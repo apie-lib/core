@@ -1,0 +1,29 @@
+{
+  "name": "apie/core",
+  "description": "Apie core classes",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pieter Jordaan",
+      "email": "pieter_jordaan@hotmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Apie\\Core\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Apie\\Tests\\Core\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "symfony/http-kernel": "4.*|5.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
