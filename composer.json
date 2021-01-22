@@ -1,6 +1,6 @@
 {
   "name": "apie/core",
-  "description": "Apie core classes",
+  "description": "Core functionality of the Apie library.",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -20,7 +20,7 @@
     }
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.3",
     "symfony/http-kernel": "4.*|5.*"
   },
   "require-dev": {
