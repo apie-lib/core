@@ -28,6 +28,7 @@ use Apie\Core\PluginInterfaces\SerializerProviderInterface;
 use Apie\Core\PluginInterfaces\SymfonyComponentProviderInterface;
 use Apie\Core\ResourceFactories\ChainableFactory;
 use Apie\Core\SearchFilters\SearchFilterRequest;
+use Apie\CorePlugin\CorePlugin;
 use Apie\ObjectAccessNormalizer\ObjectAccess\CachedObjectAccess;
 use Apie\ObjectAccessNormalizer\ObjectAccess\GroupedObjectAccess;
 use Apie\ObjectAccessNormalizer\ObjectAccess\ObjectAccess;
@@ -35,6 +36,7 @@ use Apie\ObjectAccessNormalizer\ObjectAccess\ObjectAccessInterface;
 use Apie\OpenapiSchema\Contract\InfoContract;
 use Apie\OpenapiSchema\Spec\Document;
 use Apie\OpenapiSchema\Spec\Info;
+use Apie\PrimaryKeyPlugin\PrimaryKeyPlugin;
 use Doctrine\Common\Annotations\Reader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
@@ -43,9 +45,6 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use W2w\Lib\Apie\Core\IdentifierExtractor;
-use W2w\Lib\Apie\Plugins\Core\CorePlugin;
-use W2w\Lib\Apie\Plugins\PrimaryKey\PrimaryKeyPlugin;
 
 final class Apie implements
     SerializerProviderInterface,

@@ -3,6 +3,13 @@
 namespace Apie\Core\Internal;
 
 use Apie\Core\Apie;
+use Apie\Core\ApiResourceFacade;
+use Apie\Core\ApiResourceMetadataFactory;
+use Apie\Core\ClassResourceConverter;
+use Apie\Core\IdentifierExtractor;
+use Apie\Core\PluginInterfaces\ResourceLifeCycleInterface;
+use Apie\Core\Resources\ApiResources;
+use Apie\OpenapiSchema\Spec\Document;
 
 /**
  * Used by Apie to create the general Apie classes which you are not supposed to override in a plugin.
