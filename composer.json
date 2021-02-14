@@ -21,7 +21,15 @@
   },
   "require": {
     "php": ">=7.3",
-    "symfony/http-kernel": "^4.3|^5.0"
+    "apie/object-access-normalizer": "dev-main",
+    "apie/openapi-schema": "dev-main",
+    "apie/value-objects": "dev-main",
+    "doctrine/common": "^2.6",
+    "pagerfanta/pagerfanta": "^2.4",
+    "psr/cache": "^1.0",
+    "psr/http-message": "^1.0",
+    "symfony/http-kernel": "^4.3|^5.0",
+    "symfony/serializer": "^4.3|^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5"
