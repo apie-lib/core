@@ -3,30 +3,30 @@
 
 namespace Apie\Tests\Core;
 
+use Apie\Core\Annotations\ApiResource;
+use Apie\Core\Apie;
+use Apie\Core\ApiResourceFacade;
+use Apie\Core\Exceptions\BadConfigurationException;
+use Apie\Core\Exceptions\NotAnApiePluginException;
+use Apie\CorePlugin\DataLayers\NullDataLayer;
+use Apie\CorePlugin\ResourceSerializers\SymfonySerializerAdapter;
+use Apie\FakeAnnotationsPlugin\FakeAnnotationsPlugin;
+use Apie\MockObjects\ApiResources\SimplePopo;
+use Apie\ObjectAccessNormalizer\ObjectAccess\GroupedObjectAccess;
+use Apie\OpenapiSchema\Spec\Info;
+use Apie\StaticConfigPlugin\StaticConfigPlugin;
+use Apie\StaticResourcesPlugin\StaticResourcesPlugin;
 use Doctrine\Common\Annotations\AnnotationReader;
-use erasys\OpenApi\Spec\v3\Info;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
-use W2w\Lib\Apie\Annotations\ApiResource;
-use W2w\Lib\Apie\Apie;
-use W2w\Lib\Apie\Core\ApiResourceFacade;
-use W2w\Lib\Apie\Exceptions\BadConfigurationException;
-use W2w\Lib\Apie\OpenApiSchema\OpenApiSpecGenerator;
-use W2w\Lib\Apie\Plugins\Core\DataLayers\NullDataLayer;
-use W2w\Lib\Apie\Plugins\Core\Serializers\SymfonySerializerAdapter;
-use W2w\Lib\Apie\Plugins\FakeAnnotations\FakeAnnotationsPlugin;
-use W2w\Lib\Apie\Plugins\StaticConfig\StaticConfigPlugin;
-use W2w\Lib\Apie\Plugins\StaticConfig\StaticResourcesPlugin;
-use W2w\Lib\ApieObjectAccessNormalizer\ObjectAccess\GroupedObjectAccess;
-use W2w\Test\Apie\Mocks\ApiResources\SimplePopo;
 
 class ApieTest extends TestCase
 {
     public function test_invalid_plugin_throws_exception()
     {
-        $this->expectException(BadConfigurationException::class);
+        $this->expectException(NotAnApiePluginException::class);
         new Apie([$this], true, null);
     }
 
