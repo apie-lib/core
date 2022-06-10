@@ -20,24 +20,9 @@
     }
   },
   "require": {
-    "php": ">=7.3",
-    "apie/object-access-normalizer": "dev-main",
-    "apie/openapi-schema": "dev-main",
-    "apie/value-objects": "dev-main",
-    "doctrine/common": "^2.6",
-    "pagerfanta/pagerfanta": "^2.4",
-    "psr/cache": "^1.0",
-    "psr/http-message": "^1.0",
-    "symfony/http-kernel": "^4.3|^5.0",
-    "symfony/serializer": "^4.3|^5.0"
+    "php": ">=8.1"
   },
   "require-dev": {
-    "apie/core-plugin": "dev-main",
-    "apie/mock-objects": "dev-main",
-    "apie/fake-annotations-plugin": "dev-main",
-    "apie/openapi-schema": "dev-main",
-    "apie/static-config-plugin": "dev-main",
-    "apie/static-resources-plugin":  "dev-main",
     "phpunit/phpunit": "^9.5"
   },
   "minimum-stability": "dev",
