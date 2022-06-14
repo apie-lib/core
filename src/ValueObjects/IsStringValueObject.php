@@ -49,6 +49,11 @@ trait IsStringValueObject
     {
         return $this->toNative();
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toNative();
+    }
     
     public static function validate(string $input): void
     {

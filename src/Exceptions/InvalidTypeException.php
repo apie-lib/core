@@ -6,6 +6,9 @@ use ReflectionNamedType;
 use ReflectionUnionType;
 use Throwable;
 
+/**
+ * Exception thrown when a specific type is expected, but the input is not the correct type.
+ */
 class InvalidTypeException extends ApieException
 {
     private mixed $input;
@@ -27,6 +30,10 @@ class InvalidTypeException extends ApieException
         );
     }
 
+    /**
+     * Used to chain the exception. This is probably needed when serializing objects to know
+     * where it went wrong.
+     */
     public static function chainException(self $previous): self
     {
         return new self($previous->input, $previous->expected, $previous);

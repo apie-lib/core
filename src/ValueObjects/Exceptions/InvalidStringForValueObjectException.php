@@ -2,8 +2,8 @@
 namespace Apie\Core\ValueObjects\Exceptions;
 
 use Apie\Core\Exceptions\ApieException;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
-use Apie\Core\ValueObjects\ValueObjectInterface;
 use ReflectionClass;
 
 /**

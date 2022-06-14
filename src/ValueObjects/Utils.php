@@ -12,6 +12,9 @@ use stdClass;
 use Stringable;
 use UnitEnum;
 
+/**
+ * Util classes used by or from value objects.
+ */
 final class Utils
 {
     private function __construct()

@@ -3,6 +3,10 @@ namespace Apie\Core\Attributes;
 
 use Attribute;
 
+/**
+ * Adding a FakeMethod attribute allows you to specify a static method to be used
+ * to create a new instance with some random data.
+ */
 #[Attribute(Attribute::TARGET_CLASS)]
 class FakeMethod
 {

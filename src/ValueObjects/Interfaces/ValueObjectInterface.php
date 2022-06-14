@@ -1,5 +1,5 @@
 <?php
-namespace Apie\Core\ValueObjects;
+namespace Apie\Core\ValueObjects\Interfaces;
 
 use UnitEnum;
 

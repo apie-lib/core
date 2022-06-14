@@ -2,7 +2,7 @@
 namespace Apie\Tests\Core\ValueObjects;
 
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
-use Apie\Tests\Core\Fixtures\IsStringValueObjectExample;
+use Apie\Fixtures\ValueObjects\IsStringValueObjectExample;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 

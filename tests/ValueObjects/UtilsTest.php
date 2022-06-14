@@ -1,10 +1,10 @@
 <?php
 namespace Apie\Tests\Core\ValueObjects;
 
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
-use Apie\Core\ValueObjects\ValueObjectInterface;
-use Apie\Tests\Core\Fixtures\AbstractClassExample;
-use Apie\Tests\Core\Fixtures\AbstractInterface;
+use Apie\Fixtures\Other\AbstractClassExample;
+use Apie\Fixtures\Other\AbstractInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
