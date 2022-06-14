@@ -1,11 +1,6 @@
 <?php
 namespace Apie\Core\Exceptions;
 
-use Apie\Core\ValueObjects\Utils;
-use ReflectionNamedType;
-use ReflectionUnionType;
-use Throwable;
-
 /**
  * Exception thrown when a an identifier is already defined.
  */
