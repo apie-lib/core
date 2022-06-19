@@ -18,7 +18,7 @@ class InvalidTypeException extends ApieException
     public function __construct(mixed $input, string $expected, ?Throwable $previous = null)
     {
         $this->input = $input;
-        $this->expected;
+        $this->expected = $expected;
         parent::__construct(
             sprintf(
                 'Type %s is not expected, expected %s',

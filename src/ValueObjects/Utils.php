@@ -2,6 +2,8 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\ValueObjects\Interfaces\TimeRelatedValueObjectInterface;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -23,6 +25,9 @@ final class Utils
 
     public static function toArray(mixed $input): array
     {
+        if (is_array($input)) {
+            return $input;
+        }
         if (is_iterable($input)) {
             return iterator_to_array($input);
         }
@@ -44,15 +49,27 @@ final class Utils
         return (float) $input;
     }
 
+    public static function toBoolean(mixed $input): bool
+    {
+        return (bool) $input;
+    }
+    
+    public static function toMixed(mixed $input): mixed
+    {
+        return $input instanceof ValueObjectInterface ? $input->toNative() : $input;
+    }
+
     public static function toDate(mixed $input, string $class = DateTimeImmutable::class): DateTimeInterface
     {
         if ($class === DateTimeInterface::class) {
             $class = DateTimeImmutable::class;
         }
         if ($input instanceof DateTimeInterface) {
-            return $class::createFromInterface(DateTime::ATOM, $input);
+            return $class::createFromInterface($input);
         }
-        // TODO: date value objects.
+        if ($input instanceof TimeRelatedValueObjectInterface) {
+            return $input->toDate();
+        }
         return $class::createFromFormat(DateTime::ATOM, self::toString($input));
     }
 
@@ -71,14 +88,31 @@ final class Utils
             }
             return $result;
         }
-        // TODO PHP 8.1 enum
+        if ($input instanceof UnitEnum) {
+            return $input;
+        }
         if (is_object($input) && $input instanceof Stringable) {
             return (string) $input;
         }
         if (is_string($input) || is_numeric($input)) {
             return $input;
         }
-        throw new InvalidTypeException($input, 'ValueObject|array|string|int|float|bool|Enum');
+        throw new InvalidTypeException($input, 'ValueObject|array|string|int|float|bool|UnitEnum');
+    }
+
+    public static function toEnum(string $className, mixed $input): UnitEnum
+    {
+        if ($input instanceof $className) {
+            return $input;
+        }
+
+        $input = self::toString($input);
+        foreach ($className::cases() as $enum) {
+            if ($enum->value === $input || $enum->name === $input) {
+                return $enum;
+            }
+        }
+        throw new InvalidTypeException($input, self::getDisplayNameForValueObject(new ReflectionClass($className)));
     }
 
     /**
@@ -109,6 +143,10 @@ final class Utils
                         case 'array':
                         case 'iterable':
                             return self::toArray($input);
+                        case 'bool':
+                            return self::toBoolean($input);
+                        case 'mixed':
+                            return self::toMixed($input);
                         default:
                             throw new InvalidTypeException($input, $type->getName());
                     }
@@ -126,7 +164,9 @@ final class Utils
                 if ($refl->implementsInterface(ValueObjectInterface::class)) {
                     return $className::fromNative($input);
                 }
-                // TODO: PHP 8.1 enums
+                if ($refl->implementsInterface(UnitEnum::class)) {
+                    return self::toEnum($className, $input);
+                }
                 throw new InvalidTypeException($className, 'ValueObjectInterface');
             } catch (InvalidTypeException $error) {
                 $lastError = $error;
