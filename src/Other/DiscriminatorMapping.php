@@ -3,7 +3,8 @@ namespace Apie\Core\Other;
 
 use Apie\Core\Exceptions\DiscriminatorValueException;
 
-final class DiscriminatorMapping {
+final class DiscriminatorMapping
+{
     /** @DiscriminatorConfig[] */
     private array $configs;
 

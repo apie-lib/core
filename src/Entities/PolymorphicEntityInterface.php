@@ -3,6 +3,7 @@ namespace Apie\Core\Entities;
 
 use Apie\Core\Other\DiscriminatorMapping;
 
-interface PolymorphicEntityInterface {
+interface PolymorphicEntityInterface
+{
     public function getDiscriminatorMapping(): DiscriminatorMapping;
 }

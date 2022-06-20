@@ -1,7 +1,8 @@
 <?php
 namespace Apie\Core\Other;
 
-class DiscriminatorConfig {
+class DiscriminatorConfig
+{
     public function __construct(private string $discriminator, private string $className)
     {
     }
