@@ -41,6 +41,14 @@ final class Utils
 
     public static function toInt(mixed $input): int
     {
+        $iInput = (int) $input;
+        $sInput = (string) $input;
+        if ($sInput !== ((string) $iInput)) {
+            throw new InvalidTypeException(
+                $input,
+                'int'
+            );
+        }
         return (int) $input;
     }
 
@@ -128,7 +136,7 @@ final class Utils
             }
             throw InvalidTypeException::fromTypehint($input, $typehint);
         }
-        $types = $typehint instanceof ReflectionUnionType ? $typehint->getTypes() : [$typehint];
+        $types = $typehint instanceof ReflectionUnionType ? self::sortTypes($input, ...$typehint->getTypes()) : [$typehint];
         $lastError = new InvalidTypeException($input, '(unknown)');
         foreach ($types as $type) {
             try {
@@ -173,6 +181,26 @@ final class Utils
             }
         }
         throw InvalidTypeException::chainException($lastError);
+    }
+
+    public static function sortTypes(mixed $input, ReflectionNamedType... $types): array
+    {
+        $prio = [
+            'string' => 1,
+            'int' => 0,
+            'float' => -1,
+
+        ];
+        $callback = function (ReflectionNamedType $type1, ReflectionNamedType $type2) use (&$prio) : int {
+            $name1 = $type1->getName();
+            $name2 = $type2->getName();
+            $prio1 = $prio[$name1] ?? -2;
+            $prio2 = $prio[$name2] ?? -2;
+            return $prio1 <=> $prio2;
+        };
+
+        usort($types, $callback);
+        return $types;
     }
 
     public static function displayMixedAsString(mixed $input): string
