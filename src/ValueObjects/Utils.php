@@ -81,7 +81,7 @@ final class Utils
         return $class::createFromFormat(DateTime::ATOM, self::toString($input));
     }
 
-    public static function toNative(mixed $input): array|string|int|float|bool|UnitEnum
+    public static function toNative(mixed $input): array|string|int|float|bool|UnitEnum|null
     {
         if ($input instanceof ValueObjectInterface) {
             $input = $input->toNative();
@@ -105,7 +105,10 @@ final class Utils
         if (is_string($input) || is_numeric($input)) {
             return $input;
         }
-        throw new InvalidTypeException($input, 'ValueObject|array|string|int|float|bool|UnitEnum');
+        if (null === $input) {
+            return null;
+        }
+        throw new InvalidTypeException($input, 'ValueObject|array|string|int|float|bool|UnitEnum|null');
     }
 
     public static function toEnum(string $className, mixed $input): UnitEnum
@@ -183,13 +186,15 @@ final class Utils
         throw InvalidTypeException::chainException($lastError);
     }
 
+    /**
+     * Sort typehints in a specific order.
+     */
     public static function sortTypes(mixed $input, ReflectionNamedType... $types): array
     {
         $prio = [
-            'string' => 1,
+            'string' => gettype($input) === 'string' ?  -3 : 1,
             'int' => 0,
             'float' => -1,
-
         ];
         $callback = function (ReflectionNamedType $type1, ReflectionNamedType $type2) use (&$prio) : int {
             $name1 = $type1->getName();
