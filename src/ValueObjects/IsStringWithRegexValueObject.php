@@ -9,7 +9,7 @@ trait IsStringWithRegexValueObject
     use IsStringValueObject;
     public static function validate(string $input): void
     {
-        if (!preg_match(self::getRegularExpression(), $input)) {
+        if (!preg_match(static::getRegularExpression(), $input)) {
             throw new InvalidStringForValueObjectException($input, new ReflectionClass(self::class));
         }
     }

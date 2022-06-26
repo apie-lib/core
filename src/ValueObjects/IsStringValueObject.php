@@ -14,7 +14,7 @@ trait IsStringValueObject
     public function __construct(string|int|float|bool|Stringable $input)
     {
         $input = $this->convert((string) $input);
-        self::validate($input);
+        static::validate($input);
         $this->internal = $input;
     }
 
