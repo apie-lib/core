@@ -24,6 +24,7 @@
   },
   "require-dev": {
     "apie/fixtures": "self.version",
+    "fakerphp/faker": "^1.19",
     "phpunit/phpunit": "^9.5"
   },
   "minimum-stability": "dev",

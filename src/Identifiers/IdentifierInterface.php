@@ -7,7 +7,7 @@ use ReflectionClass;
 
 interface IdentifierInterface extends ValueObjectInterface
 {
-    public function toNative(): string|int;
+    public function toNative(): string|int|null;
     /**
      * @return RefectionClass<EntityInterface>
      */
