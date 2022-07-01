@@ -41,6 +41,9 @@ final class Utils
 
     public static function toInt(mixed $input): int
     {
+        if ($input instanceof ValueObjectInterface) {
+            $input = $input->toNative();
+        }
         $iInput = (int) $input;
         $sInput = (string) $input;
         if ($sInput !== ((string) $iInput)) {
@@ -54,11 +57,17 @@ final class Utils
 
     public static function toFloat(mixed $input): float
     {
+        if ($input instanceof ValueObjectInterface) {
+            $input = $input->toNative();
+        }
         return (float) $input;
     }
 
     public static function toBoolean(mixed $input): bool
     {
+        if ($input instanceof ValueObjectInterface) {
+            $input = $input->toNative();
+        }
         return (bool) $input;
     }
     
