@@ -38,7 +38,7 @@ trait IsStringValueObject
         if (is_object($input) && !$input instanceof Stringable) {
             throw new InvalidStringForValueObjectException(get_debug_type($input), new ReflectionClass(self::class));
         }
-        return new self((string) $input);
+        return new static((string) $input);
     }
     public function toNative(): string
     {
