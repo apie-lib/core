@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Core\Exceptions;
 
-use Apie\Core\Exceptions\ApieException;
 use ReflectionMethod;
 
 class MethodIsNotStaticException extends ApieException

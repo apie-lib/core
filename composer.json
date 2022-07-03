@@ -24,6 +24,7 @@
   },
   "require-dev": {
     "apie/fixtures": "self.version",
+    "cebe/php-openapi": "^1.7",
     "fakerphp/faker": "^1.19",
     "phpunit/phpunit": "^9.5"
   },
