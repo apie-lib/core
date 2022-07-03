@@ -55,7 +55,7 @@ class ItemListTest extends TestCase
     public function if_class_is_extended_it_can_restrict_types()
     {
         $input = [1, 'a', '2'];
-        $testItem = new StringOrIntList([1, 'a', '2']);
+        $testItem = new StringOrIntList($input);
         $this->assertEquals($input, $testItem->jsonSerialize());
         $this->assertEquals($input, $testItem->toArray());
         $this->assertCount(3, $testItem);
@@ -72,11 +72,46 @@ class ItemListTest extends TestCase
     /**
      * @test
      */
+    public function if_class_is_extended_it_can_not_remove_items_in_the_middle()
+    {
+        $input = [1, 'a', '2'];
+        $testItem = new StringOrIntList($input);
+        $this->expectException(IndexNotFoundException::class);
+        unset($testItem[1]);
+    }
+
+    /**
+     * @test
+     */
     public function negative_index_is_wrong()
     {
         $testItem = new ItemList();
         $this->expectException(IndexNotFoundException::class);
         $testItem[-1] = 1;
+    }
+
+    /**
+     * @test
+     */
+    public function incorrect_index_throws_error()
+    {
+        $testItem = new ItemList();
+        $this->expectException(IndexNotFoundException::class);
+        $this->fail($testItem[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function i_can_iterate_with_foreach()
+    {
+        $count = 0;
+        foreach (new ItemList([1, 1]) as $key => $value) {
+            $this->assertSame($count, $key);
+            $this->assertSame(1, $value);
+            $count++;
+        }
+        $this->assertEquals(2, $count);
     }
 
     /**
