@@ -13,6 +13,14 @@ final class DiscriminatorMapping
         $this->configs = $configs;
     }
 
+    /**
+     * @return array
+     */
+    public function getConfigs(): array
+    {
+        return $this->configs;
+    }
+
     public function getClassNameFromDiscriminator(string $discriminatorValue): string
     {
         foreach ($this->configs as $config) {
