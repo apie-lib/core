@@ -17,7 +17,7 @@ class ItemList implements ItemListInterface
     /** @var ReflectionType[] */
     private static $typeMapping = [];
 
-    final public function __construct(array $input)
+    final public function __construct(array $input = [])
     {
         foreach ($input as $item) {
             $this->offsetSet(null, $item);

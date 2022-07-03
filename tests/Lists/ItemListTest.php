@@ -26,6 +26,9 @@ class ItemListTest extends TestCase
         $this->assertCount(3, $testItem);
         $this->assertSame($this, $testItem[2]);
 
+        $this->assertFalse(isset($testItem[3]));
+        $this->assertFalse(isset($testItem['a']));
+
         $testItem[2] = 'pizza';
         $input[2] = 'pizza';
         $this->assertEquals($input, $testItem->toArray());
@@ -39,6 +42,7 @@ class ItemListTest extends TestCase
         unset($testItem[1]);
         $input[1] = null;
         $this->assertEquals($input, $testItem->toArray());
+        $this->assertTrue(isset($testItem[1]));
 
         unset($testItem[3]);
         unset($input[3]);
@@ -68,10 +72,31 @@ class ItemListTest extends TestCase
     /**
      * @test
      */
+    public function negative_index_is_wrong()
+    {
+        $testItem = new ItemList();
+        $this->expectException(IndexNotFoundException::class);
+        $testItem[-1] = 1;
+    }
+
+    /**
+     * @test
+     */
     public function if_extended_it_throws_errors_on_wrong_types()
     {
         $this->expectException(InvalidTypeException::class);
         new StringOrIntList([$this]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_encodes_json_correctly()
+    {
+        $testItem = new ItemList([]);
+        $this->assertEquals('[]', json_encode($testItem));
+        $testItem = new ItemList([1, null, 2]);
+        $this->assertEquals('[1,null,2]', json_encode($testItem));
     }
 
     /**
