@@ -8,13 +8,18 @@ final class DiscriminatorMapping
     /** @DiscriminatorConfig[] */
     private array $configs;
 
-    public function __construct(DiscriminatorConfig... $configs)
+    public function __construct(private string $propertyName, DiscriminatorConfig... $configs)
     {
         $this->configs = $configs;
     }
 
+    public function getPropertyName(): string
+    {
+        return $this->propertyName;
+    }
+
     /**
-     * @return array
+     * @return DiscriminatorConfig[]
      */
     public function getConfigs(): array
     {
