@@ -3,13 +3,14 @@ namespace Apie\Core\Lists;
 
 use ArrayAccess;
 use Countable;
+use IteratorAggregate;
 use JsonSerializable;
 use stdClass;
 
 /**
  * @template T
  */
-interface HashmapInterface extends ArrayAccess, JsonSerializable, Countable, Arrayable
+interface HashmapInterface extends ArrayAccess, JsonSerializable, Countable, Arrayable, IteratorAggregate
 {
     /**
      * @param int|string $offset
