@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core;
 
+use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionType;
@@ -25,10 +26,15 @@ final class TypeUtils
         if ($type instanceof ReflectionNamedType) {
             return match ($type->getName()) {
                 'mixed' => true,
+                'int' => is_int($input),
+                'string' => is_string($input),
                 'null' => $input === null,
                 'true' => $input === true, // PHP 8.2
                 'false' => $input === false,
                 default => get_debug_type($input) === $type->getName()
+                    || (interface_exists($type->getName())
+                        && is_object($input)
+                        && (new ReflectionClass($input))->implementsInterface($type->getName()))
             };
         }
         if ($type instanceof ReflectionUnionType) {

@@ -1,10 +1,26 @@
 <?php
 namespace Apie\Core\Context;
 
+use Apie\Core\Attributes\AllApplies;
+use Apie\Core\Attributes\AnyApplies;
+use Apie\Core\Attributes\ApieContextAttribute;
+use Apie\Core\Attributes\CustomContextCheck;
+use Apie\Core\Attributes\Not;
+use Apie\Core\Attributes\Requires;
 use Apie\Core\Exceptions\IndexNotFoundException;
+use ReflectionEnumUnitCase;
+use ReflectionMethod;
+use ReflectionProperty;
+use ReflectionType;
 
-final class ApieContext {
-    private array $context = [];
+final class ApieContext
+{
+    /** @var array<int, class-string<ApieContextAttribute>> */
+    private const ATTRIBUTES = [Requires::class, CustomContextCheck::class, AllApplies::class, AnyApplies::class,Equals::class, Not::class];
+
+    public function __construct(private array $context = [])
+    {
+    }
 
     public function withContext(string $key, mixed $value): self
     {
@@ -25,5 +41,17 @@ final class ApieContext {
         }
 
         return $this->context[$key];
+    }
+
+    public function isFiltered(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
+    {
+        foreach (self::ATTRIBUTES as $attribute) {
+            foreach ($method->getAttributes($attribute) as $attribute) {
+                if (!$attribute->newInstance()->applies($this)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
