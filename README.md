@@ -1,4 +1,10 @@
-# core
+<img src="/docs/apie-logo.svg" width="100px" align="left" />
+<h1>core</h1>
+
+
+
+
+
 
  [![Latest Stable Version](http://poser.pugx.org/apie/core/v)](https://packagist.org/packages/apie/core) [![Total Downloads](http://poser.pugx.org/apie/core/downloads)](https://packagist.org/packages/apie/core) [![Latest Unstable Version](http://poser.pugx.org/apie/core/v/unstable)](https://packagist.org/packages/apie/core) [![License](http://poser.pugx.org/apie/core/license)](https://packagist.org/packages/apie/core) [![PHP Version Require](http://poser.pugx.org/apie/core/require/php)](https://packagist.org/packages/apie/core) ![Code coverage](https://raw.githubusercontent.com/apie-lib/core/main/coverage_badge.svg) 
 
