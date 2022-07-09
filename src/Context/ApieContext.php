@@ -8,6 +8,7 @@ use Apie\Core\Attributes\CustomContextCheck;
 use Apie\Core\Attributes\Not;
 use Apie\Core\Attributes\Requires;
 use Apie\Core\Exceptions\IndexNotFoundException;
+use ReflectionClass;
 use ReflectionEnumUnitCase;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -43,7 +44,37 @@ final class ApieContext
         return $this->context[$key];
     }
 
-    public function isFiltered(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
+    private function registerOrMarkAmbiguous(string $offset, object $instance): void
+    {
+        if (!isset($this->context[$offset])) {
+            $this->context[$offset] = $instance;
+            return;
+        }
+        if ($this->context[$offset] instanceof AmbiguousCall) {
+            $this->context[$offset] = $this->context[$offset]->withName(get_class($instance));
+        } else {
+            $this->context[$offset] = new AmbiguousCall($offset, get_class($this->context[$offset]), get_class($instance));
+        }
+    }
+
+    public function registerInstance(object $instance): self
+    {
+        $refl = new ReflectionClass($instance);
+
+        $instance = $this->withContext($refl->name, $instance);
+        foreach ($refl->getInterfaceNames() as $interface) {
+            $instance->registerOrMarkAmbiguous($interface, $instance);
+        }
+        $refl = $refl->getParentClass();
+        while ($refl) {
+            $instance->registerOrMarkAmbiguous($refl->name, $instance);
+            $refl = $refl->getParentClass();
+        }
+
+        return $instance;
+    }
+
+    public function appliesToContext(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
     {
         foreach (self::ATTRIBUTES as $attribute) {
             foreach ($method->getAttributes($attribute) as $attribute) {
