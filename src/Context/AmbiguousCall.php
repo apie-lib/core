@@ -3,10 +3,9 @@ namespace Apie\Core\Context;
 
 use Apie\Core\Exceptions\AmbiguousCallException;
 use JsonSerializable;
-use Serializable;
 use Stringable;
 
-final class AmbiguousCall implements Serializable, JsonSerializable, Stringable
+final class AmbiguousCall implements JsonSerializable, Stringable
 {
     /** @var string[] */
     private array $names;
@@ -22,12 +21,12 @@ final class AmbiguousCall implements Serializable, JsonSerializable, Stringable
         return $instance;
     }
 
-    public function serialize(): never
+    public function __serialize(): never
     {
         $this->throwError();
     }
 
-    public function unserialize(string $data): never
+    public function __unserialize(array $data): never
     {
         $this->throwError();
     }

@@ -57,17 +57,17 @@ final class ApieContext
         }
     }
 
-    public function registerInstance(object $instance): self
+    public function registerInstance(object $object): self
     {
-        $refl = new ReflectionClass($instance);
+        $refl = new ReflectionClass($object);
 
-        $instance = $this->withContext($refl->name, $instance);
+        $instance = $this->withContext($refl->name, $object);
         foreach ($refl->getInterfaceNames() as $interface) {
-            $instance->registerOrMarkAmbiguous($interface, $instance);
+            $instance->registerOrMarkAmbiguous($interface, $object);
         }
         $refl = $refl->getParentClass();
         while ($refl) {
-            $instance->registerOrMarkAmbiguous($refl->name, $instance);
+            $instance->registerOrMarkAmbiguous($refl->name, $object);
             $refl = $refl->getParentClass();
         }
 

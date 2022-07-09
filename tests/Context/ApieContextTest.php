@@ -1,7 +1,9 @@
 <?php
 namespace Apie\Tests\Core\Context;
 
+use Apie\Core\Context\AmbiguousCall;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\AmbiguousCallException;
 use Apie\Fixtures\Other\ClassWithAttributes;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -30,5 +32,22 @@ class ApieContextTest extends TestCase
         $testItem = new ApieContext(['test' => false]);
         $refl = new ReflectionClass(ClassWithAttributes::class);
         $this->assertTrue($testItem->appliesToContext($refl->getProperty('property')));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_register_services_as_context()
+    {
+        $testItem = new ApieContext();
+        $testItem = $testItem->registerInstance($this);
+        $actual = $testItem->getContext(TestCase::class);
+        $this->assertSame($this, $actual);
+        $testItem = $testItem->registerInstance(new class extends TestCase {
+        });
+        $actual = $testItem->getContext(TestCase::class);
+        $this->assertInstanceOf(AmbiguousCall::class, $actual);
+        $this->expectException(AmbiguousCallException::class);
+        $actual->it_can_read_context_attributes();
     }
 }
