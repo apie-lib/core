@@ -4,6 +4,7 @@ namespace Apie\Tests\Core\Context;
 use Apie\Core\Context\AmbiguousCall;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Exceptions\AmbiguousCallException;
+use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Fixtures\Other\ClassWithAttributes;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -37,12 +38,24 @@ class ApieContextTest extends TestCase
     /**
      * @test
      */
+    public function it_throws_an_error_if_some_context_is_not_found()
+    {
+        $testItem = new ApieContext();
+        $this->expectException(IndexNotFoundException::class);
+        $testItem->getContext('missing');
+    }
+
+    /**
+     * @test
+     */
     public function it_can_register_services_as_context()
     {
         $testItem = new ApieContext();
         $testItem = $testItem->registerInstance($this);
         $actual = $testItem->getContext(TestCase::class);
         $this->assertSame($this, $actual);
+        $testItem = $testItem->registerInstance(new class extends TestCase {
+        });
         $testItem = $testItem->registerInstance(new class extends TestCase {
         });
         $actual = $testItem->getContext(TestCase::class);
