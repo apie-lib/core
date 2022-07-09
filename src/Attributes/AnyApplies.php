@@ -7,7 +7,7 @@ use Attribute;
 /**
  * Add this attribute that succeeds if any succeed. Adding no arguments is failure.
  */
-#[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER|Attribute::TARGET_CLASS_CONSTANT)]
+#[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER|Attribute::TARGET_CLASS_CONSTANT)]
 class AnyApplies implements ApieContextAttribute
 {
     /** @var ApieContextAttribute[] */

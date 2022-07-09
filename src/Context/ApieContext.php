@@ -51,7 +51,7 @@ final class ApieContext
             return;
         }
         if ($this->context[$offset] instanceof AmbiguousCall) {
-            $this->context[$offset] = $this->context[$offset]->withName(get_class($instance));
+            $this->context[$offset] = $this->context[$offset]->withAddedName(get_class($instance));
         } else {
             $this->context[$offset] = new AmbiguousCall($offset, get_class($this->context[$offset]), get_class($instance));
         }
@@ -72,6 +72,26 @@ final class ApieContext
         }
 
         return $instance;
+    }
+
+    public function getApplicableGetters(ReflectionClass $class): ReflectionHashmap
+    {
+        $list = [];
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            if ($this->appliesToContext($property)) {
+                $list[$property->getName()] = $property;
+            }
+        }
+        foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
+                if (strpos('is', $method->name) === 0) {
+                    $list[lcfirst(substr($method->name, 3))] = $method;
+                } else {
+                    $list[lcfirst(substr($method->name, 2))] = $method;
+                }
+            }
+        }
+        return new ReflectionHashmap($list);
     }
 
     public function appliesToContext(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool

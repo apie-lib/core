@@ -8,7 +8,7 @@ use Attribute;
  * Add this attribute to tell ApieContext that it should only be called if a specific context is set and is equal to
  * the value provided.
  */
-#[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER|Attribute::TARGET_CLASS_CONSTANT)]
+#[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER|Attribute::TARGET_CLASS_CONSTANT)]
 class Equals implements ApieContextAttribute
 {
     public function __construct(public string $instance, public mixed $comparison)

@@ -63,4 +63,36 @@ class ApieContextTest extends TestCase
         $this->expectException(AmbiguousCallException::class);
         $actual->it_can_read_context_attributes();
     }
+
+    /**
+     * @test
+     * @dataProvider filterProvider
+     */
+    public function it_can_filter_methods_and_properties_with_this_context(array $expectedKeys, array $input)
+    {
+        $testItem = new ApieContext($input);
+        $refl = new ReflectionClass(ClassWithAttributes::class);
+        $keys = array_keys($testItem->getApplicableGetters($refl)->toArray());
+        $this->assertEquals($expectedKeys, $keys);
+    }
+
+    public function filterProvider()
+    {
+        yield [
+            ['property3'],
+            []
+        ];
+        yield [
+            ['property'],
+            ['test'=> 1],
+        ];
+        yield [
+            ['property', 'property2'],
+            ['test' => 1, 'test2' => 2],
+        ];
+        yield [
+            ['property3'],
+            ['test2'=> 1],
+        ];
+    }
 }

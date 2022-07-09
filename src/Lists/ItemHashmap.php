@@ -22,8 +22,8 @@ class ItemHashmap implements HashmapInterface
     final public function __construct(array|stdClass $input = [])
     {
         $this->internal = new stdClass();
-        foreach ($input as $item) {
-            $this->offsetSet(null, $item);
+        foreach ($input as $key => $item) {
+            $this->offsetSet($key, $item);
         }
     }
 
