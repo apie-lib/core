@@ -85,9 +85,9 @@ final class ApieContext
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
                 if (strpos('is', $method->name) === 0) {
-                    $list[lcfirst(substr($method->name, 3))] = $method;
+                    $list[lcfirst(substr($method->name, 4))] = $method;
                 } else {
-                    $list[lcfirst(substr($method->name, 2))] = $method;
+                    $list[lcfirst(substr($method->name, 3))] = $method;
                 }
             }
         }
