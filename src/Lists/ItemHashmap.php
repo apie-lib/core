@@ -3,6 +3,7 @@ namespace Apie\Core\Lists;
 
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\TypeUtils;
 use Apie\Core\ValueObjects\Utils;
 use ArrayIterator;
@@ -19,12 +20,17 @@ class ItemHashmap implements HashmapInterface
     /** @var ReflectionType[] */
     private static $typeMapping = [];
 
+    protected bool $mutable = true;
+
     final public function __construct(array|stdClass $input = [])
     {
         $this->internal = new stdClass();
+        $oldMutable = $this->mutable;
+        $this->mutable = true;
         foreach ($input as $key => $item) {
             $this->offsetSet($key, $item);
         }
+        $this->mutable = $oldMutable;
     }
 
     public function count(): int
@@ -85,6 +91,9 @@ class ItemHashmap implements HashmapInterface
     }
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        if (!$this->mutable) {
+            throw new ObjectIsImmutable($this);
+        }
         $offset = $this->offsetCheck($offset);
         $this->typeCheck($value);
         $this->internal->{$offset} = $value;
@@ -92,6 +101,9 @@ class ItemHashmap implements HashmapInterface
     }
     public function offsetUnset(mixed $offset): void
     {
+        if (!$this->mutable) {
+            throw new ObjectIsImmutable($this);
+        }
         $offset = Utils::toString($offset);
         if (array_key_exists($offset, $this->internalArray)) {
             unset($this->internalArray[$offset]);
