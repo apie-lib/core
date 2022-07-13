@@ -84,8 +84,8 @@ final class ApieContext
         }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
-                if (strpos('is', $method->name) === 0) {
-                    $list[lcfirst(substr($method->name, 4))] = $method;
+                if (strpos($method->name, 'is') === 0) {
+                    $list[lcfirst(substr($method->name, 2))] = $method;
                 } else {
                     $list[lcfirst(substr($method->name, 3))] = $method;
                 }
@@ -93,6 +93,26 @@ final class ApieContext
         }
         return new ReflectionHashmap($list);
     }
+
+    public function getApplicableSetters(ReflectionClass $class): ReflectionHashmap
+    {
+        $list = [];
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            if ($property->isReadOnly()) {
+                continue;
+            }
+            if ($this->appliesToContext($property)) {
+                $list[$property->getName()] = $property;
+            }
+        }
+        foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (preg_match('/^(set).+$/i', $method->name) && $this->appliesToContext($method)) {
+                $list[lcfirst(substr($method->name, 3))] = $method;
+            }
+        }
+        return new ReflectionHashmap($list);
+    }
+
 
     public function appliesToContext(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
     {
