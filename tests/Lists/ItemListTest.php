@@ -3,7 +3,9 @@ namespace Apie\Tests\Core\Lists;
 
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\Lists\ItemList;
+use Apie\Fixtures\Lists\ImmutableStringOrIntList;
 use Apie\Fixtures\Lists\StringOrIntList;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use Apie\Fixtures\TestHelpers\TestWithOpenapiSchema;
@@ -132,6 +134,26 @@ class ItemListTest extends TestCase
         $this->assertEquals('[]', json_encode($testItem));
         $testItem = new ItemList([1, null, 2]);
         $this->assertEquals('[1,null,2]', json_encode($testItem));
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_errors_if_list_is_immutable()
+    {
+        $testItem = new ImmutableStringOrIntList([1, 2, 3]);
+        $this->expectException(ObjectIsImmutable::class);
+        $testItem[2] = 3;
+    }
+
+    /**
+     * @test
+     */
+    public function an_immutable_list_can_not_unset_values()
+    {
+        $testItem = new ImmutableStringOrIntList([1, 2, 3]);
+        $this->expectException(ObjectIsImmutable::class);
+        unset($testItem[1]);
     }
 
     /**

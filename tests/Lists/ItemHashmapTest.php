@@ -3,7 +3,9 @@ namespace Apie\Tests\Core\Lists;
 
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\Lists\ItemHashmap;
+use Apie\Fixtures\Lists\ImmutableStringOrIntHashmap;
 use Apie\Fixtures\Lists\StringOrIntHashmap;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use Apie\Fixtures\TestHelpers\TestWithOpenapiSchema;
@@ -117,6 +119,26 @@ class ItemHashmapTest extends TestCase
         $this->assertEquals('{}', json_encode($testItem));
         $testItem = new ItemHashmap([1, null, 2]);
         $this->assertEquals('{"0":1,"1":null,"2":2}', json_encode($testItem));
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_errors_if_hashmap_is_immutable()
+    {
+        $testItem = new ImmutableStringOrIntHashmap([1, 2, 3]);
+        $this->expectException(ObjectIsImmutable::class);
+        $testItem[2] = 3;
+    }
+
+    /**
+     * @test
+     */
+    public function an_immutable_hashmap_can_not_unset_values()
+    {
+        $testItem = new ImmutableStringOrIntHashmap([1, 2, 3]);
+        $this->expectException(ObjectIsImmutable::class);
+        unset($testItem[1]);
     }
 
     /**
