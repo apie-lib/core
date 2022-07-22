@@ -9,9 +9,13 @@ class CheckWrongContentTypeError implements ContextBuilderInterface
 {
     public function process(ApieContext $context): ApieContext
     {
-        if ($context->hasContext(RequestInterface::class) && !$context->hasContext(ContextBuilderInterface::RAW_CONTENTS)) {
+        if (
+            $context->hasContext(RequestInterface::class)
+            && !$context->hasContext(ContextBuilderInterface::RAW_CONTENTS)
+            && $context->getContext(RequestInterface::class)->getMethod() !== 'GET'
+        ) {
             throw new WrongContentTypeException(
-                $context->getContext(RequestInterface::class)->getHeader('Content-Type') ?? '(null)'
+                $context->getContext(RequestInterface::class)->getHeader('Content-Type')[0] ?? '(null)'
             );
         }
         return $context;
