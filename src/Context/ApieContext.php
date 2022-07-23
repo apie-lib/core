@@ -114,7 +114,7 @@ final class ApieContext
     }
 
 
-    public function appliesToContext(ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
+    public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
     {
         foreach (self::ATTRIBUTES as $attribute) {
             foreach ($method->getAttributes($attribute) as $attribute) {

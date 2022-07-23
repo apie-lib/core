@@ -175,7 +175,7 @@ class ItemListTest extends TestCase
             'ItemList-post',
             [
                 'type' => 'array',
-                'items' => new Reference(['$ref' => 'mixed']),
+                'items' => new Reference(['$ref' => '#/components/schemas/mixed']),
             ]
         );
 

@@ -22,16 +22,26 @@ final class ContextBuilderFactory
         );
     }
 
-    private function createBaseContext(): ApieContext
+    private function createBaseContext(array $additionalData): ApieContext
     {
         return new ApieContext([
+            ...$additionalData,
             ContextBuilderFactory::class => $this,
         ]);
     }
 
-    public function createFromRequest(RequestInterface $request): ApieContext
+    public function createGeneralContext(array $additionalData): ApieContext
     {
-        $context = $this->createBaseContext()
+        $context = $this->createBaseContext($additionalData);
+        foreach ($this->builders as $builder) {
+            $context = $builder->process($context);
+        }
+        return $context;
+    }
+
+    public function createFromRequest(RequestInterface $request, array $additionalData = []): ApieContext
+    {
+        $context = $this->createBaseContext($additionalData)
             ->registerInstance($request)
             ->withContext(RequestMethod::class, RequestMethod::from($request->getMethod()));
         foreach ($this->builders as $builder) {

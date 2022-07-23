@@ -160,7 +160,7 @@ class ItemHashmapTest extends TestCase
             'ItemHashmap-post',
             [
                 'type' => 'object',
-                'additionalProperties' => new Reference(['$ref' => 'mixed']),
+                'additionalProperties' => new Reference(['$ref' => '#/components/schemas/mixed']),
             ]
         );
 
