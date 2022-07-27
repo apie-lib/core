@@ -89,6 +89,9 @@ class ItemList implements ItemListInterface
 
     protected function typeCheck(mixed $value): void
     {
+        if (static::class === ItemList::class) {
+            return;
+        }
         $type = $this->getType();
         if (!TypeUtils::matchesType($type, $value)) {
             throw new InvalidTypeException($value, $type->__toString());

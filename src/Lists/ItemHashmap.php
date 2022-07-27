@@ -84,6 +84,9 @@ class ItemHashmap implements HashmapInterface
 
     protected function typeCheck(mixed $value): void
     {
+        if (static::class === ItemHashmap::class) {
+            return;
+        }
         $type = $this->getType();
         if (!TypeUtils::matchesType($type, $value)) {
             throw new InvalidTypeException($value, $type->__toString());

@@ -1,13 +1,12 @@
 <?php
 namespace Apie\Core\RouteDefinitions;
 
-use Apie\Core\Actions\ActionInterface;
 use Apie\Core\Actions\HasRouteDefinition;
 use Apie\Core\Lists\ItemHashmap;
 
 final class ActionHashmap extends ItemHashmap
 {
-    public function offsetGet(mixed $offset): ActionInterface&HasRouteDefinition
+    public function offsetGet(mixed $offset): HasRouteDefinition
     {
         return parent::offsetGet($offset);
     }
