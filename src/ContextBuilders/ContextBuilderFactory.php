@@ -17,8 +17,6 @@ final class ContextBuilderFactory
     public static function create(): self
     {
         return new self(
-            new ExtractRawJsonContentsFromBody(),
-            new CheckWrongContentTypeError(),
         );
     }
 

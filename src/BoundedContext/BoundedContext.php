@@ -7,11 +7,14 @@ use Apie\Core\Lists\ReflectionMethodList;
 
 final class BoundedContext implements EntityInterface
 {
+    public readonly BoundedContextId $id;
+
     public function __construct(
-        public readonly BoundedContextId $id,
+        BoundedContextId|string $id,
         public readonly ReflectionClassList $resources,
         public readonly ReflectionMethodList $actions,
     ) {
+        $this->id = $id instanceof BoundedContextId ? $id : new BoundedContextId($id);
     }
 
     public function getId(): BoundedContextId

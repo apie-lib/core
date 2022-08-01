@@ -10,4 +10,5 @@ interface HasRouteDefinition
     public function getUrl(): UrlRouteDefinition;
     public function getController(): string;
     public function getRouteAttributes(): array;
+    public function getOperationId(): string;
 }

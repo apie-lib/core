@@ -11,6 +11,19 @@ final class ReflectionClassList extends ItemList
         return parent::offsetGet($offset);
     }
 
+    /**
+     * @return string
+     */
+    public function toStringArray(): array
+    {
+        return array_map(
+            function (ReflectionClass $refl) {
+                return $refl->getName();
+            },
+            $this->internal
+        );
+    }
+
     public function filterOnApieContext(ApieContext $apieContext): self
     {
         $clone = new ReflectionClassList();
