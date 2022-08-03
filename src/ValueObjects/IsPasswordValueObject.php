@@ -10,7 +10,7 @@ trait IsPasswordValueObject
         $lowercase = '(?=(.*[a-z]){' . self::getMinLowercase() . ',})';
         $uppercase = '(?=(.*[A-Z]){' . self::getMinUppercase() . ',})';
         $digits = '(?=(.*[0-9]){' . self::getMinDigits() . ',})';
-        $specialCharacter = '(?=(.*[' . preg_quote(self::getAllowedSpecialCharacters()) . ']){' . self::getMinSpecialCharacters() . ',})';
+        $specialCharacter = '(?=(.*[' . str_replace('\#', '#', preg_quote(self::getAllowedSpecialCharacters(), '/')) . ']){' . self::getMinSpecialCharacters() . ',})';
         $totalSize = '.{' . self::getMinLength() . ',' . self::getMaxLength() . '}';
         return '/^' . $lowercase . $uppercase . $digits . $specialCharacter . $totalSize . '$/';
     }

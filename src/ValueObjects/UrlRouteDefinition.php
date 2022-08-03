@@ -14,4 +14,9 @@ class UrlRouteDefinition implements StringValueObjectInterface
         }
         return $input;
     }
+
+    public function withBaseUrl(string $baseUrl): self
+    {
+        return new self(rtrim($baseUrl, '/') . $this->internal);
+    }
 }
