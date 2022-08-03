@@ -23,6 +23,9 @@ final class Utils
     {
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function toArray(mixed $input): array
     {
         if (is_array($input)) {
@@ -90,6 +93,9 @@ final class Utils
         return $class::createFromFormat(DateTime::ATOM, self::toString($input));
     }
 
+    /**
+     * @return mixed[]|string|int|float|bool|UnitEnum|null
+     */
     public static function toNative(mixed $input): array|string|int|float|bool|UnitEnum|null
     {
         if ($input instanceof ValueObjectInterface) {
@@ -197,6 +203,8 @@ final class Utils
 
     /**
      * Sort typehints in a specific order.
+     *
+     * @return array<int, ReflectionNamedType>
      */
     public static function sortTypes(mixed $input, ReflectionNamedType... $types): array
     {
@@ -243,6 +251,9 @@ final class Utils
         return gettype($input);
     }
 
+    /**
+     * @param ValueObjectInterface|ReflectionClass<object> $class
+     */
     public static function getDisplayNameForValueObject(ValueObjectInterface|ReflectionClass $class): string
     {
         if ($class instanceof ReflectionClass) {
