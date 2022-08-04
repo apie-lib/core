@@ -5,6 +5,7 @@ use Apie\Core\Attributes\AllApplies;
 use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
 use Apie\Core\Attributes\CustomContextCheck;
+use Apie\Core\Attributes\Equals;
 use Apie\Core\Attributes\Not;
 use Apie\Core\Attributes\Requires;
 use Apie\Core\Exceptions\IndexNotFoundException;
@@ -17,8 +18,18 @@ use ReflectionType;
 final class ApieContext
 {
     /** @var array<int, class-string<ApieContextAttribute>> */
-    private const ATTRIBUTES = [Requires::class, CustomContextCheck::class, AllApplies::class, AnyApplies::class,Equals::class, Not::class];
+    private const ATTRIBUTES = [
+        Requires::class,
+        CustomContextCheck::class,
+        AllApplies::class,
+        AnyApplies::class,
+        Equals::class,
+        Not::class
+    ];
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(private array $context = [])
     {
     }
@@ -74,6 +85,9 @@ final class ApieContext
         return $instance;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     public function getApplicableGetters(ReflectionClass $class): ReflectionHashmap
     {
         $list = [];
@@ -94,6 +108,9 @@ final class ApieContext
         return new ReflectionHashmap($list);
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     public function getApplicableSetters(ReflectionClass $class): ReflectionHashmap
     {
         $list = [];
@@ -113,7 +130,9 @@ final class ApieContext
         return new ReflectionHashmap($list);
     }
 
-
+    /**
+     * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
+     */
     public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
     {
         foreach (self::ATTRIBUTES as $attribute) {

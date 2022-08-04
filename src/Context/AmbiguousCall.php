@@ -26,6 +26,9 @@ final class AmbiguousCall implements JsonSerializable, Stringable
         $this->throwError();
     }
 
+    /**
+     * @param mixed[] $data
+     */
     public function __unserialize(array $data): never
     {
         $this->throwError();
@@ -41,11 +44,17 @@ final class AmbiguousCall implements JsonSerializable, Stringable
         $this->throwError();
     }
 
+    /**
+     * @param mixed[] $args
+     */
     public function __call(string $method, array $args): never
     {
         $this->throwError();
     }
 
+    /**
+     * @param mixed[] $args
+     */
     public static function __callStatic(string $method, array $args): never
     {
         (new self(static::class))->throwError();

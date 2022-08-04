@@ -7,6 +7,9 @@ use Psr\Http\Message\RequestInterface;
 
 final class ContextBuilderFactory
 {
+    /**
+     * @var ContextBuilderInterface[]
+     */
     private array $builders;
 
     public function __construct(ContextBuilderInterface... $builders)
@@ -20,6 +23,9 @@ final class ContextBuilderFactory
         );
     }
 
+    /**
+     * @param array<string|int, mixed> $additionalData
+     */
     private function createBaseContext(array $additionalData): ApieContext
     {
         return new ApieContext([
@@ -28,6 +34,9 @@ final class ContextBuilderFactory
         ]);
     }
 
+    /**
+     * @param array<string|int, mixed> $additionalData
+     */
     public function createGeneralContext(array $additionalData): ApieContext
     {
         $context = $this->createBaseContext($additionalData);
@@ -37,6 +46,9 @@ final class ContextBuilderFactory
         return $context;
     }
 
+    /**
+     * @param array<string|int, mixed> $additionalData
+     */
     public function createFromRequest(RequestInterface $request, array $additionalData = []): ApieContext
     {
         $context = $this->createBaseContext($additionalData)
