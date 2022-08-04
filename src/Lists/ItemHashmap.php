@@ -12,9 +12,16 @@ use ReflectionClass;
 use ReflectionType;
 use stdClass;
 
+/**
+ * @template T
+ * @implements HashmapInterface<T>
+ */
 class ItemHashmap implements HashmapInterface
 {
     protected stdClass $internal;
+    /**
+     * @var array<string|int, T>
+     */
     protected array $internalArray = [];
 
     /** @var ReflectionType[] */
@@ -22,6 +29,9 @@ class ItemHashmap implements HashmapInterface
 
     protected bool $mutable = true;
 
+    /**
+     * @param array<string|int, T>|stdClass $input
+     */
     final public function __construct(array|stdClass $input = [])
     {
         $this->internal = new stdClass();
@@ -38,16 +48,25 @@ class ItemHashmap implements HashmapInterface
         return count($this->internalArray);
     }
 
+    /**
+     * @return array<string|int, T>
+     */
     public function toArray(): array
     {
         return $this->internalArray;
     }
 
+    /**
+     * @return Iterator<string|int, T>
+     */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->internalArray);
     }
 
+    /**
+     * @return stdClass
+     */
     public function jsonSerialize(): stdClass
     {
         return $this->internal;
@@ -57,6 +76,7 @@ class ItemHashmap implements HashmapInterface
     {
         return array_key_exists($offset, $this->internalArray);
     }
+
     public function offsetGet(mixed $offset): mixed
     {
         if (!array_key_exists($offset, $this->internalArray)) {
@@ -77,7 +97,7 @@ class ItemHashmap implements HashmapInterface
     protected function offsetCheck(mixed $value): string
     {
         if ($value === null) { // append
-            return count($this->internalArray);
+            return (string) count($this->internalArray);
         }
         return Utils::toString($value);
     }
@@ -92,6 +112,7 @@ class ItemHashmap implements HashmapInterface
             throw new InvalidTypeException($value, $type->__toString());
         }
     }
+    
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!$this->mutable) {
@@ -102,6 +123,7 @@ class ItemHashmap implements HashmapInterface
         $this->internal->{$offset} = $value;
         $this->internalArray[$offset] = $value;
     }
+
     public function offsetUnset(mixed $offset): void
     {
         if (!$this->mutable) {

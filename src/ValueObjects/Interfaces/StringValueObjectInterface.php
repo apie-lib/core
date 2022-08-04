@@ -9,5 +9,6 @@ use Stringable;
  */
 interface StringValueObjectInterface extends ValueObjectInterface, Stringable, JsonSerializable
 {
+    public function __construct(string $input);
     public function toNative(): string;
 }

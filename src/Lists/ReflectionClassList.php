@@ -4,15 +4,21 @@ namespace Apie\Core\Lists;
 use Apie\Core\Context\ApieContext;
 use ReflectionClass;
 
+/**
+ * @extends ItemList<ReflectionClass<object>>
+ */
 final class ReflectionClassList extends ItemList
 {
+    /**
+     * @return ReflectionClass<object>
+     */
     public function offsetGet(mixed $offset): ReflectionClass
     {
         return parent::offsetGet($offset);
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function toStringArray(): array
     {

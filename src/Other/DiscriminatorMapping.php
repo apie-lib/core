@@ -5,7 +5,7 @@ use Apie\Core\Exceptions\DiscriminatorValueException;
 
 final class DiscriminatorMapping
 {
-    /** @DiscriminatorConfig[] */
+    /** @var DiscriminatorConfig[] */
     private array $configs;
 
     public function __construct(private string $propertyName, DiscriminatorConfig... $configs)

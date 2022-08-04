@@ -9,11 +9,13 @@ use stdClass;
 
 /**
  * @template T
+ * @extends ArrayAccess<string, T>
+ * @extends IteratorAggregate<string, T>
  */
 interface HashmapInterface extends ArrayAccess, JsonSerializable, Countable, Arrayable, IteratorAggregate
 {
     /**
-     * @param int|string $offset
+     * @param string $offset
      * @return T
      */
     public function offsetGet(mixed $offset): mixed;
@@ -23,5 +25,8 @@ interface HashmapInterface extends ArrayAccess, JsonSerializable, Countable, Arr
      */
     public function offsetSet(mixed $offset, mixed $value): void;
 
+    /**
+     * @return stdClass
+     */
     public function jsonSerialize(): stdClass;
 }

@@ -2,6 +2,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use DateTime;
 use DateTimeInterface;
 use ReflectionClass;

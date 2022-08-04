@@ -11,8 +11,15 @@ use Iterator;
 use ReflectionClass;
 use ReflectionType;
 
+/**
+ * @template T
+ * @implements ItemListInterface<T>
+ */
 class ItemList implements ItemListInterface
 {
+    /**
+     * @var array<int, T>
+     */
     protected array $internal = [];
 
     /** @var ReflectionType[] */
@@ -20,6 +27,9 @@ class ItemList implements ItemListInterface
 
     protected bool $mutable = true;
 
+    /**
+     * @param array<int, T> $input
+     */
     final public function __construct(array $input = [])
     {
         $oldMutable = $this->mutable;
@@ -35,16 +45,25 @@ class ItemList implements ItemListInterface
         return count($this->internal);
     }
 
+    /**
+     * @return array<int, T>
+     */
     public function toArray(): array
     {
         return $this->internal;
     }
 
+    /**
+     * @return Iterator<int, T>
+     */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->internal);
     }
 
+    /**
+     * @return array<int, T>
+     */
     public function jsonSerialize(): array
     {
         return $this->internal;
@@ -54,6 +73,11 @@ class ItemList implements ItemListInterface
     {
         return array_key_exists($offset, $this->internal);
     }
+
+
+    /**
+     * @return T
+     */
     public function offsetGet(mixed $offset): mixed
     {
         if (!array_key_exists($offset, $this->internal)) {
@@ -97,6 +121,10 @@ class ItemList implements ItemListInterface
             throw new InvalidTypeException($value, $type->__toString());
         }
     }
+
+    /**
+     * @param T $value
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!$this->mutable) {
@@ -106,6 +134,7 @@ class ItemList implements ItemListInterface
         $this->typeCheck($value);
         $this->internal[$offset] = $value;
     }
+
     public function offsetUnset(mixed $offset): void
     {
         if (!$this->mutable) {
@@ -117,10 +146,6 @@ class ItemList implements ItemListInterface
             array_pop($this->internal);
             return;
         }
-        if (TypeUtils::matchesType($this->getType(), null) && $offset >= 0 && $offset < count($this->internal)) {
-            $this->internal[$offset] = null;
-            return;
-        }
-        throw new IndexNotFoundException($offset);
+        array_splice($this->internal, $offset, 1);
     }
 }

@@ -8,6 +8,8 @@ use JsonSerializable;
 
 /**
  * @template T
+ * @extends ArrayAccess<int, T>
+ * @extends IteratorAggregate<int, T>
  */
 interface ItemListInterface extends ArrayAccess, JsonSerializable, Countable, IteratorAggregate, Arrayable
 {
@@ -17,10 +19,13 @@ interface ItemListInterface extends ArrayAccess, JsonSerializable, Countable, It
      */
     public function offsetGet(mixed $offset): mixed;
     /**
-     * @param int $offset
+     * @param int|null $offset
      * @param T $value
      */
     public function offsetSet(mixed $offset, mixed $value): void;
 
+    /**
+     * @return array<int, T>
+     */
     public function jsonSerialize(): array;
 }

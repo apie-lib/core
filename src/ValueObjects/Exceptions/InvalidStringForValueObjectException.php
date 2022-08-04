@@ -13,6 +13,9 @@ use Throwable;
  */
 class InvalidStringForValueObjectException extends ApieException
 {
+    /**
+     * @param ValueObjectInterface|ReflectionClass<object> $valueObject
+     */
     public function __construct(string $input, ValueObjectInterface|ReflectionClass $valueObject, ?Throwable $previous = null)
     {
         parent::__construct(

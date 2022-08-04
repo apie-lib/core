@@ -6,6 +6,9 @@ use Apie\Core\Context\ApieContext;
 
 class ChainedRouteDefinitionsProvider implements RouteDefinitionProviderInterface
 {
+    /**
+     * @var RouteDefinitionProviderInterface[]
+     */
     private array $routeDefinitions;
 
     public function __construct(RouteDefinitionProviderInterface... $routeDefinitions)

@@ -8,8 +8,9 @@ use ReflectionClass;
 interface IdentifierInterface extends ValueObjectInterface
 {
     public function toNative(): string|int|null;
+
     /**
-     * @return RefectionClass<EntityInterface>
+     * @return ReflectionClass<EntityInterface>
      */
     public static function getReferenceFor(): ReflectionClass;
 }

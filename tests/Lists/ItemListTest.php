@@ -42,13 +42,13 @@ class ItemListTest extends TestCase
         $this->assertEquals($input, $testItem->toArray());
 
         unset($testItem[1]);
-        $input[1] = null;
-        $this->assertEquals($input, $testItem->toArray());
+        $expected = [1, 'pizza', 'appended'];
+        $this->assertEquals($expected, $testItem->toArray());
         $this->assertTrue(isset($testItem[1]));
 
         unset($testItem[3]);
-        unset($input[3]);
-        $this->assertEquals($input, $testItem->toArray());
+        unset($expected[3]);
+        $this->assertEquals($expected, $testItem->toArray());
     }
 
     /**
@@ -74,12 +74,12 @@ class ItemListTest extends TestCase
     /**
      * @test
      */
-    public function if_class_is_extended_it_can_not_remove_items_in_the_middle()
+    public function if_class_is_extended_it_can_remove_items_in_the_middle()
     {
         $input = [1, 'a', '2'];
         $testItem = new StringOrIntList($input);
-        $this->expectException(IndexNotFoundException::class);
         unset($testItem[1]);
+        $this->assertEquals([1, '2'], $testItem->toArray());
     }
 
     /**
