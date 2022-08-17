@@ -2,13 +2,15 @@
 namespace Apie\Core\Attributes;
 
 use Attribute;
+use Apie\Faker\Fakers\UseFakeMethodFaker;
 
 /**
  * Adding a FakeMethod attribute allows you to specify a static method to be used
  * to create a new instance with some random data.
+ * @see UseFakeMethodFaker
  */
 #[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS)]
-class FakeMethod
+final class FakeMethod
 {
     public string $methodName;
 

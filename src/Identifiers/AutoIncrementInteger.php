@@ -6,6 +6,9 @@ use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Faker\Generator;
 
+/**
+ * Indicate an auto-increment integer.
+ */
 #[FakeMethod("createRandom")]
 class AutoIncrementInteger implements ValueObjectInterface
 {

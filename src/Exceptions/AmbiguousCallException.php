@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Exceptions;
 
-class AmbiguousCallException extends ApieException
+final class AmbiguousCallException extends ApieException
 {
     public function __construct(string $identifier, string... $names)
     {

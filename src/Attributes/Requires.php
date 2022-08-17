@@ -9,7 +9,7 @@ use Attribute;
  * does not matter.
  */
 #[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER|Attribute::TARGET_CLASS_CONSTANT)]
-class Requires implements ApieContextAttribute
+final class Requires implements ApieContextAttribute
 {
     public function __construct(public string $instance)
     {

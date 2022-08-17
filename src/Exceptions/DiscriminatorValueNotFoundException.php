@@ -5,7 +5,7 @@ namespace Apie\Core\Exceptions;
  * Exception thrown when a discriminator requires a class,
  * but can not find the proper discriminator value.
  */
-class DiscriminatorValueException extends ApieException
+final class DiscriminatorValueException extends ApieException
 {
     public function __construct(string $identifier)
     {

@@ -5,6 +5,9 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Psr\Http\Message\RequestInterface;
 
+/**
+ * Creates an ApieContext from a list of builders. The context object is used everywhere as a mediator.
+ */
 final class ContextBuilderFactory
 {
     /**

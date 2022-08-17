@@ -3,7 +3,7 @@ namespace Apie\Core\Exceptions;
 
 use Apie\Core\ValueObjects\Utils;
 
-class RangeMismatchException extends ApieException
+final class RangeMismatchException extends ApieException
 {
     public function __construct(mixed $first, mixed $second)
     {

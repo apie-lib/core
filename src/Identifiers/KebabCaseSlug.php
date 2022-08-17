@@ -4,6 +4,9 @@ namespace Apie\Core\Identifiers;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 
+/**
+ * Indicate an identifier written with dashes (kebab-case).
+ */
 class KebabCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

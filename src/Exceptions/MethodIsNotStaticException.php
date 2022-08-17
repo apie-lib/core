@@ -3,7 +3,7 @@ namespace Apie\Core\Exceptions;
 
 use ReflectionMethod;
 
-class MethodIsNotStaticException extends ApieException
+final class MethodIsNotStaticException extends ApieException
 {
     public function __construct(ReflectionMethod $method)
     {

@@ -3,7 +3,7 @@ namespace Apie\Core\Exceptions;
 
 use Apie\Core\ValueObjects\Utils;
 
-class ObjectIsImmutable extends ApieException
+final class ObjectIsImmutable extends ApieException
 {
     public function __construct(object $object)
     {

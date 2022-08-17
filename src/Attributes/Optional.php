@@ -7,6 +7,6 @@ use Attribute;
  * Used by DTO to indicate a field is optional.
  */
 #[Attribute(Attribute::TARGET_CLASS)]
-class Optional
+final class Optional
 {
 }

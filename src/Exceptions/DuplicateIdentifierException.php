@@ -4,7 +4,7 @@ namespace Apie\Core\Exceptions;
 /**
  * Exception thrown when a an identifier is already defined.
  */
-class DuplicateIdentifierException extends ApieException
+final class DuplicateIdentifierException extends ApieException
 {
     public function __construct(string $identifier)
     {

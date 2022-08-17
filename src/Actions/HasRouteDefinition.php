@@ -4,6 +4,10 @@ namespace Apie\Core\Actions;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
 
+/**
+ * Route definition interface. This is used internally used by Apie so it can be converted to whatever route library
+ * Apie is used in.
+ */
 interface HasRouteDefinition
 {
     public function getMethod(): RequestMethod;

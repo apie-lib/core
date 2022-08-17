@@ -1,6 +1,10 @@
 <?php
 namespace Apie\Core\Exceptions;
 
-interface HttpStatusCodeException {
+/**
+ * Add this interface to tell to use a different HTTP status code.
+ */
+interface HttpStatusCodeException
+{
     public function getStatusCode(): int;
 }

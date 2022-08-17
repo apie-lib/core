@@ -15,6 +15,10 @@ use ReflectionMethod;
 use ReflectionProperty;
 use ReflectionType;
 
+/**
+ * ApieContext is used as builder/mediator and passed though many Apie functions. It can be used to filter (for example
+ * only show property when authenticated) or can be used to provide extra functionality to other methods.
+ */
 final class ApieContext
 {
     /** @var array<int, class-string<ApieContextAttribute>> */

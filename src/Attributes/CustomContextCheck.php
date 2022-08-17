@@ -8,7 +8,7 @@ use Attribute;
  * Add this attribute for any custom behaviour by providing a class implementing ApieContextAttribute.
  */
 #[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS|Attribute::TARGET_METHOD|Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER)]
-class CustomContextCheck implements ApieContextAttribute
+final class CustomContextCheck implements ApieContextAttribute
 {
     public function __construct(private ApieContextAttribute $check)
     {

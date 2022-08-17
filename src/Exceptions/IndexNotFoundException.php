@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Exceptions;
 
-class IndexNotFoundException extends ApieException
+final class IndexNotFoundException extends ApieException
 {
     public function __construct(string|int|null $index)
     {
