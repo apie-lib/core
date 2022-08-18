@@ -19,4 +19,15 @@ class UrlRouteDefinition implements StringValueObjectInterface
     {
         return new self(rtrim($baseUrl, '/') . $this->internal);
     }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getPlaceholders(): array
+    {
+        if (preg_match_all('/\{\s*(?<placeholder>[a-z]+)\s*\}/', $this->internal, $matches)) {
+            return $matches['placeholder'] ?? [];
+        }
+        return [];
+    }
 }

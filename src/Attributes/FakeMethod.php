@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Core\Attributes;
 
-use Attribute;
 use Apie\Faker\Fakers\UseFakeMethodFaker;
+use Attribute;
 
 /**
  * Adding a FakeMethod attribute allows you to specify a static method to be used

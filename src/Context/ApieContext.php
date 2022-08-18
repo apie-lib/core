@@ -135,6 +135,20 @@ final class ApieContext
     }
 
     /**
+     * @param ReflectionClass<object> $class
+     */
+    public function getApplicableMethods(ReflectionClass $class): ReflectionHashmap
+    {
+        $list = [];
+        foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (!preg_match('/^(__|set|get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
+                $list[$method->name] = $method;
+            }
+        }
+        return new ReflectionHashmap($list);
+    }
+
+    /**
      * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
      */
     public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool

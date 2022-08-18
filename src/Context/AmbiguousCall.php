@@ -7,9 +7,9 @@ use Stringable;
 
 /**
  * Magic null object class used by ApieContext when used with registerInstance in case an interface has already been registered.
- * 
+ *
  * Any method call will throw an error.
- * 
+ *
  * @see ApieContext::registerInstance()
  */
 final class AmbiguousCall implements JsonSerializable, Stringable
