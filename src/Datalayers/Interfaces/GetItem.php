@@ -1,8 +1,8 @@
 <?php
-namespace Apie\Core\Repositories\Interfaces;
+namespace Apie\Core\Datalayers\Interfaces;
 
+use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Repositories\Search\QuerySearch;
 
 /**
  * @template T of EntityInterface

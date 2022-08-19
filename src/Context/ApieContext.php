@@ -6,6 +6,7 @@ use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
 use Apie\Core\Attributes\CustomContextCheck;
 use Apie\Core\Attributes\Equals;
+use Apie\Core\Attributes\Internal;
 use Apie\Core\Attributes\Not;
 use Apie\Core\Attributes\Requires;
 use Apie\Core\Exceptions\IndexNotFoundException;
@@ -141,7 +142,7 @@ final class ApieContext
     {
         $list = [];
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (!preg_match('/^(__|set|get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
+            if (!preg_match('/^(__|create|set|get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
                 $list[$method->name] = $method;
             }
         }
@@ -153,6 +154,9 @@ final class ApieContext
      */
     public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
     {
+        if ($method->getAttributes(Internal::class)) {
+            return false;
+        }
         foreach (self::ATTRIBUTES as $attribute) {
             foreach ($method->getAttributes($attribute) as $attribute) {
                 if (!$attribute->newInstance()->applies($this)) {

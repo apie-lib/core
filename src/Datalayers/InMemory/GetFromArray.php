@@ -1,9 +1,9 @@
 <?php
-namespace Apie\Core\Repositories\InMemory;
+namespace Apie\Core\Datalayers\InMemory;
 
+use Apie\Core\Datalayers\Interfaces\GetItem;
+use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Repositories\Interfaces\GetItem;
-use Apie\Core\Repositories\Search\QuerySearch;
 
 /**
  * @template T of EntityInterface

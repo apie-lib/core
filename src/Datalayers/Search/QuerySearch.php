@@ -1,5 +1,5 @@
 <?php
-namespace Apie\Core\Repositories\Search;
+namespace Apie\Core\Datalayers\Search;
 
 use Apie\Core\Lists\StringHashmap;
 

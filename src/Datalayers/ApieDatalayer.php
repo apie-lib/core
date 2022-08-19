@@ -1,12 +1,12 @@
 <?php
-namespace Apie\Core\Repositories;
+namespace Apie\Core\Datalayers;
 
+use Apie\Core\Datalayers\Lists\LazyLoadedList;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
-use Apie\Core\Repositories\Lists\LazyLoadedList;
 use ReflectionClass;
 
-interface ApieRepository
+interface ApieDatalayer
 {
     /**
      * @template T of EntityInterface
@@ -21,4 +21,18 @@ interface ApieRepository
      * @return T
      */
     public function find(IdentifierInterface $identifier): EntityInterface;
+
+    /**
+     * @template T of EntityInterface
+     * @param T $entity
+     * @return T
+     */
+    public function persistNew(EntityInterface $entity): EntityInterface;
+
+    /**
+     * @template T of EntityInterface
+     * @param T $entity
+     * @return T
+     */
+    public function persistExisting(EntityInterface $entity): EntityInterface;
 }

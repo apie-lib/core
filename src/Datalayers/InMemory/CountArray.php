@@ -1,8 +1,8 @@
 <?php
-namespace Apie\Core\Repositories\InMemory;
+namespace Apie\Core\Datalayers\InMemory;
 
-use Apie\Core\Repositories\Interfaces\CountItems;
-use Apie\Core\Repositories\Search\QuerySearch;
+use Apie\Core\Datalayers\Interfaces\CountItems;
+use Apie\Core\Datalayers\Search\QuerySearch;
 
 class CountArray implements CountItems
 {

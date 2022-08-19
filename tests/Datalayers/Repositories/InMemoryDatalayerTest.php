@@ -3,10 +3,10 @@ namespace Apie\Tests\Core\Repositories;
 
 use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\Exceptions\UnknownExistingEntityError;
-use Apie\Core\Repositories\InMemory\InMemoryRepository;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
@@ -14,7 +14,7 @@ use Apie\TextValueObjects\DatabaseText;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-class InMemoryRepositoryTest extends TestCase
+class InMemoryDatalayerTest extends TestCase
 {
     /**
      * @test
@@ -24,7 +24,7 @@ class InMemoryRepositoryTest extends TestCase
         if (!trait_exists(CompositeValueObject::class)) {
             $this->markTestSkipped('requires apie/composite-value-objects');
         }
-        $testItem = new InMemoryRepository(new BoundedContextId('default'));
+        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
         $this->assertEquals([], $testItem->all(new ReflectionClass(UserWithAutoincrementKey::class))->take(0, 100));
         $user = new UserWithAutoincrementKey(
             new AddressWithZipcodeCheck(
@@ -48,7 +48,7 @@ class InMemoryRepositoryTest extends TestCase
         if (!trait_exists(CompositeValueObject::class)) {
             $this->markTestSkipped('requires apie/composite-value-objects');
         }
-        $testItem = new InMemoryRepository(new BoundedContextId('default'));
+        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
         $this->expectException(EntityNotFoundException::class);
         $testItem->find(new UserAutoincrementIdentifier(12));
     }
@@ -61,7 +61,7 @@ class InMemoryRepositoryTest extends TestCase
         if (!trait_exists(CompositeValueObject::class)) {
             $this->markTestSkipped('requires apie/composite-value-objects');
         }
-        $testItem = new InMemoryRepository(new BoundedContextId('default'));
+        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
         $user = new UserWithAutoincrementKey(
             new AddressWithZipcodeCheck(
                 new DatabaseText('street'),

@@ -1,10 +1,10 @@
 <?php
-namespace Apie\Core\Repositories\ValueObjects;
+namespace Apie\Core\Datalayers\ValueObjects;
 
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Datalayers\Lists\LazyLoadedList;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
-use Apie\Core\Repositories\Lists\LazyLoadedList;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Utils;
 use ReflectionClass;

@@ -1,13 +1,13 @@
 <?php
-namespace Apie\Core\Repositories\Lists;
+namespace Apie\Core\Datalayers\Lists;
 
+use Apie\Core\Datalayers\Interfaces\CountItems;
+use Apie\Core\Datalayers\Interfaces\GetItem;
+use Apie\Core\Datalayers\Interfaces\TakeItem;
+use Apie\Core\Datalayers\Search\QuerySearch;
+use Apie\Core\Datalayers\ValueObjects\LazyLoadedListIdentifier;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Lists\ItemList;
-use Apie\Core\Repositories\Interfaces\CountItems;
-use Apie\Core\Repositories\Interfaces\GetItem;
-use Apie\Core\Repositories\Interfaces\TakeItem;
-use Apie\Core\Repositories\Search\QuerySearch;
-use Apie\Core\Repositories\ValueObjects\LazyLoadedListIdentifier;
 
 /**
  * @template T of EntityInterface
