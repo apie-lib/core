@@ -38,7 +38,7 @@ class AutoIncrementInteger implements ValueObjectInterface
         return $this->internal;
     }
 
-    final public static function createRandom(Generator $generator): self
+    final public static function createRandom(Generator $generator): static
     {
         $hash = spl_object_hash($generator);
         if ((self::$hash[static::class] ?? '') !== $hash) {

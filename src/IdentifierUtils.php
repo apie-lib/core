@@ -4,6 +4,7 @@ namespace Apie\Core;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Identifiers\IdentifierInterface;
+use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
 
@@ -41,5 +42,25 @@ final class IdentifierUtils
             throw new InvalidTypeException($returnType, 'ReflectionNamedType');
         }
         return new ReflectionClass($returnType->getName());
+    }
+
+    /**
+     * @template T of EntityInterface
+     * @param T $entity
+     * @param IdentifierInterface<T> $identifier
+     */
+    public static function injectIdentifier(EntityInterface $entity, IdentifierInterface $identifier): void
+    {
+        $refl = new ReflectionClass($entity);
+        while ($refl) {
+            if ($refl->hasProperty('id')) {
+                $prop = $refl->getProperty('id');
+                $prop->setAccessible(true);
+                $prop->setValue($entity, $identifier);
+                return;
+            }
+            $refl = $refl->getParentClass();
+        }
+        throw new LogicException('I could not find an "id" property!');
     }
 }

@@ -42,7 +42,7 @@ final class LazyLoadedList implements EntityInterface
     {
         $index = $search->getPageIndex();
         $count = $search->getItemsPerPage();
-        return new PaginatedResult($this->id, $this->totalCount(), new ItemList($this->take($index, $count)), $index, $count, $search);
+        return new PaginatedResult($this->id, $this->totalCount(), new ItemList($this->take($index * $count, $count)), $index, $count, $search);
     }
 
     /**
