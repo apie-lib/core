@@ -3,7 +3,7 @@ namespace Apie\Core\ContextBuilders;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Creates an ApieContext from a list of builders. The context object is used everywhere as a mediator.
@@ -18,12 +18,6 @@ final class ContextBuilderFactory
     public function __construct(ContextBuilderInterface... $builders)
     {
         $this->builders = $builders;
-    }
-
-    public static function create(): self
-    {
-        return new self(
-        );
     }
 
     /**
@@ -52,9 +46,9 @@ final class ContextBuilderFactory
     /**
      * @param array<string|int, mixed> $additionalData
      */
-    public function createFromRequest(RequestInterface $request, array $additionalData = []): ApieContext
+    public function createFromRequest(ServerRequestInterface $request, array $additionalData = []): ApieContext
     {
-        $context = $this->createBaseContext($additionalData)
+        $context = $this->createBaseContext([...$additionalData, ...$request->getAttributes()])
             ->registerInstance($request)
             ->withContext(RequestMethod::class, RequestMethod::from($request->getMethod()));
         foreach ($this->builders as $builder) {
