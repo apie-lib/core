@@ -7,14 +7,20 @@ use Apie\Core\Datalayers\Search\QuerySearch;
 class CountArray implements CountItems
 {
     /**
-     * @param array<int, mixed> $array
+     * @var callable(): array<int, mixed> $getArray
      */
-    public function __construct(private array& $array)
+    private $getArray;
+    
+    /**
+     * @param callable(): array<int, mixed> $getArray
+     */
+    public function __construct(callable $getArray)
     {
+        $this->getArray = $getArray;
     }
 
     public function __invoke(QuerySearch $search): int
     {
-        return count($this->array);
+        return count(($this->getArray)());
     }
 }

@@ -39,12 +39,14 @@ class InMemoryDatalayer implements ApieDatalayer
     {
         $className = $class->name;
         if (!isset($this->alreadyLoadedLists[$className])) {
-            $this->stored[$className] = [];
+            $callable = function () use ($className) {
+                return $this->stored[$className] ?? [];
+            };
             $this->alreadyLoadedLists[$className] = new LazyLoadedList(
                 LazyLoadedListIdentifier::createFrom($this->boundedContextId, $class),
-                new GetFromArray($this->stored[$className]),
-                new TakeFromArray($this->stored[$className]),
-                new CountArray($this->stored[$className])
+                new GetFromArray($callable),
+                new TakeFromArray($callable),
+                new CountArray($callable)
             );
         }
         return $this->alreadyLoadedLists[$className];

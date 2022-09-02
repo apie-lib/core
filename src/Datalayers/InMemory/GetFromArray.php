@@ -12,14 +12,20 @@ use Apie\Core\Entities\EntityInterface;
 class GetFromArray implements GetItem
 {
     /**
-     * @param array<int, T> $array
+     * @var callable(): array<int, T> $getArray
      */
-    public function __construct(private array& $array)
+    private $getArray;
+    
+    /**
+     * @param callable(): array<int, T> $getArray
+     */
+    public function __construct(callable $getArray)
     {
+        $this->getArray = $getArray;
     }
 
     public function __invoke(int $index, QuerySearch $search): EntityInterface
     {
-        return $this->array[$index];
+        return ($this->getArray)()[$index];
     }
 }

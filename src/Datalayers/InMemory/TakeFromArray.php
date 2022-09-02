@@ -12,14 +12,20 @@ use Apie\Core\Entities\EntityInterface;
 class TakeFromArray implements TakeItem
 {
     /**
-     * @param array<int, T> $array
+     * @var callable(): array<int, T> $getArray
      */
-    public function __construct(private array& $array)
+    private $getArray;
+    
+    /**
+     * @param callable(): array<int, T> $getArray
+     */
+    public function __construct(callable $getArray)
     {
+        $this->getArray = $getArray;
     }
 
     public function __invoke(int $index, int $count, QuerySearch $search): array
     {
-        return array_slice($this->array, $index, $count);
+        return array_slice(($this->getArray)(), $index, $count);
     }
 }

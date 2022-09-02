@@ -2,6 +2,8 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Lists\ItemHashmap;
+use Apie\Core\Lists\ItemList;
 use Apie\Core\ValueObjects\Interfaces\TimeRelatedValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use DateTime;
@@ -30,6 +32,9 @@ final class Utils
     {
         if (is_array($input)) {
             return $input;
+        }
+        if ($input instanceof ItemList || $input instanceof ItemHashmap) {
+            return $input->toArray();
         }
         if (is_iterable($input)) {
             return iterator_to_array($input);
