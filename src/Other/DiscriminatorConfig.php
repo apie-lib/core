@@ -1,6 +1,9 @@
 <?php
 namespace Apie\Core\Other;
 
+use Apie\Core\Attributes\SchemaMethod;
+
+#[SchemaMethod('provideSchema')]
 class DiscriminatorConfig
 {
     public function __construct(private string $discriminator, private string $className)
@@ -15,5 +18,13 @@ class DiscriminatorConfig
     public function getClassName(): string
     {
         return $this->className;
+    }
+
+    public function provideSchema()
+    {
+        return [
+            'type' => 'object',
+            'additionalProperties' => true,
+        ];
     }
 }
