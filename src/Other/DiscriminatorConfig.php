@@ -20,7 +20,10 @@ class DiscriminatorConfig
         return $this->className;
     }
 
-    public function provideSchema()
+    /**
+     * @return array<string, mixed>
+     */
+    public static function provideSchema(): array
     {
         return [
             'type' => 'object',
