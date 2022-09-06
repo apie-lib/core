@@ -2,6 +2,8 @@
 namespace Apie\Core\Other;
 
 use Apie\Core\Exceptions\DiscriminatorValueException;
+use Apie\Core\Exceptions\InvalidTypeException;
+use ReflectionClass;
 
 final class DiscriminatorMapping
 {
@@ -24,6 +26,22 @@ final class DiscriminatorMapping
     public function getConfigs(): array
     {
         return $this->configs;
+    }
+
+    public function getDiscriminatorForObject(object $object): string
+    {
+        $classes = [];
+        foreach ($this->configs as $config) {
+            $refl = new ReflectionClass($config->getClassName());
+            if ($refl->isInstance($object)) {
+                return $config->getDiscriminator();
+            }
+            $classes[] = $config->getClassName();
+        }
+        throw new InvalidTypeException(
+            $object,
+            $classes ? implode(', ', $classes) : 'none'
+        );
     }
 
     public function getClassNameFromDiscriminator(string $discriminatorValue): string
