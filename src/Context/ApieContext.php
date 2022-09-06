@@ -102,7 +102,7 @@ final class ApieContext
             }
         }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
+            if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method) && !$method->isStatic() && !$method->isAbstract()) {
                 if (strpos($method->name, 'is') === 0) {
                     $list[lcfirst(substr($method->name, 2))] = $method;
                 } else {
