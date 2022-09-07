@@ -128,7 +128,7 @@ final class ApieContext
             }
         }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (preg_match('/^(set).+$/i', $method->name) && $this->appliesToContext($method)) {
+            if (preg_match('/^(set).+$/i', $method->name) && $this->appliesToContext($method) && !$method->isStatic() && !$method->isAbstract()) {
                 $list[lcfirst(substr($method->name, 3))] = $method;
             }
         }

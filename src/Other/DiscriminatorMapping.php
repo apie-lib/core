@@ -1,10 +1,12 @@
 <?php
 namespace Apie\Core\Other;
 
+use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\Exceptions\DiscriminatorValueException;
 use Apie\Core\Exceptions\InvalidTypeException;
 use ReflectionClass;
 
+#[SchemaMethod('provideSchema')]
 final class DiscriminatorMapping
 {
     /** @var DiscriminatorConfig[] */
@@ -52,5 +54,16 @@ final class DiscriminatorMapping
             }
         }
         throw new DiscriminatorValueException($discriminatorValue);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function provideSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'additionalProperties' => true,
+        ];
     }
 }
