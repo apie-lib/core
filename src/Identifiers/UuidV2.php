@@ -17,6 +17,6 @@ class UuidV2 extends Uuid
             ])
         );
 
-        return new self($uuid2->toString());
+        return new static($uuid2->toString());
     }
 }

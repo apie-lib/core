@@ -28,6 +28,7 @@
   "require-dev": {
     "apie/fixtures": "self.version",
     "cebe/php-openapi": "^1.7",
+    "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9.5"
   },
   "minimum-stability": "dev",
