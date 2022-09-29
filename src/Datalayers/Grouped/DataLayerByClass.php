@@ -3,6 +3,7 @@ namespace Apie\Core\Datalayers\Grouped;
 
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Exceptions\ObjectIsImmutable;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Lists\ItemHashmap;
 use ReflectionClass;
 
@@ -25,6 +26,9 @@ final class DataLayerByClass extends ItemHashmap
         return $this;
     }
 
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
     public function pickDataLayerFor(ReflectionClass $class): ApieDatalayer
     {
         $className = $class->name;

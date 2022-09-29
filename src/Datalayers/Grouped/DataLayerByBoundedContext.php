@@ -4,6 +4,7 @@ namespace Apie\Core\Datalayers\Grouped;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Exceptions\ObjectIsImmutable;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Lists\ItemHashmap;
 use ReflectionClass;
 
@@ -26,6 +27,9 @@ final class DataLayerByBoundedContext extends ItemHashmap
         return $this;
     }
 
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
     public function pickDataLayerFor(ReflectionClass $class, BoundedContextId $boundedContextId): ApieDatalayer
     {
         if (isset($this[$boundedContextId->toNative()])) {
