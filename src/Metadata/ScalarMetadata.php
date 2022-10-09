@@ -5,7 +5,8 @@ use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 
-final class ScalarMetadata implements MetadataInterface {
+final class ScalarMetadata implements MetadataInterface
+{
     public function __construct(private ScalarType $type)
     {
     }

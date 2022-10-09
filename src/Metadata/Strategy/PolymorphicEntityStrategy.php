@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Core\Metadata\Strategy;
 
-use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Entities\PolymorphicEntityInterface;
@@ -11,8 +10,6 @@ use Apie\Core\Metadata\StrategyInterface;
 use Apie\Core\Other\DiscriminatorConfig;
 use Apie\Core\Other\DiscriminatorMapping;
 use ReflectionClass;
-use ReflectionMethod;
-use ReflectionProperty;
 
 final class PolymorphicEntityStrategy implements StrategyInterface
 {
@@ -53,6 +50,10 @@ final class PolymorphicEntityStrategy implements StrategyInterface
         return new CompositeMetadata(new ReflectionHashmap($list), new StringList($required));
     }
 
+    /**
+     * @param array<string, mixed> $list
+     * @param array<string, string> $required
+     */
     private function mergeChildClass(ApieContext $context, DiscriminatorConfig $config, array& $list, array& $required): void
     {
         $refl = new ReflectionClass($config->getClassName());

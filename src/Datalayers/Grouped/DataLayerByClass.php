@@ -2,8 +2,8 @@
 namespace Apie\Core\Datalayers\Grouped;
 
 use Apie\Core\Datalayers\ApieDatalayer;
-use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\Lists\ItemHashmap;
 use ReflectionClass;
 

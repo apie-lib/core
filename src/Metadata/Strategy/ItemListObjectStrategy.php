@@ -4,7 +4,6 @@ namespace Apie\Core\Metadata\Strategy;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\ItemListMetadata;
-use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\StrategyInterface;
 use ReflectionClass;
 

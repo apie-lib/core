@@ -28,7 +28,7 @@ class ItemList implements ItemListInterface
     protected bool $mutable = true;
 
     /**
-     * @param array<int, T> $input
+     * @param array<int|string, T> $input
      */
     final public function __construct(array $input = [])
     {

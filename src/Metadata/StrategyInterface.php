@@ -4,7 +4,7 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\ApieContext;
 use ReflectionClass;
 
-interface StrategyInterface 
+interface StrategyInterface
 {
     /**
      * @param ReflectionClass<object> $class

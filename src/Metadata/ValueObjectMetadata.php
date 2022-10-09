@@ -5,6 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
 class ValueObjectMetadata implements MetadataInterface

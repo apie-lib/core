@@ -10,6 +10,8 @@ use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
 use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
+use Apie\Core\Metadata\Strategy\ScalarStrategy;
+use Apie\Core\Metadata\Strategy\UnionTypeStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use LogicException;
 use ReflectionClass;
@@ -18,7 +20,8 @@ use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
 
-final class MetadataFactory {
+final class MetadataFactory
+{
     private function __construct()
     {
     }
@@ -58,7 +61,7 @@ final class MetadataFactory {
         if ($typehint instanceof ReflectionUnionType) {
             $metadata = [];
             foreach ($typehint->getTypes() as $type) {
-                $metadata[] = self::getMetadataStrategyForType($typehint);
+                $metadata[] = self::getMetadataStrategyForType($typehint)->getCreationMetadata(new ApieContext());
             }
             return new UnionTypeStrategy(...$metadata);
         }
@@ -67,8 +70,8 @@ final class MetadataFactory {
         }
         assert($typehint instanceof ReflectionNamedType);
         if ($typehint->isBuiltin()) {
-            return new ScalarMetadata(
-                match($typehint->getName()) {
+            return new ScalarStrategy(
+                match ($typehint->getName()) {
                     'string' => ScalarType::STRING,
                     'float' => ScalarType::FLOAT,
                     'int' => ScalarType::INTEGER,
@@ -78,6 +81,7 @@ final class MetadataFactory {
                     'bool' => ScalarType::BOOLEAN,
                     'true' => ScalarType::BOOLEAN,
                     'false' => ScalarType::BOOLEAN,
+                    default => throw new InvalidTypeException($typehint->getName(), 'string|float|int|null|array|mixed|bool')
                 }
             );
         }
@@ -85,7 +89,10 @@ final class MetadataFactory {
         return self::getMetadataStrategy(new ReflectionClass($typehint->getName()));
     }
 
-    public static function getCreationMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): CompositeMetadata
+    /**
+     * @param ReflectionClass<object>|ReflectionType $typehint
+     */
+    public static function getCreationMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): MetadataInterface
     {
         if ($typehint instanceof ReflectionType) {
             return self::getMetadataStrategyForType($typehint)->getCreationMetadata($context);
