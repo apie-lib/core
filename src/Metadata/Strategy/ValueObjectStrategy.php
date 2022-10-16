@@ -25,4 +25,9 @@ final class ValueObjectStrategy implements StrategyInterface
     {
         return new ValueObjectMetadata($this->class);
     }
+
+    public function getModificationMetadata(ApieContext $context): ValueObjectMetadata
+    {
+        return $this->getCreationMetadata($context);
+    }
 }

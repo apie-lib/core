@@ -28,6 +28,24 @@ final class RegularObjectStrategy implements StrategyInterface
     {
     }
 
+    public function getModificationMetadata(ApieContext $context): CompositeMetadata
+    {
+        $list = [];
+        foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            if ($property->isReadOnly()) {
+                continue;
+            }
+            $list[$property->getName()] = $property;
+        }
+        foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (preg_match('/^(set).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract()) {
+                $list[lcfirst(substr($method->name, 3))] = $method;
+            }
+        }
+
+        return new CompositeMetadata(new ReflectionHashmap($list), new StringList([]));
+    }
+
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
     {
         $list = [];

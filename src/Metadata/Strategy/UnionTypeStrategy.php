@@ -28,4 +28,9 @@ final class UnionTypeStrategy implements StrategyInterface
     {
         return new UnionTypeMetadata(...$this->metadata);
     }
+
+    public function getModificationMetadata(ApieContext $context): UnionTypeMetadata
+    {
+        return new UnionTypeMetadata(...$this->metadata);
+    }
 }

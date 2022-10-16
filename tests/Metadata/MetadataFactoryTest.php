@@ -2,8 +2,10 @@
 namespace Apie\Tests\Core\Metadata;
 
 use Apie\CompositeValueObjects\CompositeValueObject;
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
+use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
@@ -75,5 +77,72 @@ class MetadataFactoryTest extends TestCase
                 CompositeValueObjectExample::class,
             ];
         }
+    }
+
+    /**
+     * @param array<int, string> $expectedFields
+     * @param array<int, string> $expectedRequired
+     * @param class-string<object> $className
+     * @dataProvider metadataProvider
+     */
+    public function testMetadata(
+        array $expectedFields,
+        array $expectedRequired,
+        string $methodName,
+        string $className,
+        ApieContext $context
+    ) {
+        /** @var CompositeMetadata $actual */
+        $actual = MetadataFactory::$methodName(new ReflectionClass($className), $context);
+        $this->assertInstanceOf(CompositeMetadata::class, $actual);
+        $this->assertEquals($expectedFields, array_keys($actual->getHashmap()->toArray()));
+        $this->assertEquals($expectedRequired, $actual->getRequiredFields()->toArray());
+    }
+
+    public function metadataProvider()
+    {
+        $context = new ApieContext();
+        yield 'Creation of entity' => [
+            ['id', 'orderLineList'],
+            ['id', 'orderLineList'],
+            'getCreationMetadata',
+            Order::class,
+            $context
+        ];
+        yield 'Modification of entity' => [
+            [],
+            [],
+            'getModificationMetadata',
+            Order::class,
+            $context
+        ];
+        yield 'Creation of polymorphic entity, base class' => [
+            ['animalType', 'hasMilk', 'id', 'starving', 'poisonous'],
+            ['animalType'],
+            'getCreationMetadata',
+            Animal::class,
+            $context
+        ];
+        yield 'Modification of polymorphic entity, base class' => [
+            ['hasMilk', 'starving', 'poisonous'],
+            [],
+            'getModificationMetadata',
+            Animal::class,
+            $context
+        ];
+        yield 'Creation of polymorphic entity, child class' => [
+            ['animalType', 'hasMilk', 'id'],
+            ['animalType'],
+            'getCreationMetadata',
+            Cow::class,
+            $context
+        ];
+        yield 'Modification of polymorphic entity, child class' => [
+            ['hasMilk'],
+            [],
+            'getModificationMetadata',
+            Cow::class,
+            $context
+        ];
     }
 }

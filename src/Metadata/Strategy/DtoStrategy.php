@@ -25,7 +25,7 @@ final class DtoStrategy implements StrategyInterface
     {
     }
 
-    public function getCreationMetadata(ApieContext $context): CompositeMetadata
+    private function getDtoMetadata(ApieContext $context, bool $includeRequired): CompositeMetadata
     {
         $list = [];
         $required = [];
@@ -39,6 +39,16 @@ final class DtoStrategy implements StrategyInterface
             }
         }
     
-        return new CompositeMetadata(new ReflectionHashmap($list), new StringList($required));
+        return new CompositeMetadata(new ReflectionHashmap($list), new StringList($includeRequired ? $required : []));
+    }
+
+    public function getCreationMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getDtoMetadata($context, true);
+    }
+
+    public function getModificationMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getDtoMetadata($context, false);
     }
 }

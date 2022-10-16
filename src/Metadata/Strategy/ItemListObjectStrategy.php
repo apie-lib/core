@@ -25,4 +25,9 @@ final class ItemListObjectStrategy implements StrategyInterface
     {
         return new ItemListMetadata($this->class);
     }
+
+    public function getModificationMetadata(ApieContext $context): ItemListMetadata
+    {
+        return new ItemListMetadata($this->class);
+    }
 }

@@ -39,4 +39,9 @@ final class CompositeValueObjectStrategy implements StrategyInterface
         }
         return new CompositeMetadata(new ReflectionHashmap($map), new StringList($required));
     }
+
+    public function getModificationMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getCreationMetadata($context);
+    }
 }
