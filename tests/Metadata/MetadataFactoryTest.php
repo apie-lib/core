@@ -9,6 +9,7 @@ use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
+use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
@@ -16,9 +17,12 @@ use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use Apie\Fixtures\Dto\DefaultExampleDto;
 use Apie\Fixtures\Dto\EmptyDto;
+use Apie\Fixtures\Dto\ExampleDto;
+use Apie\Fixtures\Dto\OptionalExampleDto;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\Polymorphic\Cow;
+use Apie\Fixtures\Enums\EmptyEnum;
 use Apie\Fixtures\Lists\ImmutableStringOrIntHashmap;
 use Apie\Fixtures\Lists\ImmutableStringOrIntList;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectExample;
@@ -56,6 +60,9 @@ class MetadataFactoryTest extends TestCase
         ];
         yield [
             DtoStrategy::class, EmptyDto::class,
+        ];
+        yield [
+            EnumStrategy::class, EmptyEnum::class,
         ];
         yield [
             ItemHashmapStrategy::class, ItemHashmap::class,
@@ -143,6 +150,89 @@ class MetadataFactoryTest extends TestCase
             [],
             'getModificationMetadata',
             Cow::class,
+            $context
+        ];
+        yield 'Creation of DTO with default values' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [],
+            'getCreationMetadata',
+            DefaultExampleDto::class,
+            $context
+        ];
+        yield 'Modification of DTO with default values' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [],
+            'getModificationMetadata',
+            DefaultExampleDto::class,
+            $context
+        ];
+        yield 'Creation of DTO' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'gender',
+            ],
+            'getCreationMetadata',
+            ExampleDto::class,
+            $context
+        ];
+        yield 'Creation of DTO with @Optional attribute' => [
+            [
+                'optionalString',
+                'optionalInteger',
+                'optionalFloatingPoint',
+                'optionalTrueOrFalse',
+                'mixed',
+                'noType',
+                'optionalGender',
+            ],
+            [],
+            'getCreationMetadata',
+            OptionalExampleDto::class,
+            $context
+        ];
+        yield 'Modification of DTO' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [
+            ],
+            'getModificationMetadata',
+            ExampleDto::class,
             $context
         ];
         if (trait_exists(CompositeValueObject::class)) {

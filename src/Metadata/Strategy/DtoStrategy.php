@@ -34,7 +34,7 @@ final class DtoStrategy implements StrategyInterface
                 continue;
             }
             $list[$property->getName()] = $property;
-            if (!$property->getAttributes(Optional::class)) {
+            if (!$property->getAttributes(Optional::class) && !$property->hasDefaultValue()) {
                 $required[$property->getName()] = $property->getName();
             }
         }

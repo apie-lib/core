@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Metadata;
 
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
@@ -20,6 +21,19 @@ class EnumMetadata implements MetadataInterface
     public function getRequiredFields(): StringList
     {
         return new StringList([]);
+    }
+
+    /** @return array<string|int, string|int> */
+    public function getOptions(ApieContext $apieContext, bool $runtimeFilter = false): array
+    {
+        $cases = $this->enum->getCases();
+        $result = [];
+        foreach ($cases as $case) {
+            if ($runtimeFilter && $apieContext->appliesToContext($case)) {
+                $result[$case->getName()] = $this->enum->isBacked() ? $case->getBackingValue() : $case->getName();
+            }
+        }
+        return $result;
     }
 
     public function toScalarType(): ScalarType
