@@ -6,6 +6,7 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
+use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
@@ -31,6 +32,9 @@ final class MetadataFactory
      */
     public static function getMetadataStrategy(ReflectionClass $class): StrategyInterface
     {
+        if (EnumStrategy::supports($class)) {
+            return new EnumStrategy($class);
+        }
         if (PolymorphicEntityStrategy::supports($class)) {
             return new PolymorphicEntityStrategy($class);
         }

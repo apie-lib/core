@@ -4,8 +4,8 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Enums\ScalarType;
-use Apie\Core\Lists\StringList;
 use Apie\Core\Lists\ItemHashmap;
+use Apie\Core\Lists\StringList;
 use ReflectionClass;
 
 final class ItemHashmapMetadata implements MetadataInterface
@@ -34,7 +34,7 @@ final class ItemHashmapMetadata implements MetadataInterface
         return MetadataFactory::getMetadataStrategyForType(
             $this->class->getMethod('__offsetGet')->getReturnType()
         )->getCreationMetadata(
-                new ApieContext()
-            );
+            new ApieContext()
+        );
     }
 }

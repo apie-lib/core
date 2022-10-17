@@ -3,7 +3,6 @@ namespace Apie\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemHashmap;
-use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\ItemHashmapMetadata;
 use Apie\Core\Metadata\StrategyInterface;
 use ReflectionClass;

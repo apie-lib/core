@@ -22,6 +22,7 @@ use Apie\Fixtures\Entities\Polymorphic\Cow;
 use Apie\Fixtures\Lists\ImmutableStringOrIntHashmap;
 use Apie\Fixtures\Lists\ImmutableStringOrIntList;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectExample;
+use Apie\Fixtures\ValueObjects\CompositeValueObjectWithOptionalFields;
 use Apie\Fixtures\ValueObjects\Password;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -83,9 +84,9 @@ class MetadataFactoryTest extends TestCase
      * @param array<int, string> $expectedFields
      * @param array<int, string> $expectedRequired
      * @param class-string<object> $className
-     * @dataProvider metadataProvider
+     * @dataProvider compositeMetadataProvider
      */
-    public function testMetadata(
+    public function testCompositeMetadata(
         array $expectedFields,
         array $expectedRequired,
         string $methodName,
@@ -99,7 +100,7 @@ class MetadataFactoryTest extends TestCase
         $this->assertEquals($expectedRequired, $actual->getRequiredFields()->toArray());
     }
 
-    public function metadataProvider()
+    public function compositeMetadataProvider()
     {
         $context = new ApieContext();
         yield 'Creation of entity' => [
@@ -144,5 +145,21 @@ class MetadataFactoryTest extends TestCase
             Cow::class,
             $context
         ];
+        if (trait_exists(CompositeValueObject::class)) {
+            yield 'Composite value object creation' => [
+                ['withDefaultValue', 'withOptionalAttribute'],
+                [],
+                'getCreationMetadata',
+                CompositeValueObjectWithOptionalFields::class,
+                $context
+            ];
+            yield 'Composite value object modification' => [
+                ['withDefaultValue', 'withOptionalAttribute'],
+                [],
+                'getModificationMetadata',
+                CompositeValueObjectWithOptionalFields::class,
+                $context
+            ];
+        }
     }
 }

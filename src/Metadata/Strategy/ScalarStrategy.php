@@ -3,7 +3,6 @@ namespace Apie\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
-use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\StrategyInterface;
 use ReflectionClass;
