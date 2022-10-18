@@ -3,7 +3,6 @@ namespace Apie\Tests\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
-use Apie\Core\Metadata\EnumMetadata;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Fixtures\Enums\ColorEnum;
@@ -26,6 +25,9 @@ class EnumStrategyTest extends TestCase
         $actual = MetadataFactory::getMetadataStrategy(new ReflectionClass($class));
         $this->assertInstanceOf(EnumStrategy::class, $actual);
         $metadata = $actual->getCreationMetadata($context);
+        $this->assertSame($expectedScalar, $metadata->toScalarType());
+        $this->assertEquals($expectedOptions, $metadata->getOptions($context, true));
+        $metadata = $actual->getModificationMetadata($context);
         $this->assertSame($expectedScalar, $metadata->toScalarType());
         $this->assertEquals($expectedOptions, $metadata->getOptions($context, true));
     }

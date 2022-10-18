@@ -32,6 +32,9 @@ final class MetadataFactory
      */
     public static function getMetadataStrategy(ReflectionClass $class): StrategyInterface
     {
+        if (ScalarStrategy::supports($class)) {
+            return new ScalarStrategy(ScalarType::STDCLASS);
+        }
         if (EnumStrategy::supports($class)) {
             return new EnumStrategy($class);
         }
