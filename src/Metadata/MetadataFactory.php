@@ -4,6 +4,7 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
@@ -32,6 +33,9 @@ final class MetadataFactory
      */
     public static function getMetadataStrategy(ReflectionClass $class): StrategyInterface
     {
+        if (BuiltInPhpClassStrategy::supports($class)) {
+            return new BuiltInPhpClassStrategy($class);
+        }
         if (ScalarStrategy::supports($class)) {
             return new ScalarStrategy(ScalarType::STDCLASS);
         }
@@ -68,7 +72,7 @@ final class MetadataFactory
         if ($typehint instanceof ReflectionUnionType) {
             $metadata = [];
             foreach ($typehint->getTypes() as $type) {
-                $metadata[] = self::getMetadataStrategyForType($typehint)->getCreationMetadata(new ApieContext());
+                $metadata[] = self::getMetadataStrategyForType($type)->getCreationMetadata(new ApieContext());
             }
             return new UnionTypeStrategy(...$metadata);
         }

@@ -32,7 +32,7 @@ final class ItemListMetadata implements MetadataInterface
     public function getArrayItemType(): ?MetadataInterface
     {
         return MetadataFactory::getMetadataStrategyForType(
-            $this->class->getMethod('__offsetGet')->getReturnType()
+            $this->class->getMethod('offsetGet')->getReturnType()
         )->getCreationMetadata(
             new ApieContext()
         );
