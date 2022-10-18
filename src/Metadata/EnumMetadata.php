@@ -29,7 +29,7 @@ class EnumMetadata implements MetadataInterface
         $cases = $this->enum->getCases();
         $result = [];
         foreach ($cases as $case) {
-            if ($runtimeFilter && $apieContext->appliesToContext($case)) {
+            if ($apieContext->appliesToContext($case, $runtimeFilter)) {
                 $result[$case->getName()] = $this->enum->isBacked() ? $case->getBackingValue() : $case->getName();
             }
         }

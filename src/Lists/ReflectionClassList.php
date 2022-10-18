@@ -30,13 +30,13 @@ final class ReflectionClassList extends ItemList
         );
     }
 
-    public function filterOnApieContext(ApieContext $apieContext): self
+    public function filterOnApieContext(ApieContext $apieContext, bool $runtimeChecks = true): self
     {
         $clone = new ReflectionClassList();
         $clone->internal = array_values(array_filter(
             $this->internal,
-            function (ReflectionClass $item) use ($apieContext) {
-                return $apieContext->appliesToContext($item);
+            function (ReflectionClass $item) use ($apieContext, $runtimeChecks) {
+                return $apieContext->appliesToContext($item, $runtimeChecks);
             }
         ));
         return $clone;
