@@ -14,6 +14,9 @@ use RuntimeException;
  */
 final class ReflectionTypeFactory
 {
+    /**
+     * @var array<string, ReflectionType>
+     */
     private static array $alreadyCreated = [];
 
     private static function dummy(): string|false|null
