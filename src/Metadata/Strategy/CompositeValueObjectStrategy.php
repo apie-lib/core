@@ -7,8 +7,8 @@ use Apie\Core\Context\ReflectionHashmap;
 use Apie\Core\Lists\StringList;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\StrategyInterface;
+use Apie\Core\ReflectionTypeFactory;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
-use Apie\HtmlBuilders\Factories\ReflectionTypeFactory;
 use ReflectionClass;
 
 final class CompositeValueObjectStrategy implements StrategyInterface
