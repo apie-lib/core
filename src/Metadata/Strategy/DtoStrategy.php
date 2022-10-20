@@ -31,7 +31,9 @@ final class DtoStrategy implements StrategyInterface
         $required = [];
         foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if ($property->isReadOnly()) {
-                continue;
+                if (!$includeRequired || !$property->isPromoted()) {
+                    continue;
+                }
             }
             $list[$property->getName()] = $property;
             if (!$property->getAttributes(Optional::class) && !$property->hasDefaultValue()) {
