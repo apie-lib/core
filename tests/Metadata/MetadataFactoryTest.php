@@ -125,7 +125,7 @@ class MetadataFactoryTest extends TestCase
             $context
         ];
         yield 'Creation of polymorphic entity, base class' => [
-            ['animalType', 'hasMilk', 'id', 'starving', 'poisonous'],
+            ['animalType', 'id', 'hasMilk', 'starving', 'poisonous'],
             ['animalType'],
             'getCreationMetadata',
             Animal::class,
@@ -139,7 +139,7 @@ class MetadataFactoryTest extends TestCase
             $context
         ];
         yield 'Creation of polymorphic entity, child class' => [
-            ['animalType', 'hasMilk', 'id'],
+            ['animalType', 'id', 'hasMilk'],
             ['animalType'],
             'getCreationMetadata',
             Cow::class,

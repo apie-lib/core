@@ -43,7 +43,7 @@ final class RegularObjectStrategy implements StrategyInterface
             }
         }
 
-        return new CompositeMetadata(new ReflectionHashmap($list), new StringList([]));
+        return new CompositeMetadata((new ReflectionHashmap($list))->sort(), new StringList([]));
     }
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
@@ -78,6 +78,6 @@ final class RegularObjectStrategy implements StrategyInterface
             }
         }
 
-        return new CompositeMetadata(new ReflectionHashmap($list), new StringList($required));
+        return new CompositeMetadata((new ReflectionHashmap($list))->sort(), new StringList($required));
     }
 }
