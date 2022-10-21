@@ -51,7 +51,7 @@ final class RegularObjectStrategy implements StrategyInterface
         $list = [];
         $required = [];
         foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            if ($property->isReadOnly()) {
+            if ($property->isReadOnly() && !$property->isPromoted()) {
                 continue;
             }
             $list[$property->getName()] = $property;
