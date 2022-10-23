@@ -1,6 +1,8 @@
 <?php
 namespace Apie\Core\Enums;
 
+use Apie\Core\ReflectionTypeFactory;
+use ReflectionType;
 use stdClass;
 
 enum ScalarType: string
@@ -13,4 +15,9 @@ enum ScalarType: string
     case BOOLEAN = 'boolean';
     case MIXED = 'mixed';
     case STDCLASS = stdClass::class;
+
+    public function toReflectionType(): ReflectionType
+    {
+        return ReflectionTypeFactory::createReflectionType($this->value);
+    }
 }
