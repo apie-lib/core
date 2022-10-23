@@ -2,6 +2,7 @@
 namespace Apie\Core\Identifiers;
 
 use Apie\Core\Attributes\FakeMethod;
+use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Faker\Generator;
@@ -10,6 +11,7 @@ use Faker\Generator;
  * Indicate an auto-increment integer.
  */
 #[FakeMethod("createRandom")]
+#[SchemaMethod("getSchema")]
 class AutoIncrementInteger implements ValueObjectInterface
 {
     /**
@@ -36,6 +38,17 @@ class AutoIncrementInteger implements ValueObjectInterface
     final public function toNative(): int|null
     {
         return $this->internal;
+    }
+
+    /**
+     * @return array<string, string|int>
+     */
+    final public static function getSchema(): array
+    {
+        return [
+            'type' => 'integer',
+            'min' => 1,
+        ];
     }
 
     final public static function createRandom(Generator $generator): static
