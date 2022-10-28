@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Metadata\Strategy;
 
+use Apie\Core\Attributes\Context;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\ReflectionHashmap;
@@ -69,8 +70,9 @@ final class RegularObjectStrategy implements StrategyInterface
         if ($constructor) {
             foreach ($constructor->getParameters() as $parameter) {
                 $list[$parameter->name] = $parameter;
-                if ($parameter->isOptional()) {
+                if ($parameter->isOptional() || $parameter->getAttributes(Context::class)) {
                     // this is possible if you have a promoted public property in the constructor....
+                    // it is also possible for constructor arguments with @Context attribute on it.
                     unset($required[$parameter->name]);
                 } else {
                     $required[$parameter->name] = $parameter->name;
