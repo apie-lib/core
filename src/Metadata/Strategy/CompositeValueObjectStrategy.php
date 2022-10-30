@@ -3,9 +3,9 @@ namespace Apie\Core\Metadata\Strategy;
 
 use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Context\ReflectionHashmap;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
+use Apie\Core\Metadata\Fields\Typehint;
 use Apie\Core\Metadata\StrategyInterface;
 use Apie\Core\ReflectionTypeFactory;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
@@ -30,14 +30,13 @@ final class CompositeValueObjectStrategy implements StrategyInterface
     {
         $method = $this->class->getMethod('getFields');
         $map = [];
-        $required = [];
         foreach ($method->invoke(null) as $name => $field) {
-            $map[$name] = ReflectionTypeFactory::createReflectionType($field->getTypehint());
-            if (!$field->isOptional()) {
-                $required[] = $name;
-            }
+            $map[$name] = new Typehint(
+                ReflectionTypeFactory::createReflectionType($field->getTypehint()),
+                !$field->isOptional()
+            );
         }
-        return new CompositeMetadata(new ReflectionHashmap($map), new StringList($required));
+        return new CompositeMetadata(new MetadataFieldHashmap($map));
     }
 
     public function getModificationMetadata(ApieContext $context): CompositeMetadata

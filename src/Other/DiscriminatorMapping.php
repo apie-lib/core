@@ -4,6 +4,7 @@ namespace Apie\Core\Other;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\Exceptions\DiscriminatorValueException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Entities\PolymorphicEntityInterface;
 use ReflectionClass;
 
 #[SchemaMethod('provideSchema')]
@@ -28,6 +29,25 @@ final class DiscriminatorMapping
     public function getConfigs(): array
     {
         return $this->configs;
+    }
+
+    /**
+     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     */
+    public function getDiscriminatorForClass(ReflectionClass $class): string
+    {
+        $classes = [];
+        foreach ($this->configs as $config) {
+            $refl = new ReflectionClass($config->getClassName());
+            if ($refl->name === $class->name || $class->isSubclassOf($refl)) {
+                return $config->getDiscriminator();
+            }
+            $classes[] = $config->getClassName();
+        }
+        throw new InvalidTypeException(
+            $class->name,
+            $classes ? implode(', ', $classes) : 'none'
+        );
     }
 
     public function getDiscriminatorForObject(object $object): string

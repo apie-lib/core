@@ -1,9 +1,10 @@
 <?php
 namespace Apie\Core\Metadata;
 
-use Apie\Core\Context\ReflectionHashmap;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Metadata\Fields\OptionalField;
 
 class UnionTypeMetadata implements MetadataInterface
 {
@@ -17,18 +18,18 @@ class UnionTypeMetadata implements MetadataInterface
         $this->metadata = $metadata;
     }
 
-    public function getHashmap(): ReflectionHashmap
+    public function getHashmap(): MetadataFieldHashmap
     {
         $map = [];
         foreach ($this->metadata as $objectData) {
             foreach ($objectData->getHashmap() as $key => $value) {
                 if (isset($map[$key])) {
-                    // TODO make it an union type
+                    $value = new OptionalField($value, $map[$key]);
                 }
                 $map[$key] = $value;
             }
         }
-        return new ReflectionHashmap($map);
+        return new MetadataFieldHashmap($map);
     }
     
     public function getRequiredFields(): StringList

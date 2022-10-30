@@ -1,13 +1,15 @@
 <?php
 namespace Apie\Core\Metadata;
 
-use Apie\Core\Context\ReflectionHashmap;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 
 final class CompositeMetadata implements MetadataInterface
 {
-    public function __construct(private readonly ReflectionHashmap $hashmap, private readonly StringList $requiredFields)
+    private ?StringList $requiredFields = null;
+
+    public function __construct(private readonly MetadataFieldHashmap $hashmap)
     {
     }
 
@@ -16,13 +18,22 @@ final class CompositeMetadata implements MetadataInterface
         return ScalarType::STDCLASS;
     }
 
-    public function getHashmap(): ReflectionHashmap
+    public function getHashmap(): MetadataFieldHashmap
     {
         return $this->hashmap;
     }
 
     public function getRequiredFields(): StringList
     {
+        if (null === $this->requiredFields) {
+            $required = [];
+            foreach ($this->hashmap as $name => $field) {
+                if ($field->isField() && $field->isRequired()) {
+                    $required[] = $name;
+                }
+            }
+            $this->requiredFields = new StringList($required);
+        }
         return $this->requiredFields;
     }
 

@@ -2,8 +2,7 @@
 namespace Apie\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Context\ReflectionHashmap;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\StrategyInterface;
@@ -39,6 +38,14 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     }
 
     /**
+     * @return ReflectionClass<object>
+     */
+    public function getClass(): ReflectionClass
+    {
+        return $this->class;
+    }
+
+    /**
      * @param ReflectionClass<object> $class
      */
     public function __construct(private ReflectionClass $class)
@@ -48,15 +55,13 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     public function getCreationMetadata(ApieContext $context): MetadataInterface
     {
         return new CompositeMetadata(
-            new ReflectionHashmap(['name' => new ReflectionProperty($this->class, 'name')]),
-            new StringList(['name'])
+            new MetadataFieldHashmap([])
         );
     }
     public function getModificationMetadata(ApieContext $context): MetadataInterface
     {
         return new CompositeMetadata(
-            new ReflectionHashmap([]),
-            new StringList([])
+            new MetadataFieldHashmap([])
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Metadata;
 
-use Apie\Core\Context\ReflectionHashmap;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 
@@ -11,9 +11,9 @@ final class ScalarMetadata implements MetadataInterface
     {
     }
 
-    public function getHashmap(): ReflectionHashmap
+    public function getHashmap(): MetadataFieldHashmap
     {
-        return new ReflectionHashmap([]);
+        return new MetadataFieldHashmap();
     }
 
     public function getRequiredFields(): StringList

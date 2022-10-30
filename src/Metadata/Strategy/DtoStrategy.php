@@ -1,12 +1,11 @@
 <?php
 namespace Apie\Core\Metadata\Strategy;
 
-use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Context\ReflectionHashmap;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Dto\DtoInterface;
-use Apie\Core\Lists\StringList;
 use Apie\Core\Metadata\CompositeMetadata;
+use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\StrategyInterface;
 use ReflectionClass;
 use ReflectionProperty;
@@ -25,32 +24,28 @@ final class DtoStrategy implements StrategyInterface
     {
     }
 
-    private function getDtoMetadata(ApieContext $context, bool $includeRequired): CompositeMetadata
+    private function getDtoMetadata(ApieContext $context, bool $optional): CompositeMetadata
     {
         $list = [];
-        $required = [];
         foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if ($property->isReadOnly()) {
-                if (!$includeRequired || !$property->isPromoted()) {
+                if ($optional || !$property->isPromoted()) {
                     continue;
                 }
             }
-            $list[$property->getName()] = $property;
-            if (!$property->getAttributes(Optional::class) && !$property->hasDefaultValue()) {
-                $required[$property->getName()] = $property->getName();
-            }
+            $list[$property->getName()] = new PublicProperty($property, $optional);
         }
     
-        return new CompositeMetadata(new ReflectionHashmap($list), new StringList($includeRequired ? $required : []));
+        return new CompositeMetadata(new MetadataFieldHashmap($list));
     }
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
     {
-        return $this->getDtoMetadata($context, true);
+        return $this->getDtoMetadata($context, false);
     }
 
     public function getModificationMetadata(ApieContext $context): CompositeMetadata
     {
-        return $this->getDtoMetadata($context, false);
+        return $this->getDtoMetadata($context, true);
     }
 }

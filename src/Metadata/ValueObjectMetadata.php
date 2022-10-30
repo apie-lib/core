@@ -2,7 +2,7 @@
 namespace Apie\Core\Metadata;
 
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Context\ReflectionHashmap;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
@@ -23,7 +23,7 @@ class ValueObjectMetadata implements MetadataInterface
         return MetadataFactory::getCreationMetadata($method->getReturnType(), new ApieContext());
     }
 
-    public function getHashmap(): ReflectionHashmap
+    public function getHashmap(): MetadataFieldHashmap
     {
         return $this->getNativeType()->getHashmap();
     }

@@ -4,7 +4,6 @@ namespace Apie\Core\Context;
 use Apie\Core\Attributes\AllApplies;
 use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
-use Apie\Core\Attributes\Context;
 use Apie\Core\Attributes\CustomContextCheck;
 use Apie\Core\Attributes\Equals;
 use Apie\Core\Attributes\Internal;
@@ -16,11 +15,9 @@ use Apie\Core\Exceptions\IndexNotFoundException;
 use ReflectionClass;
 use ReflectionEnumUnitCase;
 use ReflectionMethod;
-use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
-use ReflectionUnionType;
 
 /**
  * ApieContext is used as builder/mediator and passed though many Apie functions. It can be used to filter (for example
@@ -165,33 +162,6 @@ final class ApieContext
             return false;
         }
         $attributesToCheck = $runtimeChecks ? [RuntimeCheck::class, ...self::ATTRIBUTES] : self::ATTRIBUTES;
-        if ($runtimeChecks) {
-            if ($method instanceof ReflectionMethod) {
-                if ($method->isConstructor()) {
-                    if (!$this->appliesToConstructor($method)) {
-                        return false;
-                    }
-                } elseif (preg_match('/^(set).+$/i', $method->name)) {
-                    if (!$this->appliesToSetter($method)) {
-                        return false;
-                    }
-                } elseif (preg_match('/^(get|is|has).+$/i', $method->name)) {
-                    if (!$this->appliesToGetter($method)) {
-                        return false;
-                    }
-                }
-            }
-            if ($method instanceof ReflectionNamedType) {
-                return $this->hasContext($method->getName());
-            }
-            if ($method instanceof ReflectionUnionType) {
-                foreach ($method->getTypes()as $type) {
-                    if ($this->appliesToContext($type)) {
-                        return true;
-                    }
-                }
-            }
-        }
         foreach ($attributesToCheck as $attribute) {
             foreach ($method->getAttributes($attribute) as $reflAttribute) {
                 if (!in_array($reflAttribute->getName(), [StaticCheck::class, RuntimeCheck::class])) {
@@ -202,53 +172,6 @@ final class ApieContext
                 }
             }
         }
-        return true;
-    }
-
-    private function appliesToGetter(ReflectionMethod $method): bool
-    {
-        $parameters = $method->getParameters();
-        foreach ($parameters as $parameter) {
-            if (!$this->appliesToParameter($parameter)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function appliesToSetter(ReflectionMethod $method): bool
-    {
-        $parameters = $method->getParameters();
-        array_pop($parameters);
-        foreach ($parameters as $parameter) {
-            if (!$this->appliesToParameter($parameter)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function appliesToConstructor(ReflectionMethod $method): bool
-    {
-        foreach ($method->getParameters() as $parameter) {
-            if ($parameter->getAttributes(Context::class) && !$this->appliesToParameter($parameter)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function appliesToParameter(ReflectionParameter $parameter): bool
-    {
-        foreach ($parameter->getAttributes(Context::class) as $attribute) {
-            $contextKey = $attribute->newInstance()->contextKey;
-            if ($contextKey === null) {
-                return $this->appliesToContext($parameter->getType());
-            } else {
-                return $this->hasContext($contextKey);
-            }
-        }
-
         return true;
     }
 }
