@@ -34,4 +34,9 @@ final class EnumStrategy implements StrategyInterface
     {
         return new EnumMetadata($this->enum);
     }
+
+    public function getResultMetadata(ApieContext $context): EnumMetadata
+    {
+        return new EnumMetadata($this->enum);
+    }
 }

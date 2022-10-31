@@ -17,7 +17,7 @@ final class GetterMethod implements FieldInterface
 
     public function isRequired(): bool
     {
-        return false;
+        return true;
     }
 
     public function isField(): bool

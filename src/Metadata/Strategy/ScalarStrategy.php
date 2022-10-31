@@ -28,4 +28,9 @@ final class ScalarStrategy implements StrategyInterface
     {
         return new ScalarMetadata($this->scalarType);
     }
+
+    public function getResultMetadata(ApieContext $context): ScalarMetadata
+    {
+        return new ScalarMetadata($this->scalarType);
+    }
 }

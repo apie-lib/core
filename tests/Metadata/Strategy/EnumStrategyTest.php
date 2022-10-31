@@ -30,6 +30,9 @@ class EnumStrategyTest extends TestCase
         $metadata = $actual->getModificationMetadata($context);
         $this->assertSame($expectedScalar, $metadata->toScalarType());
         $this->assertEquals($expectedOptions, $metadata->getOptions($context, true));
+        $metadata = $actual->getResultMetadata($context);
+        $this->assertSame($expectedScalar, $metadata->toScalarType());
+        $this->assertEquals($expectedOptions, $metadata->getOptions($context, true));
     }
 
     public function enumOptionsProvider()

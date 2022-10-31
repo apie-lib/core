@@ -124,6 +124,13 @@ class MetadataFactoryTest extends TestCase
             Order::class,
             $context
         ];
+        yield 'Retrieve an entity' => [
+            ['id', 'orderStatus', 'orderLines'],
+            ['id', 'orderStatus', 'orderLines'],
+            'getResultMetadata',
+            Order::class,
+            $context
+        ];
         yield 'Creation of polymorphic entity, base class' => [
             ['animalType', 'id', 'hasMilk', 'starving', 'poisonous'],
             ['animalType'],
@@ -138,6 +145,13 @@ class MetadataFactoryTest extends TestCase
             Animal::class,
             $context
         ];
+        yield 'Retrieve of polymorphic entity, base class' => [
+            ['animalType', 'id', 'hasMilk', 'starving', 'poisonous'],
+            ['animalType', 'id'],
+            'getResultMetadata',
+            Animal::class,
+            $context
+        ];
         yield 'Creation of polymorphic entity, child class' => [
             ['animalType', 'id', 'hasMilk'],
             ['animalType'],
@@ -149,6 +163,13 @@ class MetadataFactoryTest extends TestCase
             ['hasMilk'],
             [],
             'getModificationMetadata',
+            Cow::class,
+            $context
+        ];
+        yield 'Retrieve of polymorphic entity, child class' => [
+            ['animalType', 'id', 'hasMilk'],
+            ['animalType', 'id'],
+            'getResultMetadata',
             Cow::class,
             $context
         ];
@@ -182,6 +203,21 @@ class MetadataFactoryTest extends TestCase
             DefaultExampleDto::class,
             $context
         ];
+        yield 'Retrieve of DTO with default values' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [],
+            'getResultMetadata',
+            DefaultExampleDto::class,
+            $context
+        ];
         yield 'Creation of DTO' => [
             [
                 'string',
@@ -204,21 +240,6 @@ class MetadataFactoryTest extends TestCase
             ExampleDto::class,
             $context
         ];
-        yield 'Creation of DTO with @Optional attribute' => [
-            [
-                'optionalString',
-                'optionalInteger',
-                'optionalFloatingPoint',
-                'optionalTrueOrFalse',
-                'mixed',
-                'noType',
-                'optionalGender',
-            ],
-            [],
-            'getCreationMetadata',
-            OptionalExampleDto::class,
-            $context
-        ];
         yield 'Modification of DTO' => [
             [
                 'string',
@@ -235,6 +256,58 @@ class MetadataFactoryTest extends TestCase
             ExampleDto::class,
             $context
         ];
+        yield 'Retrieve of DTO' => [
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'noType',
+                'gender',
+            ],
+            [
+                'string',
+                'integer',
+                'floatingPoint',
+                'trueOrFalse',
+                'mixed',
+                'gender',
+            ],
+            'getResultMetadata',
+            ExampleDto::class,
+            $context
+        ];
+        yield 'Creation of DTO with @Optional attribute' => [
+            [
+                'optionalString',
+                'optionalInteger',
+                'optionalFloatingPoint',
+                'optionalTrueOrFalse',
+                'mixed',
+                'noType',
+                'optionalGender',
+            ],
+            [],
+            'getCreationMetadata',
+            OptionalExampleDto::class,
+            $context
+        ];
+        yield 'Retrieve of DTO with @Optional attribute' => [
+            [
+                'optionalString',
+                'optionalInteger',
+                'optionalFloatingPoint',
+                'optionalTrueOrFalse',
+                'mixed',
+                'noType',
+                'optionalGender',
+            ],
+            [],
+            'getResultMetadata',
+            OptionalExampleDto::class,
+            $context
+        ];
         if (trait_exists(CompositeValueObject::class)) {
             yield 'Composite value object creation' => [
                 ['withDefaultValue', 'withOptionalAttribute'],
@@ -247,6 +320,13 @@ class MetadataFactoryTest extends TestCase
                 ['withDefaultValue', 'withOptionalAttribute'],
                 [],
                 'getModificationMetadata',
+                CompositeValueObjectWithOptionalFields::class,
+                $context
+            ];
+            yield 'Composite value object retrieval' => [
+                ['withDefaultValue', 'withOptionalAttribute'],
+                [],
+                'getResultMetadata',
                 CompositeValueObjectWithOptionalFields::class,
                 $context
             ];

@@ -24,6 +24,8 @@ class ScalarStrategyTest extends TestCase
         $this->assertSame($expectedScalar, $metadata->toScalarType());
         $metadata = $actual->getModificationMetadata($context);
         $this->assertSame($expectedScalar, $metadata->toScalarType());
+        $metadata = $actual->getResultMetadata($context);
+        $this->assertSame($expectedScalar, $metadata->toScalarType());
     }
 
     public function scalarProvider()

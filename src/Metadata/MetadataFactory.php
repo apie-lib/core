@@ -121,4 +121,15 @@ final class MetadataFactory
         }
         return self::getMetadataStrategy($typehint)->getModificationMetadata($context);
     }
+
+    /**
+     * @param ReflectionClass<object>|ReflectionType $typehint
+     */
+    public static function getResultMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): MetadataInterface
+    {
+        if ($typehint instanceof ReflectionType) {
+            return self::getMetadataStrategyForType($typehint)->getResultMetadata($context);
+        }
+        return self::getMetadataStrategy($typehint)->getResultMetadata($context);
+    }
 }

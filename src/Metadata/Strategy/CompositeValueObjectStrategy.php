@@ -43,4 +43,9 @@ final class CompositeValueObjectStrategy implements StrategyInterface
     {
         return $this->getCreationMetadata($context);
     }
+
+    public function getResultMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getCreationMetadata($context);
+    }
 }

@@ -48,4 +48,9 @@ final class DtoStrategy implements StrategyInterface
     {
         return $this->getDtoMetadata($context, true);
     }
+
+    public function getResultMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getDtoMetadata($context, false);
+    }
 }

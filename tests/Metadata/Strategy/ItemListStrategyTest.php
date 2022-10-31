@@ -26,6 +26,8 @@ class ItemListStrategyTest extends TestCase
         $this->assertInstanceOf($expectedMetadataClass, $metadata->getArrayItemType());
         $metadata = $actual->getModificationMetadata($context);
         $this->assertInstanceOf($expectedMetadataClass, $metadata->getArrayItemType());
+        $metadata = $actual->getResultMetadata($context);
+        $this->assertInstanceOf($expectedMetadataClass, $metadata->getArrayItemType());
     }
 
     public function hashmapOptionsProvider()

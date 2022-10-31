@@ -74,6 +74,30 @@ final class PolymorphicEntityStrategy implements StrategyInterface
         return new CompositeMetadata(new MetadataFieldHashmap($list));
     }
 
+    public function getResultMetadata(ApieContext $context): CompositeMetadata
+    {
+        $list = [];
+        
+        $class = $this->class;
+
+        while ($class) {
+            $method = $class->getMethod('getDiscriminatorMapping');
+            if (!$method->isAbstract() && $method->getDeclaringClass()->name === $class->name) {
+                /** @var DiscriminatorMapping $mapping */
+                $mapping = $method->invoke(null);
+                $list[$mapping->getPropertyName()] = new DiscriminatorColumn($mapping);
+                foreach ($mapping->getConfigs() as $config) {
+                    if ($method->getDeclaringClass()->name === $this->class->name || $config->getClassName() === $this->class->name) {
+                        $this->mergeChildClass($context, $config, $list, 'getResultMetadata');
+                    }
+                }
+            }
+            $class = $class->getParentClass();
+        }
+
+        return new CompositeMetadata(new MetadataFieldHashmap($list));
+    }
+
     /**
      * @param array<string, mixed> $list
      */

@@ -52,13 +52,19 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     {
     }
 
-    public function getCreationMetadata(ApieContext $context): MetadataInterface
+    public function getCreationMetadata(ApieContext $context): CompositeMetadata
     {
         return new CompositeMetadata(
             new MetadataFieldHashmap([])
         );
     }
-    public function getModificationMetadata(ApieContext $context): MetadataInterface
+    public function getModificationMetadata(ApieContext $context): CompositeMetadata
+    {
+        return new CompositeMetadata(
+            new MetadataFieldHashmap([])
+        );
+    }
+    public function getResultMetadata(ApieContext $context): CompositeMetadata
     {
         return new CompositeMetadata(
             new MetadataFieldHashmap([])

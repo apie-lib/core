@@ -12,4 +12,5 @@ interface StrategyInterface
     public static function supports(ReflectionClass $class): bool;
     public function getCreationMetadata(ApieContext $context): MetadataInterface;
     public function getModificationMetadata(ApieContext $context): MetadataInterface;
+    public function getResultMetadata(ApieContext $context): MetadataInterface;
 }
