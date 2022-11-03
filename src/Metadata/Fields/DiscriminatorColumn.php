@@ -3,15 +3,21 @@ namespace Apie\Core\Metadata\Fields;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\PolymorphicEntityInterface;
+use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Other\DiscriminatorMapping;
 use Apie\Core\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionType;
 
-class DiscriminatorColumn implements FieldInterface
+class DiscriminatorColumn implements FieldInterface, GetterInterface
 {
     public function __construct(private DiscriminatorMapping $discriminatorMapping)
     {
+    }
+
+    public function getValue(object $object, ApieContext $apieContext): mixed
+    {
+        return $this->discriminatorMapping->getDiscriminatorForObject($object);
     }
 
     /**

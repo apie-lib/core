@@ -4,7 +4,6 @@ namespace Apie\Core\Metadata\Strategy;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
-use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\StrategyInterface;
 use ReflectionClass;
 use ReflectionEnum;

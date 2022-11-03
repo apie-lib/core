@@ -4,10 +4,11 @@ namespace Apie\Core\Metadata\Fields;
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\Concerns\UseContextKey;
+use Apie\Core\Metadata\SetterInterface;
 use ReflectionMethod;
 use ReflectionType;
 
-final class SetterMethod implements FieldInterface
+final class SetterMethod implements FieldInterface, SetterInterface
 {
     use UseContextKey;
 
@@ -45,6 +46,29 @@ final class SetterMethod implements FieldInterface
             }
         }
         return true;
+    }
+
+    public function markValueAsMissing(): void
+    {
+    }
+
+    public function setValue(object $object, mixed $value, ApieContext $apieContext): void
+    {
+        $parameters = $this->method->getParameters();
+        // last argument is value set, so we skip that one.
+        array_pop($parameters);
+        $arguments = [];
+        foreach ($parameters as $parameter) {
+            $contextKey = $this->getContextKey($apieContext, $parameter);
+            if ($contextKey === null || !$apieContext->hasContext($contextKey)) {
+                $arguments[] = $parameter->getDefaultValue();
+            } else {
+                $arguments[] = $apieContext->getContext($contextKey);
+            }
+        }
+        $arguments[] = $value;
+
+        $this->method->invokeArgs($object, $arguments);
     }
 
     public function getFieldPriority(): ?int

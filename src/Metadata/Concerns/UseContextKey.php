@@ -3,6 +3,7 @@ namespace Apie\Core\Metadata\Concerns;
 
 use Apie\Core\Attributes\Context;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -11,7 +12,10 @@ use ReflectionUnionType;
 
 trait UseContextKey
 {
-    private function getContextKey(ApieContext $apieContext, ReflectionParameter $parameter): ?string
+    /**
+     * @phpstan-return ($returnNull is true ? string|null : string)
+     */
+    private function getContextKey(ApieContext $apieContext, ReflectionParameter $parameter, bool $returnNull = true): ?string
     {
         foreach ($parameter->getAttributes(Context::class) as $attribute) {
             $contextKey = $attribute->newInstance()->contextKey;
@@ -27,7 +31,7 @@ trait UseContextKey
         return $this->getContextKeyForType($apieContext, $type);
     }
 
-    private function getContextKeyForType(ApieContext $apieContext, ReflectionType $type): ?string
+    private function getContextKeyForType(ApieContext $apieContext, ReflectionType $type, bool $returnNull = true): ?string
     {
         if ($type instanceof ReflectionNamedType) {
             return $type->getName();
@@ -39,7 +43,10 @@ trait UseContextKey
                     return $key;
                 }
             }
-            return null;
+            if ($returnNull) {
+                return null;
+            }
+            throw new IndexNotFoundException((string) $type);
         }
         throw new InvalidTypeException($type, 'ReflectionNamedType|ReflectionUnionType');
     }

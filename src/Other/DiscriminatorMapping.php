@@ -2,9 +2,9 @@
 namespace Apie\Core\Other;
 
 use Apie\Core\Attributes\SchemaMethod;
+use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Exceptions\DiscriminatorValueException;
 use Apie\Core\Exceptions\InvalidTypeException;
-use Apie\Core\Entities\PolymorphicEntityInterface;
 use ReflectionClass;
 
 #[SchemaMethod('provideSchema')]

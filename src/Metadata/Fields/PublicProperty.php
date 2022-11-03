@@ -4,10 +4,12 @@ namespace Apie\Core\Metadata\Fields;
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Metadata\GetterInterface;
+use Apie\Core\Metadata\SetterInterface;
 use ReflectionProperty;
 use ReflectionType;
 
-final class PublicProperty implements FieldInterface
+final class PublicProperty implements FieldInterface, GetterInterface, SetterInterface
 {
     private bool $required;
 
@@ -40,6 +42,20 @@ final class PublicProperty implements FieldInterface
 
         $attribute = reset($attributes);
         return $attribute->newInstance()->priority;
+    }
+
+    public function getValue(object $object, ApieContext $apieContext): mixed
+    {
+        return $this->property->getValue($object);
+    }
+
+    public function setValue(object $object, mixed $value, ApieContext $apieContext): void
+    {
+        $this->property->setValue($object, $value);
+    }
+
+    public function markValueAsMissing(): void
+    {
     }
 
     public function getTypehint(): ?ReflectionType
