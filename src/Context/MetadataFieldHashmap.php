@@ -3,6 +3,8 @@ namespace Apie\Core\Context;
 
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Metadata\Fields\FieldInterface;
+use Apie\Core\Metadata\GetterInterface;
+use Apie\Core\Metadata\SetterInterface;
 
 /**
  * Contains a list of methods and/or properties.
@@ -12,6 +14,24 @@ final class MetadataFieldHashmap extends ItemHashmap
     public function offsetGet(mixed $offset): FieldInterface
     {
         return parent::offsetGet($offset);
+    }
+
+    public function filterOnContext(ApieContext $apieContext, ?bool $getters = null, ?bool $setters = null): self
+    {
+        $list = array_filter(
+            $this->internalArray,
+            function (FieldInterface $field) use ($apieContext, $getters, $setters) {
+                if ($getters !== null && ($getters xor ($field instanceof GetterInterface))) {
+                    return false;
+                }
+                if ($setters !== null && ($setters xor ($field instanceof SetterInterface))) {
+                    return false;
+                }
+                return $field->appliesToContext($apieContext);
+            }
+        );
+
+        return new self($list);
     }
 
     public function sort(): self

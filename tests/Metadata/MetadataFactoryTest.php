@@ -19,6 +19,7 @@ use Apie\Fixtures\Dto\DefaultExampleDto;
 use Apie\Fixtures\Dto\EmptyDto;
 use Apie\Fixtures\Dto\ExampleDto;
 use Apie\Fixtures\Dto\OptionalExampleDto;
+use Apie\Fixtures\Entities\CollectionItemOwned;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\Polymorphic\Cow;
@@ -105,6 +106,17 @@ class MetadataFactoryTest extends TestCase
         $this->assertInstanceOf(CompositeMetadata::class, $actual);
         $this->assertEquals($expectedFields, array_keys($actual->getHashmap()->toArray()));
         $this->assertEquals($expectedRequired, $actual->getRequiredFields()->toArray());
+    }
+
+    public function testCompositeMetadataWithContext()
+    {
+        $context = new ApieContext([]);
+        /** @var CompositeMetadata $actual */
+        $actual = MetadataFactory::getResultMetadata(new ReflectionClass(CollectionItemOwned::class), $context);
+        $this->assertInstanceOf(CompositeMetadata::class, $actual);
+        $hashmap = $actual->getHashmap();
+        $filteredHashmap = $hashmap->filterOnContext($context, true);
+        $this->assertEquals(['id', 'owned'], array_keys($filteredHashmap->toArray()));
     }
 
     public function compositeMetadataProvider()
@@ -308,6 +320,28 @@ class MetadataFactoryTest extends TestCase
             OptionalExampleDto::class,
             $context
         ];
+        yield 'Creation of entity with context' => [
+            ['id', 'owned', 'createdBy'],
+            ['id', 'owned'],
+            'getCreationMetadata',
+            CollectionItemOwned::class,
+            $context
+        ];
+        yield 'Modification of entity with context' => [
+            ['owned'],
+            [],
+            'getModificationMetadata',
+            CollectionItemOwned::class,
+            $context
+        ];
+        yield 'Retrieve of entity with context' => [
+            ['id', 'owned', 'createdBy'],
+            ['id', 'owned', 'createdBy'],
+            'getResultMetadata',
+            CollectionItemOwned::class,
+            $context
+        ];
+
         if (trait_exists(CompositeValueObject::class)) {
             yield 'Composite value object creation' => [
                 ['withDefaultValue', 'withOptionalAttribute'],

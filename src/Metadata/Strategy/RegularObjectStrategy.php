@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Metadata\Strategy;
 
+use Apie\Core\Attributes\Internal;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
@@ -78,11 +79,13 @@ final class RegularObjectStrategy implements StrategyInterface
     {
         $list = [];
         foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            $list[$property->getName()] = new PublicProperty($property, !empty($property->getAttributes(Optional::class)));
+            if (!$property->getAttributes(Internal::class)) {
+                $list[$property->getName()] = new PublicProperty($property, !empty($property->getAttributes(Optional::class)));
+            }
         }
         foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (preg_match('/^(get|is|has).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract()) {
-                $list[lcfirst(substr($method->name, 3))] = new GetterMethod($method);
+            if (preg_match('/^(get|is|has).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract() && !$method->getAttributes(Internal::class)) {
+                $list[lcfirst(substr($method->name, str_starts_with($method->name, 'is') ? 2 : 3))] = new GetterMethod($method);
             }
         }
 
