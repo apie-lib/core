@@ -81,12 +81,17 @@ final class MetadataFactory
         }
         assert($typehint instanceof ReflectionNamedType);
         if ($typehint->isBuiltin()) {
-            return new ScalarStrategy(
+            if ($typehint->getName() === 'null') {
+                return new ScalarStrategy(ScalarType::NULL);
+            }
+            if ($typehint->getName() === 'mixed') {
+                return new ScalarStrategy(ScalarType::MIXED);
+            }
+            $strategy = new ScalarStrategy(
                 match ($typehint->getName()) {
                     'string' => ScalarType::STRING,
                     'float' => ScalarType::FLOAT,
                     'int' => ScalarType::INTEGER,
-                    'null' => ScalarType::NULL,
                     'array' => ScalarType::ARRAY,
                     'mixed' => ScalarType::MIXED,
                     'bool' => ScalarType::BOOLEAN,
@@ -95,9 +100,14 @@ final class MetadataFactory
                     default => throw new InvalidTypeException($typehint->getName(), 'string|float|int|null|array|mixed|bool')
                 }
             );
+        } else {
+            $strategy = self::getMetadataStrategy(new ReflectionClass($typehint->getName()));
+        }
+        if ($typehint->allowsNull()) {
+            return new UnionTypeStrategy($strategy, new ScalarMetadata(ScalarType::NULL));
         }
 
-        return self::getMetadataStrategy(new ReflectionClass($typehint->getName()));
+        return $strategy;
     }
 
     /**

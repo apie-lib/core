@@ -16,6 +16,12 @@ class ConstructorParameter implements FieldInterface
     {
     }
 
+    public function allowsNull(): bool
+    {
+        $type = $this->parameter->getType();
+        return (null === $type || $type->allowsNull());
+    }
+
     public function isRequired(): bool
     {
         return !$this->parameter->isDefaultValueAvailable();

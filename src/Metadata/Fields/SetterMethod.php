@@ -21,6 +21,14 @@ final class SetterMethod implements FieldInterface, SetterInterface
         return $this->method;
     }
 
+    public function allowsNull(): bool
+    {
+        $parameters = $this->method->getParameters();
+        $parameter = array_pop($parameters);
+        $type = $parameter->getType();
+        return $type === null || $type->allowsNull();
+    }
+
     public function isRequired(): bool
     {
         return false;

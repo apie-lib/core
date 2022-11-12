@@ -16,6 +16,12 @@ final class GetterMethod implements FieldInterface, GetterInterface
     {
     }
 
+    public function allowsNull(): bool
+    {
+        $type = $this->method->getReturnType();
+        return $type === null || $type->allowsNull();
+    }
+
     public function isRequired(): bool
     {
         return true;

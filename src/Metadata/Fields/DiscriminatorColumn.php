@@ -44,6 +44,11 @@ class DiscriminatorColumn implements FieldInterface, GetterInterface
         return $options;
     }
 
+    public function allowsNull(): bool
+    {
+        return false;
+    }
+
     public function isRequired(): bool
     {
         return true;

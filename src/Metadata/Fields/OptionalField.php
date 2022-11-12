@@ -12,6 +12,14 @@ class OptionalField implements FieldInterface, GetterInterface, SetterInterface
     {
     }
 
+    public function allowsNull(): bool
+    {
+        if ($this->field2 && $this->field2->allowsNull()) {
+            return true;
+        }
+        return $this->field1->allowsNull();
+    }
+
     public function isRequired(): bool
     {
         if ($this->field2 !== null && !$this->field2->isRequired()) {

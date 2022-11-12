@@ -18,6 +18,14 @@ class UnionTypeMetadata implements MetadataInterface
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return MetadataInterface[]
+     */
+    public function getTypes(): array
+    {
+        return $this->metadata;
+    }
+
     public function getHashmap(): MetadataFieldHashmap
     {
         $map = [];

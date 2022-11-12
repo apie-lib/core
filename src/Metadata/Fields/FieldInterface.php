@@ -15,4 +15,6 @@ interface FieldInterface
     public function getFieldPriority(): ?int;
 
     public function getTypehint(): ?ReflectionType;
+
+    public function allowsNull(): bool;
 }

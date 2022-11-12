@@ -18,6 +18,12 @@ final class PublicProperty implements FieldInterface, GetterInterface, SetterInt
         $this->required = !$optional && empty($property->getAttributes(Optional::class)) && !$this->property->hasDefaultValue();
     }
 
+    public function allowsNull(): bool
+    {
+        $type = $this->property->getType();
+        return $type === null || $type->allowsNull();
+    }
+
     public function isRequired(): bool
     {
         return $this->required;

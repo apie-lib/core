@@ -10,11 +10,11 @@ use ReflectionClass;
 final class UnionTypeStrategy implements StrategyInterface
 {
     /**
-     * @var MetadataInterface[] $metadata
+     * @var array<int, MetadataInterface|StrategyInterface> $metadata
      */
     private array $metadata;
 
-    public function __construct(MetadataInterface... $metadata)
+    public function __construct(MetadataInterface|StrategyInterface... $metadata)
     {
         $this->metadata = $metadata;
     }
@@ -24,18 +24,35 @@ final class UnionTypeStrategy implements StrategyInterface
         return false;
     }
 
+    /**
+     * @return array<int, MetadataInterface>
+     */
+    private function createList(ApieContext $context, string $method): array
+    {
+        $list = [];
+        foreach ($this->metadata as $metadata) {
+            if ($metadata instanceof MetadataInterface) {
+                $list[] = $metadata;
+            } else {
+                $list[] = $metadata->$method($context);
+            }
+        }
+
+        return $list;
+    }
+
     public function getCreationMetadata(ApieContext $context): UnionTypeMetadata
     {
-        return new UnionTypeMetadata(...$this->metadata);
+        return new UnionTypeMetadata(...$this->createList($context, 'getCreationMetadata'));
     }
 
     public function getModificationMetadata(ApieContext $context): UnionTypeMetadata
     {
-        return new UnionTypeMetadata(...$this->metadata);
+        return new UnionTypeMetadata(...$this->createList($context, 'getModificationMetadata'));
     }
 
     public function getResultMetadata(ApieContext $context): UnionTypeMetadata
     {
-        return new UnionTypeMetadata(...$this->metadata);
+        return new UnionTypeMetadata(...$this->createList($context, 'getResultMetadata'));
     }
 }

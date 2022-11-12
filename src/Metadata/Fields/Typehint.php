@@ -10,6 +10,11 @@ final class Typehint implements FieldInterface
     {
     }
 
+    public function allowsNull(): bool
+    {
+        return $this->type->allowsNull();
+    }
+
     public function isRequired(): bool
     {
         return $this->required;
