@@ -8,7 +8,7 @@ use Apie\Core\Metadata\Concerns\UseContextKey;
 use ReflectionParameter;
 use ReflectionType;
 
-class ConstructorParameter implements FieldInterface
+class ConstructorParameter implements FieldWithPossibleDefaultValue
 {
     use UseContextKey;
 
@@ -20,6 +20,16 @@ class ConstructorParameter implements FieldInterface
     {
         $type = $this->parameter->getType();
         return (null === $type || $type->allowsNull());
+    }
+
+    public function hasDefaultValue(): bool
+    {
+        return $this->parameter->isDefaultValueAvailable();
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return $this->parameter->getDefaultValue();
     }
 
     public function isRequired(): bool

@@ -9,20 +9,31 @@ use Apie\Core\Metadata\SetterInterface;
 use ReflectionProperty;
 use ReflectionType;
 
-final class PublicProperty implements FieldInterface, GetterInterface, SetterInterface
+final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInterface, SetterInterface
 {
     private bool $required;
 
     public function __construct(private readonly ReflectionProperty $property, bool $optional = false)
     {
-        $hasDefaultValue = $property->hasDefaultValue();
-        if (null === $property->getType()) {
-            $hasDefaultValue = $property->getDefaultValue() !== null;
-        }
+        $hasDefaultValue = $this->hasDefaultValue();
 
         $this->required = !$optional
             && empty($property->getAttributes(Optional::class))
             && !$hasDefaultValue;
+    }
+
+    public function hasDefaultValue(): bool
+    {
+        if (null === $this->property->getType()) {
+            return $this->property->getDefaultValue() !== null;
+        }
+
+        return $this->property->hasDefaultValue();
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return $this->property->getDefaultValue();
     }
 
     public function allowsNull(): bool

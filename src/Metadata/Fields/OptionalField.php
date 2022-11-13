@@ -6,10 +6,28 @@ use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\SetterInterface;
 use ReflectionType;
 
-class OptionalField implements FieldInterface, GetterInterface, SetterInterface
+class OptionalField implements FieldWithPossibleDefaultValue, GetterInterface, SetterInterface
 {
     public function __construct(private FieldInterface $field1, private ?FieldInterface $field2 = null)
     {
+    }
+
+    public function hasDefaultValue(): bool
+    {
+        if ($this->field1 instanceof FieldWithPossibleDefaultValue && $this->field1->hasDefaultValue()) {
+            return true;
+        }
+
+        return $this->field2 instanceof FieldWithPossibleDefaultValue && $this->field2->hasDefaultValue();
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        if ($this->field1 instanceof FieldWithPossibleDefaultValue && $this->field1->hasDefaultValue()) {
+            return $this->field1->getDefaultValue();
+        }
+        assert($this->field2 instanceof FieldWithPossibleDefaultValue);
+        return $this->field2->getDefaultValue();
     }
 
     public function allowsNull(): bool
