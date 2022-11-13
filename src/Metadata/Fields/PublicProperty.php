@@ -15,7 +15,14 @@ final class PublicProperty implements FieldInterface, GetterInterface, SetterInt
 
     public function __construct(private readonly ReflectionProperty $property, bool $optional = false)
     {
-        $this->required = !$optional && empty($property->getAttributes(Optional::class)) && !$this->property->hasDefaultValue();
+        $hasDefaultValue = $property->hasDefaultValue();
+        if (null === $property->getType()) {
+            $hasDefaultValue = $property->getDefaultValue() !== null;
+        }
+
+        $this->required = !$optional
+            && empty($property->getAttributes(Optional::class))
+            && !$hasDefaultValue;
     }
 
     public function allowsNull(): bool
