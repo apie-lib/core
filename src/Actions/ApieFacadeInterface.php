@@ -50,6 +50,13 @@ interface ApieFacadeInterface
     public function denormalizeNewObject(string|int|float|bool|ItemList|ItemHashmap|array|null $object, string $desiredType, ApieContext $apieContext): mixed;
 
     /**
+     * @template T of object
+     * @param T $existingObject
+     * @return T
+     */
+    public function denormalizeOnExistingObject(ItemHashmap $object, object $existingObject, ApieContext $apieContext): mixed;
+    
+    /**
      * @param string|int|float|bool|ItemList<mixed>|ItemHashmap<mixed>|array<string, mixed>|null $input
      */
     public function denormalizeOnMethodCall(string|int|float|bool|ItemList|ItemHashmap|array|null $input, ?object $object, ReflectionMethod $method, ApieContext $apieContext): mixed;
