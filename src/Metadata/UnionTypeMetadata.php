@@ -6,7 +6,7 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 use Apie\Core\Metadata\Fields\OptionalField;
 
-class UnionTypeMetadata implements MetadataInterface
+class UnionTypeMetadata implements NullableMetadataInterface
 {
     /**
      * @var MetadataInterface[] $metadata
@@ -50,11 +50,14 @@ class UnionTypeMetadata implements MetadataInterface
         return new StringList($requiredFields ? array_intersect_key(...$requiredFields) : []);
     }
 
-    public function toScalarType(): ScalarType
+    public function toScalarType(bool $ignoreNull = false): ScalarType
     {
         $current = null;
         foreach ($this->metadata as $objectData) {
-            $type = $objectData->toScalarType();
+            $type = $objectData->toScalarType($ignoreNull);
+            if ($ignoreNull && $type === ScalarType::NULL) {
+                continue;
+            }
             if ($current === null) {
                 $current = $type;
             } elseif ($type !== $current) {

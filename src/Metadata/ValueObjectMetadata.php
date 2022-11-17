@@ -8,7 +8,7 @@ use Apie\Core\Lists\StringList;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
-class ValueObjectMetadata implements MetadataInterface
+class ValueObjectMetadata implements NullableMetadataInterface
 {
     /**
      * @param ReflectionClass<ValueObjectInterface> $class
@@ -33,9 +33,9 @@ class ValueObjectMetadata implements MetadataInterface
         return $this->getNativeType()->getRequiredFields();
     }
 
-    public function toScalarType(): ScalarType
+    public function toScalarType(bool $ignoreNull = false): ScalarType
     {
-        return $this->getNativeType()->toScalarType();
+        return $this->getNativeType()->toScalarType($ignoreNull);
     }
 
     public function getArrayItemType(): ?MetadataInterface
