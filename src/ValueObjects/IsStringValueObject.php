@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
-use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use DateTime;
 use DateTimeInterface;
@@ -34,10 +34,13 @@ trait IsStringValueObject
             $input = $input->value;
         }
         if (is_array($input)) {
-            throw new InvalidStringForValueObjectException(get_debug_type($input), new ReflectionClass(self::class));
+            throw new InvalidTypeException($input, (new ReflectionClass(self::class))->getShortName());
         }
         if (is_object($input) && !$input instanceof Stringable) {
-            throw new InvalidStringForValueObjectException(get_debug_type($input), new ReflectionClass(self::class));
+            throw new InvalidTypeException(
+                $input,
+                (new ReflectionClass(self::class))->getShortName()
+            );
         }
         return new static((string) $input);
     }

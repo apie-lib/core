@@ -3,6 +3,7 @@ namespace Apie\Core\Lists;
 
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Exceptions\ObjectIsEmpty;
 use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\TypeUtils;
 use Apie\Core\ValueObjects\Utils;
@@ -43,6 +44,17 @@ class ItemList implements ItemListInterface
     public function count(): int
     {
         return count($this->internal);
+    }
+
+    /**
+     * @return T
+     */
+    public function first(): mixed
+    {
+        if (empty($this->internal)) {
+            throw ObjectIsEmpty::createForList();
+        }
+        return reset($this->internal);
     }
 
     /**

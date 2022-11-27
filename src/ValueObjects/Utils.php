@@ -250,7 +250,7 @@ final class Utils
         }
 
         if (is_string($input) || is_numeric($input)) {
-            return (string) $input;
+            return (string) '"' . $input . '"';
         }
 
         return gettype($input);

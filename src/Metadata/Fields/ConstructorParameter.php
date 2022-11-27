@@ -4,16 +4,29 @@ namespace Apie\Core\Metadata\Fields;
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Attributes\Context;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Metadata\Concerns\UseContextKey;
+use Apie\Core\Metadata\SetterInterface;
 use ReflectionParameter;
 use ReflectionType;
 
-class ConstructorParameter implements FieldWithPossibleDefaultValue
+class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInterface
 {
     use UseContextKey;
 
     public function __construct(private readonly ReflectionParameter $parameter)
     {
+    }
+
+    public function setValue(object $object, mixed $value, ApieContext $apieContext): void
+    {
+        // no-op
+    }
+    public function markValueAsMissing(): void
+    {
+        if (!$this->hasDefaultValue()) {
+            throw new IndexNotFoundException($this->parameter->name);
+        }
     }
 
     public function allowsNull(): bool
@@ -44,6 +57,9 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue
 
     public function appliesToContext(ApieContext $apieContext): bool
     {
+        if ($this->isField()) {
+            return true;
+        }
         $contextKey = $this->getContextKey($apieContext, $this->parameter);
         return $this->parameter->isDefaultValueAvailable() || $apieContext->hasContext($contextKey);
     }

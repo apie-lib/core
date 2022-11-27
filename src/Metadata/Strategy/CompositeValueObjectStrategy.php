@@ -5,9 +5,8 @@ use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
-use Apie\Core\Metadata\Fields\Typehint;
+use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\StrategyInterface;
-use Apie\Core\ReflectionTypeFactory;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
@@ -31,10 +30,9 @@ final class CompositeValueObjectStrategy implements StrategyInterface
         $method = $this->class->getMethod('getFields');
         $map = [];
         foreach ($method->invoke(null) as $name => $field) {
-            $map[$name] = new Typehint(
-                ReflectionTypeFactory::createReflectionType($field->getTypehint()),
-                !$field->isOptional()
-            );
+            $prop = $this->class->getProperty($name);
+            $prop->setAccessible(true);
+            $map[$name] = new PublicProperty($prop, $field->isOptional());
         }
         return new CompositeMetadata(new MetadataFieldHashmap($map));
     }
