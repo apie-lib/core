@@ -8,6 +8,7 @@ use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
+use Apie\Core\Metadata\Strategy\ExceptionStrategy;
 use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
@@ -59,6 +60,9 @@ final class MetadataFactory
         }
         if (ValueObjectStrategy::supports($class)) {
             return new ValueObjectStrategy($class);
+        }
+        if (ExceptionStrategy::supports($class)) {
+            return new ExceptionStrategy($class);
         }
         if (RegularObjectStrategy::supports($class)) {
             return new RegularObjectStrategy($class);
