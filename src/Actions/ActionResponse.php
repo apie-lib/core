@@ -2,6 +2,8 @@
 namespace Apie\Core\Actions;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\ClientRequestException;
+use Apie\Core\Exceptions\HttpStatusCodeException;
 use Throwable;
 
 final class ActionResponse
@@ -10,12 +12,25 @@ final class ActionResponse
 
     public readonly mixed $resource;
     
-    public readonly Throwable $error;
+    public readonly Throwable&HttpStatusCodeException $error;
 
     private mixed $nativeData;
 
     private function __construct(private readonly ApieFacadeInterface $apieFacade, public readonly ApieContext $apieContext, public readonly ActionResponseStatus $status)
     {
+    }
+
+    public static function createClientError(ApieFacadeInterface $apieFacade, ApieContext $apieContext, Throwable $error): self
+    {
+        $res = new self($apieFacade, $apieContext, ActionResponseStatus::CLIENT_ERROR);
+        $statusCode = ($error instanceof HttpStatusCodeException) ? $error->getStatusCode() : 500;
+        if ($statusCode < 400 || $statusCode >= 500) {
+            $error = new ClientRequestException($error);
+        }
+        $res->result = $error;
+        /** @var Throwable&HttpStatusCodeException $error */
+        $res->error = $error;
+        return $res;
     }
 
     public static function createCreationSuccess(ApieFacadeInterface $apieFacade, ApieContext $apieContext, mixed $result, mixed $resource): self
@@ -40,7 +55,7 @@ final class ActionResponse
     public function getStatusCode(): int
     {
         return match ($this->status) {
-            ActionResponseStatus::CLIENT_ERROR => 400,
+            ActionResponseStatus::CLIENT_ERROR => $this->error->getStatusCode(),
             ActionResponseStatus::CREATED => 201,
             ActionResponseStatus::SUCCESS => 200,
             ActionResponseStatus::DELETED => 204,
