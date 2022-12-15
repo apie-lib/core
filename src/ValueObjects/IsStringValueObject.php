@@ -42,6 +42,11 @@ trait IsStringValueObject
                 (new ReflectionClass(self::class))->getShortName()
             );
         }
+        $class = new ReflectionClass(static::class);
+        if (!$class->isInstantiable()) {
+            return new self((string) $input);
+        }
+
         return new static((string) $input);
     }
     public function toNative(): string
