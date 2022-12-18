@@ -11,7 +11,7 @@ final class ClientRequestException extends ApieException implements HttpStatusCo
     public function __construct(Throwable $previous)
     {
         parent::__construct(
-            'Client request error',
+            'Unknown client request error: ' . $previous->getMessage(),
             0,
             $previous
         );

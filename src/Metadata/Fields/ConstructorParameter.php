@@ -24,7 +24,7 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
     }
     public function markValueAsMissing(): void
     {
-        if (!$this->hasDefaultValue()) {
+        if (!$this->hasDefaultValue() && $this->isField()) {
             throw new IndexNotFoundException($this->parameter->name);
         }
     }
@@ -47,7 +47,7 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
 
     public function isRequired(): bool
     {
-        return !$this->parameter->isDefaultValueAvailable();
+        return !$this->parameter->isDefaultValueAvailable() && $this->isField();
     }
 
     public function isField(): bool
