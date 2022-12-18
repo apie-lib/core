@@ -10,7 +10,7 @@ use Apie\Core\Metadata\SetterInterface;
 use ReflectionParameter;
 use ReflectionType;
 
-class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInterface
+class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInterface, FallbackFieldInterface
 {
     use UseContextKey;
 
@@ -27,6 +27,18 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
         if (!$this->hasDefaultValue() && $this->isField()) {
             throw new IndexNotFoundException($this->parameter->name);
         }
+    }
+
+    public function getMissingValue(ApieContext $apieContext): mixed
+    {
+        if ($this->isField()) {
+            if (!$this->hasDefaultValue()) {
+                throw new IndexNotFoundException($this->parameter->name);
+            }
+            return $this->getDefaultValue();
+        }
+        $contextKey = $this->getContextKey($apieContext, $this->parameter);
+        return $apieContext->getContext($contextKey);
     }
 
     public function allowsNull(): bool
