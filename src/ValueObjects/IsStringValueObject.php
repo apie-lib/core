@@ -44,6 +44,7 @@ trait IsStringValueObject
         }
         $class = new ReflectionClass(static::class);
         if (!$class->isInstantiable()) {
+            self::validate((string) $input);
             return new self((string) $input);
         }
 
