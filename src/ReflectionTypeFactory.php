@@ -9,7 +9,7 @@ use RuntimeException;
 
 /**
  * This code is evil, do not reuse!
- *
+ * @codeCoverageIgnore
  * @internal
  */
 final class ReflectionTypeFactory
