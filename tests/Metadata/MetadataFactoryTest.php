@@ -123,8 +123,8 @@ class MetadataFactoryTest extends TestCase
     {
         $context = new ApieContext();
         yield 'Creation of entity' => [
-            ['id', 'orderLineList'],
-            ['id', 'orderLineList'],
+            ['id', 'orderLines'],
+            ['id', 'orderLines'],
             'getCreationMetadata',
             Order::class,
             $context

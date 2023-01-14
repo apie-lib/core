@@ -6,6 +6,7 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
+use ReflectionNamedType;
 
 final class PropertyToFieldMetadataUtil
 {
@@ -42,13 +43,13 @@ final class PropertyToFieldMetadataUtil
     {
         $hashmap = $node->getHashmap();
         $key = array_shift($property);
-
         if (isset($hashmap[$key])) {
             if (empty($property)) {
                 return $hashmap[$key];
             }
-            $class = $node->toClass();
-            if ($class !== null) {
+            $type = $hashmap[$key]->getTypehint();
+            if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                $class = new ReflectionClass($type->getName());
                 return self::visit(
                     MetadataFactory::getCreationMetadata($class, $apieContext),
                     $apieContext,
@@ -56,7 +57,6 @@ final class PropertyToFieldMetadataUtil
                 );
             }
         }
-
         $arrayItemType = $node->getArrayItemType();
         if (null === $arrayItemType) {
             return null;

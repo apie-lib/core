@@ -5,7 +5,6 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
-use ReflectionClass;
 use ReflectionEnum;
 
 class EnumMetadata implements MetadataInterface
