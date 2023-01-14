@@ -51,7 +51,8 @@ final class ExceptionStrategy implements StrategyInterface
             $fields['errors'] = new GetterMethod($this->class->getMethod('getErrors'));
         }
         return new CompositeMetadata(
-            new MetadataFieldHashmap($fields)
+            new MetadataFieldHashmap($fields),
+            $this->class
         );
     }
 }

@@ -17,6 +17,11 @@ class ValueObjectMetadata implements NullableMetadataInterface
     {
     }
 
+    public function toClass(): ReflectionClass
+    {
+        return $this->class;
+    }
+
     public function getNativeType(): MetadataInterface
     {
         $method = $this->class->getMethod('toNative');

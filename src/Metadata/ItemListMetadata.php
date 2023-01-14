@@ -17,6 +17,11 @@ final class ItemListMetadata implements MetadataInterface
     {
     }
 
+    public function toClass(): ReflectionClass
+    {
+        return $this->class;
+    }
+
     public function getHashmap(): MetadataFieldHashmap
     {
         return new MetadataFieldHashmap();

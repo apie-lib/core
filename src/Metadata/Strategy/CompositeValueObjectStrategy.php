@@ -34,7 +34,7 @@ final class CompositeValueObjectStrategy implements StrategyInterface
             $prop->setAccessible(true);
             $map[$name] = new PublicProperty($prop, $field->isOptional());
         }
-        return new CompositeMetadata(new MetadataFieldHashmap($map));
+        return new CompositeMetadata(new MetadataFieldHashmap($map), $this->class);
     }
 
     public function getModificationMetadata(ApieContext $context): CompositeMetadata

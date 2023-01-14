@@ -36,7 +36,7 @@ final class DtoStrategy implements StrategyInterface
             $list[$property->getName()] = new PublicProperty($property, $optional);
         }
     
-        return new CompositeMetadata(new MetadataFieldHashmap($list));
+        return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
     }
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata

@@ -43,9 +43,20 @@ final class PropertyToFieldMetadataUtil
         $hashmap = $node->getHashmap();
         $key = array_shift($property);
 
-        if (isset($hashmap[$key]) && empty($property)) {
-            return $hashmap[$key];
+        if (isset($hashmap[$key])) {
+            if (empty($property)) {
+                return $hashmap[$key];
+            }
+            $class = $node->toClass();
+            if ($class !== null) {
+                return self::visit(
+                    MetadataFactory::getCreationMetadata($class, $apieContext),
+                    $apieContext,
+                    $property
+                );
+            }
         }
+
         $arrayItemType = $node->getArrayItemType();
         if (null === $arrayItemType) {
             return null;

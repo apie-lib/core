@@ -5,12 +5,18 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use ReflectionClass;
 use ReflectionEnum;
 
 class EnumMetadata implements MetadataInterface
 {
     public function __construct(private ReflectionEnum $enum)
     {
+    }
+
+    public function toClass(): ReflectionEnum
+    {
+        return $this->enum;
     }
 
     public function getHashmap(): MetadataFieldHashmap

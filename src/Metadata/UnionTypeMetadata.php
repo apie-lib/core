@@ -5,6 +5,7 @@ use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 use Apie\Core\Metadata\Fields\OptionalField;
+use ReflectionClass;
 
 class UnionTypeMetadata implements NullableMetadataInterface
 {
@@ -16,6 +17,26 @@ class UnionTypeMetadata implements NullableMetadataInterface
     public function __construct(MetadataInterface... $metadata)
     {
         $this->metadata = $metadata;
+    }
+
+    public function toClass(): ?ReflectionClass
+    {
+        $first = false;
+        $class = null;
+        foreach ($this->metadata as $metadata) {
+            $current = $metadata->toClass();
+            if (null === $current) {
+                return null;
+            }
+            if ($first) {
+                $class = $metadata->toClass();
+                $first = false;
+            }
+            if ($current->name !== $class->name) {
+                return null;
+            }
+        }
+        return null;
     }
 
     /**

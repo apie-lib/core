@@ -47,7 +47,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
             $class = $class->getParentClass();
         }
 
-        return new CompositeMetadata(new MetadataFieldHashmap($list));
+        return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
     }
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
@@ -71,7 +71,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
             $class = $class->getParentClass();
         }
 
-        return new CompositeMetadata(new MetadataFieldHashmap($list));
+        return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
     }
 
     public function getResultMetadata(ApieContext $context): CompositeMetadata
@@ -95,7 +95,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
             $class = $class->getParentClass();
         }
 
-        return new CompositeMetadata(new MetadataFieldHashmap($list));
+        return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
     }
 
     /**

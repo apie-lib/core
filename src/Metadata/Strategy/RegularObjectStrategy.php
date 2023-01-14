@@ -47,7 +47,7 @@ final class RegularObjectStrategy implements StrategyInterface
             }
         }
 
-        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort());
+        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort(), $this->class);
     }
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
@@ -72,7 +72,7 @@ final class RegularObjectStrategy implements StrategyInterface
             }
         }
 
-        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort());
+        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort(), $this->class);
     }
 
     public function getResultMetadata(ApieContext $context): CompositeMetadata
@@ -89,6 +89,6 @@ final class RegularObjectStrategy implements StrategyInterface
             }
         }
 
-        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort());
+        return new CompositeMetadata((new MetadataFieldHashmap($list))->sort(), $this->class);
     }
 }

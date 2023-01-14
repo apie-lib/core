@@ -4,11 +4,17 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use ReflectionClass;
 
 final class ScalarMetadata implements MetadataInterface
 {
     public function __construct(private ScalarType $type)
     {
+    }
+
+    public function toClass(): ?ReflectionClass
+    {
+        return null;
     }
 
     public function getHashmap(): MetadataFieldHashmap
