@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Core\Attributes;
 
-use Apie\Core\Context\ApieContext;
 use Attribute;
 
 /**

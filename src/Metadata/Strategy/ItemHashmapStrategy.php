@@ -23,16 +23,16 @@ final class ItemHashmapStrategy implements StrategyInterface
 
     public function getCreationMetadata(ApieContext $context): ItemHashmapMetadata
     {
-        return new ItemHashmapMetadata($this->class);
+        return new ItemHashmapMetadata($this->class, true);
     }
 
     public function getModificationMetadata(ApieContext $context): ItemHashmapMetadata
     {
-        return new ItemHashmapMetadata($this->class);
+        return new ItemHashmapMetadata($this->class, true);
     }
 
     public function getResultMetadata(ApieContext $context): ItemHashmapMetadata
     {
-        return new ItemHashmapMetadata($this->class);
+        return new ItemHashmapMetadata($this->class, false);
     }
 }

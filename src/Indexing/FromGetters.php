@@ -3,12 +3,9 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\FieldInterface;
-use Apie\Core\Metadata\Fields\GetterMethod;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\MetadataFactory;
-use Apie\Core\ReflectionTypeFactory;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -44,7 +41,6 @@ class FromGetters implements IndexingStrategyInterface
             }
             $value = (string) $value;
             $result[$value] = $this->getPrio($propertyName, $typehint, $fieldMetadata, $value, $result[$value] ?? 0);
-        
         }
         return $result;
     }
@@ -58,7 +54,7 @@ class FromGetters implements IndexingStrategyInterface
     ): int {
         if (in_array($typehint->getName(), ['string', 'int', 'float'])) {
             return max(
-                match($propertyName) {
+                match ($propertyName) {
                     'id' => 1,
                     'name' => 5,
                     'description' => 4,

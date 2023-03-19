@@ -13,7 +13,7 @@ final class ItemHashmapMetadata implements MetadataInterface
     /**
      * @param ReflectionClass<ItemHashmap> $class
      */
-    public function __construct(private readonly ReflectionClass $class)
+    public function __construct(private readonly ReflectionClass $class, private readonly bool $creation = true)
     {
     }
 
@@ -37,10 +37,11 @@ final class ItemHashmapMetadata implements MetadataInterface
     }
     public function getArrayItemType(): ?MetadataInterface
     {
-        return MetadataFactory::getMetadataStrategyForType(
+        $strategy = MetadataFactory::getMetadataStrategyForType(
             $this->class->getMethod('offsetGet')->getReturnType()
-        )->getCreationMetadata(
-            new ApieContext()
         );
+        return $this->creation
+            ? $strategy->getCreationMetadata(new ApieContext())
+            : $strategy->getResultMetadata(new ApieContext());
     }
 }

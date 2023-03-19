@@ -3,12 +3,7 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Attributes\ProvideIndex;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Metadata\Fields\DiscriminatorColumn;
-use Apie\Core\Metadata\GetterInterface;
-use Apie\Core\Metadata\MetadataFactory;
 use ReflectionClass;
-use ReflectionNamedType;
 
 class FromAttribute implements IndexingStrategyInterface
 {

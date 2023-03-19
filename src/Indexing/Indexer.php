@@ -3,7 +3,6 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
-use ReflectionClass;
 
 final class Indexer
 {

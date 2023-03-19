@@ -1,9 +1,15 @@
 <?php
 namespace Apie\Core\Datalayers\Lists;
 
+use Apie\Core\Datalayers\InMemory\CountArray;
+use Apie\Core\Datalayers\InMemory\GetFromArray;
+use Apie\Core\Datalayers\InMemory\TakeFromArray;
 use Apie\Core\Datalayers\Interfaces\CountItems;
 use Apie\Core\Datalayers\Interfaces\GetItem;
 use Apie\Core\Datalayers\Interfaces\TakeItem;
+use Apie\Core\Datalayers\Lists\Filtered\CountFilteredItem;
+use Apie\Core\Datalayers\Lists\Filtered\FilteredItem;
+use Apie\Core\Datalayers\Lists\Filtered\TakeFilteredItem;
 use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Datalayers\ValueObjects\LazyLoadedListIdentifier;
 use Apie\Core\Entities\EntityInterface;
@@ -25,6 +31,24 @@ final class LazyLoadedList implements EntityInterface
         private TakeItem $takeItem,
         private CountItems $countItems
     ) {
+    }
+
+    /**
+     * @template T
+     * @param array<int, T> $input
+     * @return LazyLoadedList<T>
+     */
+    public static function createFromArray(LazyLoadedListIdentifier $id, array $input): self
+    {
+        $callable = function () use ($input) {
+            return $input;
+        };
+        return new LazyLoadedList(
+            $id,
+            new GetFromArray($callable),
+            new TakeFromArray($callable),
+            new CountArray($callable)
+        );
     }
 
     /**
@@ -64,5 +88,24 @@ final class LazyLoadedList implements EntityInterface
     public function totalCount(): int
     {
         return ($this->countItems)(new QuerySearch(0));
+    }
+
+    /**
+     * @param callable(T): bool $filterFn
+     */
+    public function filterList(callable $filterFn): self
+    {
+        $filteredList = new FilteredItem(
+            $this->getItem,
+            $this->totalCount(),
+            $filterFn
+        );
+
+        return new self(
+            $this->id,
+            $filteredList,
+            new TakeFilteredItem($filteredList),
+            new CountFilteredItem($filteredList)
+        );
     }
 }
