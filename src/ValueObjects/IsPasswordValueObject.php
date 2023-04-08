@@ -6,11 +6,13 @@ use Stringable;
 
 trait IsPasswordValueObject
 {
-    use IsStringWithRegexValueObject;
+    use IsStringWithRegexValueObject {
+        __construct as private initObject;
+    }
 
     public function __construct(#[SensitiveParameter] string|int|float|bool|Stringable $input)
     {
-        parent::__construct($input);
+        $this->initObject($input);
     }
 
     public static function getRegularExpression(): string
