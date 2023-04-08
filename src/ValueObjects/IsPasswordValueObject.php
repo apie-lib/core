@@ -1,9 +1,17 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use SensitiveParameter;
+use Stringable;
+
 trait IsPasswordValueObject
 {
     use IsStringWithRegexValueObject;
+
+    public function __construct(#[SensitiveParameter] string|int|float|bool|Stringable $input)
+    {
+        parent::__construct($input);
+    }
 
     public static function getRegularExpression(): string
     {
