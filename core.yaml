@@ -1,0 +1,54 @@
+services:
+  apie.route_definitions.provider:
+    class: Apie\Core\RouteDefinitions\ChainedRouteDefinitionProvider
+    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createRoutedDefinitionProvider']
+    arguments:
+      - !tagged apie.core.route_definition
+
+  apie.csrf_token_provider:
+    alias: Apie\Core\Session\CsrfTokenProvider
+    public: true
+
+  Apie\Core\Session\CsrfTokenProvider:
+    alias: Apie\ApieBundle\ContextBuilders\CsrfTokenContextBuilder
+
+  Apie\Core\BoundedContext\BoundedContextHashmap:
+    factory: ["@apie.bounded_context.hashmap_factory", "create"]
+
+  Apie\Core\ContextBuilders\ContextBuilderFactory:
+    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
+    arguments:
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
+      - '@?Apie\Serializer\DecoderHashmap'
+      - !tagged apie.core.context_builder
+
+  apie.bounded_context.hashmap:
+    alias: Apie\Core\BoundedContext\BoundedContextHashmap
+    public: true
+
+  apie.context.factory:
+    alias: Apie\Core\ContextBuilders\ContextBuilderFactory
+    public: true
+
+  Apie\Core\Datalayers\ApieDatalayer:
+    alias: Apie\Core\Datalayers\GroupedDataLayer
+
+  Apie\Core\Datalayers\GroupedDataLayer:
+    arguments:
+      - '@Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext'
+
+  apie.datalayer:
+    alias: Apie\Core\Datalayers\ApieDatalayer
+
+  Apie\Core\Indexing\Indexer:
+    factory: ['Apie\Core\Indexing\Indexer', 'create']
+
+  Apie\Core\Datalayers\Search\LazyLoadedListFilterer:
+    arguments:
+      - '@Apie\Core\Indexing\Indexer'
+
+  Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext:
+    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
+    arguments:
+      - '%apie.datalayers%'
+      - !tagged_locator apie.datalayer
