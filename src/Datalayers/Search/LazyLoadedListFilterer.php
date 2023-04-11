@@ -15,10 +15,11 @@ final class LazyLoadedListFilterer
     ) {
     }
 
-    public function filterList(LazyLoadedList $lazyLoadedList, ApieContext $apieContext, QuerySearch $querySearch): LazyLoadedList
+    public function filterList(LazyLoadedList $lazyLoadedList, ApieContext $apieContext, QuerySearch $querySearch, bool $partialSearch = false): LazyLoadedList
     {
-        return $lazyLoadedList->filterList(function (EntityInterface $object) use ($querySearch, $apieContext) {
-            return $this->appliesSearch($object, $querySearch, $apieContext);
+        $method = $partialSearch ? 'appliesPartialSearch' : 'appliesSearch';
+        return $lazyLoadedList->filterList(function (EntityInterface $object) use ($method, $querySearch, $apieContext) {
+            return $this->$method($object, $querySearch, $apieContext);
         });
     }
 
@@ -35,6 +36,19 @@ final class LazyLoadedListFilterer
             }
         }
 
+        return false;
+    }
+
+    public function appliesPartialSearch(EntityInterface $object, QuerySearch $querySearch, ApieContext $apieContext = new ApieContext()): bool
+    {
+        $searchTerm = $querySearch->getTextSearch();
+        $indexes = $this->indexer->getIndexesForEntity($object, $apieContext);
+        foreach (array_keys($indexes) as $index) {
+            if (strpos($index, $searchTerm) !== false) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
