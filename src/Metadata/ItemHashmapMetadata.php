@@ -17,6 +17,9 @@ final class ItemHashmapMetadata implements MetadataInterface
     {
     }
 
+    /**
+     * @return ReflectionClass<ItemHashmap>
+     */
     public function toClass(): ReflectionClass
     {
         return $this->class;

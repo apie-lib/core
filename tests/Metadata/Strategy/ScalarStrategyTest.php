@@ -5,7 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\ScalarStrategy;
-use Apie\Core\ReflectionTypeFactory;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use PHPUnit\Framework\TestCase;
 
 class ScalarStrategyTest extends TestCase

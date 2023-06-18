@@ -4,16 +4,23 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
 final class CompositeMetadata implements MetadataInterface
 {
     private ?StringList $requiredFields = null;
 
+    /**
+     * @param ReflectionClass<ValueObjectInterface> $class
+     */
     public function __construct(private readonly MetadataFieldHashmap $hashmap, private ?ReflectionClass $class = null)
     {
     }
 
+    /**
+     * @return ReflectionClass<ValueObjectInterface>
+     */
     public function toClass(): ?ReflectionClass
     {
         return $this->class;

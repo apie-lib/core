@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Core\Datalayers\Lists\Filtered;
 
-use Apie\Core\Datalayers\Interfaces\CountItems;
 use Apie\Core\Datalayers\Interfaces\GetItem;
 use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Entities\EntityInterface;
@@ -12,6 +11,9 @@ use Apie\Core\Entities\EntityInterface;
  */
 final class FilteredItem implements GetItem
 {
+    /**
+     * @var array<int, T>
+     */
     private array $hydrated = [];
     private int $currentIndex = 0;
     /**
@@ -21,7 +23,6 @@ final class FilteredItem implements GetItem
 
     /**
      * @param GetItem<T> $getItem
-     * @param CountItems<T> $countItem
      * @param callable(T): bool $filterFn
      */
     public function __construct(

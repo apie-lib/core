@@ -3,6 +3,7 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Attributes\ProvideIndex;
 use Apie\Core\Context\ApieContext;
+use ReflectionAttribute;
 use ReflectionClass;
 
 class FromAttribute implements IndexingStrategyInterface
@@ -22,7 +23,7 @@ class FromAttribute implements IndexingStrategyInterface
         $result = [];
         $attributes = $refl->getAttributes(ProvideIndex::class);
         foreach ($attributes as $attribute) {
-            /** @var ProvideIndex $attribute */
+            /** @var ReflectionAttribute<ProvideIndex> $attribute */
             $method = $refl->getMethod($attribute->newInstance()->methodName);
             $result += $method->invoke($object);
         }

@@ -15,6 +15,11 @@ final class LazyLoadedListFilterer
     ) {
     }
 
+    /**
+     * @template T of EntityInterface
+     * @param LazyLoadedList<T> $lazyLoadedList
+     * @return LazyLoadedList<T>
+     */
     public function filterList(LazyLoadedList $lazyLoadedList, ApieContext $apieContext, QuerySearch $querySearch, bool $partialSearch = false): LazyLoadedList
     {
         $method = $partialSearch ? 'appliesPartialSearch' : 'appliesSearch';
@@ -52,7 +57,7 @@ final class LazyLoadedListFilterer
         return false;
     }
 
-    private function compare(string $value1, mixed $value2)
+    private function compare(string $value1, mixed $value2): bool
     {
         $value2 = Utils::toString($value2);
         return $value1 === $value2;

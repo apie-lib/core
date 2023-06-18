@@ -5,7 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Other\DiscriminatorMapping;
-use Apie\Core\ReflectionTypeFactory;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionType;
 

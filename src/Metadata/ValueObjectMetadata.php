@@ -17,6 +17,9 @@ class ValueObjectMetadata implements NullableMetadataInterface
     {
     }
 
+    /**
+     * @return ReflectionClass<ValueObjectInterface>
+     */
     public function toClass(): ReflectionClass
     {
         return $this->class;

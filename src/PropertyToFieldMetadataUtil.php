@@ -14,6 +14,9 @@ final class PropertyToFieldMetadataUtil
     {
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     public static function fromPropertyStringToFieldMetadata(
         ReflectionClass $class,
         ApieContext $apieContext,
@@ -23,6 +26,7 @@ final class PropertyToFieldMetadataUtil
     }
 
     /**
+     * @param ReflectionClass<object> $class
      * @param array<int, string> $property
      */
     public static function fromPropertyArrayToFieldMetadata(

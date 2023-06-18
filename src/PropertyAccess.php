@@ -77,7 +77,7 @@ final class PropertyAccess
     }
 
     /**
-     * @phpstan-return $throwErrorOnMissing ? never : null
+     * @phpstan-return ($throwErrorOnMissing is true ? never : null)
      */
     private static function throwErrorOnMissingValue(?string $key, bool $throwErrorOnMissing): mixed
     {

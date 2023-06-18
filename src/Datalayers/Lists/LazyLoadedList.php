@@ -14,11 +14,14 @@ use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Datalayers\ValueObjects\LazyLoadedListIdentifier;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Lists\ItemList;
+use Iterator;
+use IteratorAggregate;
 
 /**
  * @template T of EntityInterface
+ * @implements IteratorAggregate<int, EntityInterface>
  */
-final class LazyLoadedList implements EntityInterface
+final class LazyLoadedList implements EntityInterface, IteratorAggregate
 {
     /**
      * @param LazyLoadedListIdentifier<T> $id
@@ -33,8 +36,14 @@ final class LazyLoadedList implements EntityInterface
     ) {
     }
 
+    public function getIterator(): Iterator
+    {
+        $total = $this->totalCount();
+        return new ItemList($this->take(0, $total));
+    }
+
     /**
-     * @template T
+     * @param LazyLoadedListIdentifier<T> $id
      * @param array<int, T> $input
      * @return LazyLoadedList<T>
      */
@@ -92,6 +101,7 @@ final class LazyLoadedList implements EntityInterface
 
     /**
      * @param callable(T): bool $filterFn
+     * @return LazyLoadedList<T>
      */
     public function filterList(callable $filterFn): self
     {

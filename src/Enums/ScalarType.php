@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Enums;
 
-use Apie\Core\ReflectionTypeFactory;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionType;
 use stdClass;
 

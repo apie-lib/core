@@ -17,6 +17,9 @@ final class ItemListMetadata implements MetadataInterface
     {
     }
 
+    /**
+     * @return ReflectionClass<ItemList>
+     */
     public function toClass(): ReflectionClass
     {
         return $this->class;

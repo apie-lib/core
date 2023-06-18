@@ -21,7 +21,7 @@ class UnionTypeMetadata implements NullableMetadataInterface
 
     public function toClass(): ?ReflectionClass
     {
-        $first = false;
+        $first = true;
         $class = null;
         foreach ($this->metadata as $metadata) {
             $current = $metadata->toClass();

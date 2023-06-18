@@ -28,6 +28,7 @@ class FromGetters implements IndexingStrategyInterface
             if (!$fieldMetadata->isField() || !$fieldMetadata instanceof GetterInterface) {
                 continue;
             }
+            /** @var GetterInterface&FieldInterface $fieldMetadata */
             $typehint = $fieldMetadata->getTypehint();
             if (!$typehint instanceof ReflectionNamedType) {
                 continue;
@@ -65,9 +66,11 @@ class FromGetters implements IndexingStrategyInterface
         } elseif (!$typehint->isBuiltin() && class_exists($typehint->getName())) {
             $refl = new ReflectionClass($typehint->getName());
             if ($refl->implementsInterface(ValueObjectInterface::class)) {
+                $returnType = $refl->getMethod('toNative')->getReturnType();
+                assert($returnType instanceof ReflectionNamedType);
                 return $this->getPrio(
                     $propertyName,
-                    $refl->getMethod('toNative')->getReturnType(),
+                    $returnType,
                     $fieldMetadata,
                     $value,
                     $currentPrio
