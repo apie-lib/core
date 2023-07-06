@@ -1,7 +1,7 @@
 services:
   apie.route_definitions.provider:
     class: Apie\Core\RouteDefinitions\ChainedRouteDefinitionProvider
-    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createRoutedDefinitionProvider']
+    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createRoutedDefinitionProvider']
     arguments:
       - !tagged apie.core.route_definition
 
@@ -16,7 +16,7 @@ services:
     factory: ["@apie.bounded_context.hashmap_factory", "create"]
 
   Apie\Core\ContextBuilders\ContextBuilderFactory:
-    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
+    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
     arguments:
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
       - '@?Apie\Serializer\DecoderHashmap'
@@ -48,7 +48,7 @@ services:
       - '@Apie\Core\Indexing\Indexer'
 
   Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext:
-    factory: ['Apie\ApieBundle\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
+    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
     arguments:
       - '%apie.datalayers%'
       - !tagged_locator apie.datalayer

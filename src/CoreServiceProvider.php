@@ -18,15 +18,15 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->singleton(
             'apie.route_definitions.provider',
             function ($app) {
-                return \Apie\ApieBundle\Wrappers\GeneralServiceFactory::createRoutedDefinitionProvider(
+                return \Apie\Common\Wrappers\GeneralServiceFactory::createRoutedDefinitionProvider(
                     $this->getTaggedServicesIterator('apie.core.route_definition')
                 );
                 
             }
         );
-        $this->app->bind(\Apie\Core\Session\CsrfTokenProvider::class, 'apie.csrf_token_provider');
+        $this->app->bind('apie.csrf_token_provider', \Apie\Core\Session\CsrfTokenProvider::class);
         
-        $this->app->bind(\Apie\ApieBundle\ContextBuilders\CsrfTokenContextBuilder::class, \Apie\Core\Session\CsrfTokenProvider::class);
+        $this->app->bind(\Apie\Core\Session\CsrfTokenProvider::class, \Apie\ApieBundle\ContextBuilders\CsrfTokenContextBuilder::class);
         
         $this->app->singleton(
             \Apie\Core\BoundedContext\BoundedContextHashmap::class,
@@ -40,7 +40,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->singleton(
             \Apie\Core\ContextBuilders\ContextBuilderFactory::class,
             function ($app) {
-                return \Apie\ApieBundle\Wrappers\GeneralServiceFactory::createContextBuilderFactory(
+                return \Apie\Common\Wrappers\GeneralServiceFactory::createContextBuilderFactory(
                     $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class),
                     $app->bound(\Apie\Serializer\DecoderHashmap::class) ? $app->make(\Apie\Serializer\DecoderHashmap::class) : null,
                     $this->getTaggedServicesIterator('apie.core.context_builder')
@@ -48,11 +48,11 @@ class CoreServiceProvider extends ServiceProvider
                 
             }
         );
-        $this->app->bind(\Apie\Core\BoundedContext\BoundedContextHashmap::class, 'apie.bounded_context.hashmap');
+        $this->app->bind('apie.bounded_context.hashmap', \Apie\Core\BoundedContext\BoundedContextHashmap::class);
         
-        $this->app->bind(\Apie\Core\ContextBuilders\ContextBuilderFactory::class, 'apie.context.factory');
+        $this->app->bind('apie.context.factory', \Apie\Core\ContextBuilders\ContextBuilderFactory::class);
         
-        $this->app->bind(\Apie\Core\Datalayers\GroupedDataLayer::class, \Apie\Core\Datalayers\ApieDatalayer::class);
+        $this->app->bind(\Apie\Core\Datalayers\ApieDatalayer::class, \Apie\Core\Datalayers\GroupedDataLayer::class);
         
         $this->app->singleton(
             \Apie\Core\Datalayers\GroupedDataLayer::class,
@@ -62,7 +62,7 @@ class CoreServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->bind(\Apie\Core\Datalayers\ApieDatalayer::class, 'apie.datalayer');
+        $this->app->bind('apie.datalayer', \Apie\Core\Datalayers\ApieDatalayer::class);
         
         $this->app->singleton(
             \Apie\Core\Indexing\Indexer::class,
@@ -84,7 +84,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->singleton(
             \Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class,
             function ($app) {
-                return \Apie\ApieBundle\Wrappers\GeneralServiceFactory::createDataLayerMap(
+                return \Apie\Common\Wrappers\GeneralServiceFactory::createDataLayerMap(
                     $this->parseArgument('%apie.datalayers%'),
                     $this->getTaggedServicesServiceLocator('apie.datalayer')
                 );
