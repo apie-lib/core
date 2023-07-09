@@ -1,10 +1,4 @@
 services:
-  apie.route_definitions.provider:
-    class: Apie\Core\RouteDefinitions\ChainedRouteDefinitionProvider
-    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createRoutedDefinitionProvider']
-    arguments:
-      - !tagged apie.core.route_definition
-
   apie.csrf_token_provider:
     alias: Apie\Core\Session\CsrfTokenProvider
     public: true

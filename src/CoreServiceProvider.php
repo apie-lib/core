@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 /**
  * This file is generated with apie/service-provider-generator from file: core.yaml
  * @codecoverageIgnore
- * @phpstan-ignore
  */
 class CoreServiceProvider extends ServiceProvider
 {
@@ -15,15 +14,6 @@ class CoreServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(
-            'apie.route_definitions.provider',
-            function ($app) {
-                return \Apie\Common\Wrappers\GeneralServiceFactory::createRoutedDefinitionProvider(
-                    $this->getTaggedServicesIterator('apie.core.route_definition')
-                );
-                
-            }
-        );
         $this->app->bind('apie.csrf_token_provider', \Apie\Core\Session\CsrfTokenProvider::class);
         
         $this->app->bind(\Apie\Core\Session\CsrfTokenProvider::class, \Apie\ApieBundle\ContextBuilders\CsrfTokenContextBuilder::class);

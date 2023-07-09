@@ -14,6 +14,9 @@ class BoundedContextHashmapIterator implements Iterator
 {
     private int $counter = 0;
     private ?BoundedContext $currentBoundedContext = null;
+    /**
+     * @var ReflectionClass<EntityInterface>|null
+     */
     private ?ReflectionClass $currentValue = null;
     /**
      * @var array<int, BoundedContext>
@@ -21,7 +24,7 @@ class BoundedContextHashmapIterator implements Iterator
     private array $boundedContextTodo = [];
 
     /**
-     * @var array<int, EntityInterface>
+     * @var array<int, ReflectionClass<EntityInterface>>
      */
     private array $entityTodo = [];
 
