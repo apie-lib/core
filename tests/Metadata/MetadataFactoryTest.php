@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\Core\Metadata;
 
-use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
@@ -80,12 +79,11 @@ class MetadataFactoryTest extends TestCase
         yield [
             ValueObjectStrategy::class, Password::class,
         ];
-        if (trait_exists(CompositeValueObject::class)) {
-            yield [
-                CompositeValueObjectStrategy::class,
-                CompositeValueObjectExample::class,
-            ];
-        }
+    
+        yield [
+            CompositeValueObjectStrategy::class,
+            CompositeValueObjectExample::class,
+        ];
     }
 
     /**
@@ -344,28 +342,26 @@ class MetadataFactoryTest extends TestCase
             $context
         ];
 
-        if (trait_exists(CompositeValueObject::class)) {
-            yield 'Composite value object creation' => [
-                ['withDefaultValue', 'withOptionalAttribute'],
-                [],
-                'getCreationMetadata',
-                CompositeValueObjectWithOptionalFields::class,
-                $context
-            ];
-            yield 'Composite value object modification' => [
-                ['withDefaultValue', 'withOptionalAttribute'],
-                [],
-                'getModificationMetadata',
-                CompositeValueObjectWithOptionalFields::class,
-                $context
-            ];
-            yield 'Composite value object retrieval' => [
-                ['withDefaultValue', 'withOptionalAttribute'],
-                [],
-                'getResultMetadata',
-                CompositeValueObjectWithOptionalFields::class,
-                $context
-            ];
-        }
+        yield 'Composite value object creation' => [
+            ['withDefaultValue', 'withOptionalAttribute'],
+            [],
+            'getCreationMetadata',
+            CompositeValueObjectWithOptionalFields::class,
+            $context
+        ];
+        yield 'Composite value object modification' => [
+            ['withDefaultValue', 'withOptionalAttribute'],
+            [],
+            'getModificationMetadata',
+            CompositeValueObjectWithOptionalFields::class,
+            $context
+        ];
+        yield 'Composite value object retrieval' => [
+            ['withDefaultValue', 'withOptionalAttribute'],
+            [],
+            'getResultMetadata',
+            CompositeValueObjectWithOptionalFields::class,
+            $context
+        ];
     }
 }

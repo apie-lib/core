@@ -7,6 +7,7 @@ use Apie\Core\Identifiers\IdentifierInterface;
 use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
+use ReflectionProperty;
 
 final class IdentifierUtils
 {
@@ -42,6 +43,26 @@ final class IdentifierUtils
             throw new InvalidTypeException($returnType, 'ReflectionNamedType');
         }
         return new ReflectionClass($returnType->getName());
+    }
+
+    /**
+     * @param ReflectionClass<object> $class
+     */
+    public static function classNameToUnderscore(ReflectionClass $class): string
+    {
+        $str = $class->getShortName();
+        $str = lcfirst($str);
+        $str = preg_replace("/[A-Z]/", '_$0', $str);
+        return strtolower($str);
+    }
+
+    public static function propertyToUnderscore(ReflectionProperty $property): string
+    {
+        // TODO check visibility with private properties
+        $str = $property->name;
+        $str = lcfirst($str);
+        $str = preg_replace("/[A-Z]/", '_$0', $str);
+        return strtolower($str);
     }
 
     /**

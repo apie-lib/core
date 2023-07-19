@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\Core;
 
-use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\Fields\ConstructorParameter;
@@ -9,6 +8,7 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\PropertyToFieldMetadataUtil;
+use Apie\Core\ValueObjects\CompositeValueObject;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;

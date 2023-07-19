@@ -10,14 +10,14 @@ use Apie\Core\Metadata\Fields\OptionalField;
 use Apie\Core\Metadata\StrategyInterface;
 use Apie\Core\Other\DiscriminatorConfig;
 use Apie\Core\Other\DiscriminatorMapping;
+use Apie\Core\Utils\EntityUtils;
 use ReflectionClass;
 
 final class PolymorphicEntityStrategy implements StrategyInterface
 {
     public static function supports(ReflectionClass $class): bool
     {
-        return $class->implementsInterface(PolymorphicEntityInterface::class)
-            && !$class->isInterface();
+        return EntityUtils::isPolymorphicEntity($class);
     }
 
     /**

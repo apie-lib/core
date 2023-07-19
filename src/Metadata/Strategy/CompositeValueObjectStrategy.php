@@ -1,12 +1,12 @@
 <?php
 namespace Apie\Core\Metadata\Strategy;
 
-use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\StrategyInterface;
+use Apie\Core\Utils\ValueObjectUtils;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
@@ -14,8 +14,7 @@ final class CompositeValueObjectStrategy implements StrategyInterface
 {
     public static function supports(ReflectionClass $class): bool
     {
-        return $class->implementsInterface(ValueObjectInterface::class)
-            && in_array(CompositeValueObject::class, $class->getTraitNames());
+        return ValueObjectUtils::isCompositeValueObject($class);
     }
 
     /**

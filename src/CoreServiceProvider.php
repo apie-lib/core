@@ -16,8 +16,6 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->app->bind('apie.csrf_token_provider', \Apie\Core\Session\CsrfTokenProvider::class);
         
-        $this->app->bind(\Apie\Core\Session\CsrfTokenProvider::class, \Apie\ApieBundle\ContextBuilders\CsrfTokenContextBuilder::class);
-        
         $this->app->singleton(
             \Apie\Core\BoundedContext\BoundedContextHashmap::class,
             function ($app) {

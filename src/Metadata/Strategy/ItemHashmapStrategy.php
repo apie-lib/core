@@ -5,13 +5,14 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Metadata\ItemHashmapMetadata;
 use Apie\Core\Metadata\StrategyInterface;
+use Apie\Core\Utils\HashmapUtils;
 use ReflectionClass;
 
 final class ItemHashmapStrategy implements StrategyInterface
 {
     public static function supports(ReflectionClass $class): bool
     {
-        return $class->name === ItemHashmap::class || $class->isSubclassOf(ItemHashmap::class);
+        return HashmapUtils::isHashmap($class);
     }
 
     /**

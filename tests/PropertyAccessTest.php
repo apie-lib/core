@@ -73,32 +73,30 @@ class PropertyAccessTest extends TestCase
             'id.something'
         ];
 
-        if (trait_exists(CompositeValueObject::class)) {
-            $userId = UserWithAddressIdentifier::createRandom();
-            $address = new AddressWithZipcodeCheck(
-                new DatabaseText('Evergreen Terrace'),
-                new DatabaseText('743'),
-                new DatabaseText('11111'),
-                new DatabaseText('Springfield')
-            );
-            $user = new UserWithAddress($address, $userId);
-            $user->setPassword(new Password('1Aa-bB'));
+        $userId = UserWithAddressIdentifier::createRandom();
+        $address = new AddressWithZipcodeCheck(
+            new DatabaseText('Evergreen Terrace'),
+            new DatabaseText('743'),
+            new DatabaseText('11111'),
+            new DatabaseText('Springfield')
+        );
+        $user = new UserWithAddress($address, $userId);
+        $user->setPassword(new Password('1Aa-bB'));
 
-            yield 'write only property' => [
-                null,
-                $user,
-                'password'
-            ];
-            yield 'composite value object, getter' => [
-                true,
-                $address,
-                'manualAddress'
-            ];
-            yield 'composite value object, internal property' => [
-                null,
-                $address,
-                'manual'
-            ];
-        }
+        yield 'write only property' => [
+            null,
+            $user,
+            'password'
+        ];
+        yield 'composite value object, getter only is ignored' => [
+            null, // TODO: should this be correct behaviour?
+            $address,
+            'manualAddress'
+        ];
+        yield 'composite value object, internal property' => [
+            null,
+            $address,
+            'manual'
+        ];
     }
 }

@@ -7,6 +7,7 @@ use Apie\Core\Dto\DtoInterface;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\StrategyInterface;
+use Apie\Core\Utils\DtoUtils;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -14,7 +15,7 @@ final class DtoStrategy implements StrategyInterface
 {
     public static function supports(ReflectionClass $class): bool
     {
-        return $class->isInstantiable() && $class->implementsInterface(DtoInterface::class);
+        return DtoUtils::isDto($class);
     }
 
     /**
