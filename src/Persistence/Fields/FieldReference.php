@@ -22,6 +22,11 @@ final class FieldReference implements PersistenceFieldInterface
         return $this->field->getType();
     }
 
+    public function getDeclaredClass(): ?string
+    {
+        return $this->declaredClass;
+    }
+
     public function isAllowsNull(): bool
     {
         $propertyType = $this->getProperty()->getType();

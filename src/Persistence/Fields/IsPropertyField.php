@@ -14,7 +14,12 @@ trait IsPropertyField
     {
     }
 
-    private function getProperty(): ReflectionProperty
+    public function getDeclaredClass(): ?string
+    {
+        return $this->declaredClass;
+    }
+
+    public function getProperty(): ReflectionProperty
     {
         return (new ReflectionClass($this->declaredClass))->getProperty($this->propertyName);
     }

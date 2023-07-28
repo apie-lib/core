@@ -20,6 +20,11 @@ final class EntityMetadata implements PersistenceTableInterface
     ) {
     }
 
+    public function getOriginalClass(): ?string
+    {
+        return $this->class;
+    }
+
     public function getName(): string
     {
         return 'apie_entity_' . $this->boundedContextId . '_' . IdentifierUtils::classNameToUnderscore(new ReflectionClass($this->class));

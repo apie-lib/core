@@ -16,6 +16,12 @@ final class AutoincrementInteger implements PersistenceFieldInterface
     {
         return $this->name;
     }
+
+    public function getDeclaredClass(): ?string
+    {
+        return null;
+    }
+
     public function isAllowsNull(): bool
     {
         return true;

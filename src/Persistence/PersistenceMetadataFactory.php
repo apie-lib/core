@@ -2,6 +2,7 @@
 namespace Apie\Core\Persistence;
 
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\Persistence\FieldFactories\AutoincrementIntegerFactory;
 use Apie\Core\Persistence\FieldFactories\CompositeValueObjectFactory;
 use Apie\Core\Persistence\FieldFactories\EnumFieldFactory;
 use Apie\Core\Persistence\FieldFactories\ListFieldFactory;
@@ -9,11 +10,13 @@ use Apie\Core\Persistence\FieldFactories\PrimitiveFieldFactory;
 use Apie\Core\Persistence\FieldFactories\PrimitiveValueObjectFactory;
 use Apie\Core\Persistence\Fields\AutoincrementInteger;
 use Apie\Core\Persistence\Fields\EntityGetIdValue;
+use Apie\Core\Persistence\FormFactories\AutoincrementIntegerTableFactory;
 use Apie\Core\Persistence\Lists\PersistenceFieldFactoryList;
 use Apie\Core\Persistence\Lists\PersistenceFieldList;
 use Apie\Core\Persistence\Lists\PersistenceTableFactoryList;
 use Apie\Core\Persistence\Metadata\EntityInvariantMetadata;
 use Apie\Core\Persistence\Metadata\EntityMetadata;
+use Apie\DoctrineEntityConverter\PropertyGenerators\AutoincrementIntegerPropertyGenerator;
 use LogicException;
 use ReflectionClass;
 
@@ -29,6 +32,7 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
     {
         return new self(
             new PersistenceFieldFactoryList([
+                new AutoincrementIntegerFactory(),
                 new PrimitiveFieldFactory(),
                 new PrimitiveValueObjectFactory(),
                 new CompositeValueObjectFactory(),
@@ -36,6 +40,7 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
                 new ListFieldFactory(),
             ]),
             new PersistenceTableFactoryList([
+                new AutoincrementIntegerTableFactory(),
             ])
         );
     }

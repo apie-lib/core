@@ -14,6 +14,12 @@ class IgnoredField implements PersistenceFieldInterface
     {
         return true;
     }
+
+    public function getDeclaredClass(): ?string
+    {
+        return null;
+    }
+
     public function getType(): ReflectionType
     {
         return $this->getProperty()->getType() ?? ReflectionTypeFactory::createReflectionType('mixed');

@@ -16,9 +16,9 @@ class ReflectionTypeToReflectionClassConverter implements ConverterInterface
     /**
      * @return ReflectionClass<object>|null
      */
-    public function convert(ReflectionType $input, ?ReflectionType $wantedType = null): ?ReflectionClass
+    public function convert(ReflectionNamedType $input, ?ReflectionType $wantedType = null): ?ReflectionClass
     {
-        if ($input instanceof ReflectionNamedType && !$input->isBuiltin()) {
+        if (!$input->isBuiltin()) {
             return new ReflectionClass($input->getName());
         }
         if (!$wantedType || !$wantedType->allowsNull()) {

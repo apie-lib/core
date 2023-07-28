@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Utils;
 
+use Apie\Core\TypeConverters\IntToAutoincrementIntegerConverter;
 use Apie\Core\TypeConverters\ReflectionMethodToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
@@ -10,6 +11,7 @@ use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionType;
 
@@ -24,6 +26,7 @@ final class ConverterUtils
         $this->typeConverter = new TypeConverter(
             new ObjectToObjectConverter(),
             ...DefaultConvertersFactory::create(
+                new IntToAutoincrementIntegerConverter(),
                 new StringToReflectionClassConverter(),
                 new ReflectionMethodToReflectionClassConverter(),
                 new ReflectionPropertyToReflectionClassConverter(),
@@ -54,6 +57,22 @@ final class ConverterUtils
             return $input;
         }
         return self::getInstance()->typeConverter->convertTo($input, $strict ? 'ReflectionType' : '?ReflectionType');
+    }
+
+    public static function dynamicCast(mixed $input, ReflectionType $wantedType): mixed
+    {
+        if ($input === null && $wantedType->allowsNull()) {
+            return null;
+        }
+        if (is_object($input)) {
+            $class = self::toReflectionClass($wantedType);
+            if ($class->isInstance($input)) {
+                return $input;
+            }
+        } else if ($wantedType instanceof ReflectionNamedType && $wantedType->getName() === get_debug_type($input)) {
+            return $input;
+        }
+        return self::getInstance()->typeConverter->convertTo($input, $wantedType);
     }
 
     private static function getInstance(): self

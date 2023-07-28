@@ -11,6 +11,11 @@ class FieldInvariant implements PersistenceFieldInterface
     {
     }
 
+    public function getDeclaredClass(): ?string
+    {
+        return $this->field->getDeclaredClass();
+    }
+
     public function getName(): string
     {
         return 'invariant_' . $this->field->getName();

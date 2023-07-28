@@ -12,6 +12,12 @@ class ListOrderNumber implements PersistenceFieldInterface
     {
         return 'order';
     }
+
+    public function getDeclaredClass(): ?string
+    {
+        return null;
+    }
+
     public function isAllowsNull(): bool
     {
         return false;
