@@ -8,6 +8,10 @@ use Apie\Core\Utils\ConverterUtils;
 use ReflectionClass;
 use ReflectionType;
 
+/**
+ * We do not know if the entity getId() is just a getter for a property, so we need to add an 'id'
+ * field as the real identifier of an entity.
+ */
 final class EntityGetIdValue implements PersistenceFieldInterface
 {
     /**
@@ -25,6 +29,11 @@ final class EntityGetIdValue implements PersistenceFieldInterface
     public function getDeclaredClass(): ?string
     {
         return null;
+    }
+
+    public function getEntityClass(): string
+    {
+        return $this->class;
     }
 
     public function isAllowsNull(): bool

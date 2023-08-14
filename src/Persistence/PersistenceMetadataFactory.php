@@ -2,6 +2,7 @@
 namespace Apie\Core\Persistence;
 
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Persistence\FieldFactories\AutoincrementIntegerFactory;
 use Apie\Core\Persistence\FieldFactories\CompositeValueObjectFactory;
 use Apie\Core\Persistence\FieldFactories\EnumFieldFactory;
@@ -10,14 +11,12 @@ use Apie\Core\Persistence\FieldFactories\PrimitiveFieldFactory;
 use Apie\Core\Persistence\FieldFactories\PrimitiveValueObjectFactory;
 use Apie\Core\Persistence\Fields\AutoincrementInteger;
 use Apie\Core\Persistence\Fields\EntityGetIdValue;
-use Apie\Core\Persistence\FormFactories\AutoincrementIntegerTableFactory;
 use Apie\Core\Persistence\Lists\PersistenceFieldFactoryList;
 use Apie\Core\Persistence\Lists\PersistenceFieldList;
 use Apie\Core\Persistence\Lists\PersistenceTableFactoryList;
 use Apie\Core\Persistence\Metadata\EntityInvariantMetadata;
 use Apie\Core\Persistence\Metadata\EntityMetadata;
-use Apie\DoctrineEntityConverter\PropertyGenerators\AutoincrementIntegerPropertyGenerator;
-use LogicException;
+use Apie\Core\Persistence\TableFactories\AutoincrementIntegerTableFactory;
 use ReflectionClass;
 
 final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInterface
@@ -45,32 +44,37 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
         );
     }
 
-    public function createRelatedTable(PersistenceMetadataContext $context): PersistenceTableInterface
-    {
+    public function createInvariantTable(
+        ReflectionClass $class,
+        PersistenceMetadataContext $context
+    ): PersistenceTableInterface {
+        $context->verify($this);
         foreach ($this->tableFactories as $tableFactory) {
             if ($tableFactory->supports($context)) {
                 return $tableFactory->createMetadataFor($context);
             }
         }
-
-        $identifier = $context->getCurrentIdentifier() ?? new AutoincrementInteger();
-        $fields = array_merge([$identifier], $context->getInvariantFields()->toArray());
-        foreach ($context->getProperties($context->getCurrentObject()) as $propertyContext) {
-            $field = $propertyContext->createPropertyDefinition();
+        $boundedContext = $context->getCurrentBoundedContext();
+        assert(null !== $boundedContext);
+        $idField = new AutoincrementInteger();
+        if ($class->implementsInterface(EntityInterface::class)) {
+            $idField = new EntityGetIdValue($class->name);
+        }
+        $context = $context->useContext(
+            $class,
+            $idField,
+            $boundedContext
+        );
+        $fields = [$idField];
+        foreach ($context->getProperties($class) as $propertyContext) {
+            $field = $this->createProperty($propertyContext);
             if ($field) {
                 $fields[] = $field;
             }
         }
-
-        $boundedContext = $context->getCurrentBoundedContext();
-        $currentObject = $context->getOriginalObject() ?? $context->getCurrentObject();
-        if (!$boundedContext || !$currentObject) {
-            throw new LogicException('I have no bounded context/object and no table factory that can create a related table');
-        }
-
         return new EntityInvariantMetadata(
             $boundedContext->getId(),
-            $currentObject->name,
+            $class->name,
             $context->getInvariantPrefix(),
             new PersistenceFieldList($fields)
         );
@@ -116,7 +120,6 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
                 return $fieldFactory->createMetadataFor($context);
             }
         }
-        var_dump((string) $context->getCurrentPropertyType());
 
         return null;
     }

@@ -28,6 +28,12 @@ class FieldInvariant implements PersistenceFieldInterface
     {
         return $this->field->getType();
     }
+
+    public function getDecoratedField(): PersistenceFieldInterface
+    {
+        return $this->field;
+    }
+
     public function getPersistenceType(): PersistenceColumn
     {
         return $this->field->getPersistenceType();

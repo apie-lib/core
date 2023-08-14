@@ -6,10 +6,18 @@ use Apie\Core\Persistence\PersistenceFieldInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionType;
 
+/**
+ * Add an auto-increment integer field.
+ */
 final class AutoincrementInteger implements PersistenceFieldInterface
 {
-    public function __construct(private readonly string $name = 'id')
+    public function __construct(private readonly string $name = 'id', private readonly bool $internal = true)
     {
+    }
+
+    public function isInternal(): bool
+    {
+        return $this->internal;
     }
 
     public function getName(): string

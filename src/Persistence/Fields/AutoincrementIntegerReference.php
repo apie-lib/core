@@ -6,6 +6,10 @@ use Apie\Core\Persistence\PersistenceFieldInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionType;
 
+/**
+ * Doctrine only supports auto-increment integers as ID, so if an other field is defined we need an extra table
+ * to handle those autoincrement integers. This field is a reference to this table.
+ */
 final class AutoincrementIntegerReference implements PersistenceFieldInterface
 {
     use IsPropertyField;
@@ -20,7 +24,7 @@ final class AutoincrementIntegerReference implements PersistenceFieldInterface
     public function isAllowsNull(): bool
     {
         $type = $this->getType();
-        return $type ? $type->allowsNull() : true;
+        return $type->allowsNull();
     }
 
     public function getType(): ReflectionType

@@ -210,7 +210,7 @@ final class PersistenceMetadataContext
 
     public function createTableDefinition(): PersistenceTableInterface
     {
-        $tableDefinition = $this->factory->createRelatedTable($this);
+        $tableDefinition = $this->factory->createInvariantTable($this->getCurrentPropertyClass(), $this);
         $this->tables[] = $tableDefinition;
 
         return $tableDefinition;

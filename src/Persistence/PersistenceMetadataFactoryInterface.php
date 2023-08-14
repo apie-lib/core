@@ -16,7 +16,13 @@ interface PersistenceMetadataFactoryInterface
         ?PersistenceMetadataContext $context = null
     ): PersistenceTableInterface;
 
-    public function createRelatedTable(PersistenceMetadataContext $context): PersistenceTableInterface;
+    /**
+     * @param ReflectionClass<object> $class
+     */
+    public function createInvariantTable(
+        ReflectionClass $class,
+        PersistenceMetadataContext $context
+    ): PersistenceTableInterface;
 
     public function createProperty(PersistenceMetadataContext $context): ?PersistenceFieldInterface;
 }

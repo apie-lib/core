@@ -6,6 +6,7 @@ use Apie\Core\TypeConverters\ReflectionMethodToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
 use Apie\Core\TypeConverters\StringToReflectionClassConverter;
+use Apie\DoctrineEntityConverter\TypeConverters\EntityToValueObjectTypeConverter;
 use Apie\TypeConverter\Converters\ObjectToObjectConverter;
 use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
@@ -23,14 +24,20 @@ final class ConverterUtils
 
     private function __construct()
     {
+        $converters = [
+            new IntToAutoincrementIntegerConverter(),
+            new StringToReflectionClassConverter(),
+            new ReflectionMethodToReflectionClassConverter(),
+            new ReflectionPropertyToReflectionClassConverter(),
+            new ReflectionTypeToReflectionClassConverter(),
+        ];
+        if (class_exists(EntityToValueObjectTypeConverter::class)) {
+            $converters[] = new EntityToValueObjectTypeConverter();
+        }
         $this->typeConverter = new TypeConverter(
             new ObjectToObjectConverter(),
             ...DefaultConvertersFactory::create(
-                new IntToAutoincrementIntegerConverter(),
-                new StringToReflectionClassConverter(),
-                new ReflectionMethodToReflectionClassConverter(),
-                new ReflectionPropertyToReflectionClassConverter(),
-                new ReflectionTypeToReflectionClassConverter(),
+                ...$converters
             )
         );
     }
@@ -69,7 +76,7 @@ final class ConverterUtils
             if ($class->isInstance($input)) {
                 return $input;
             }
-        } else if ($wantedType instanceof ReflectionNamedType && $wantedType->getName() === get_debug_type($input)) {
+        } elseif ($wantedType instanceof ReflectionNamedType && $wantedType->getName() === get_debug_type($input)) {
             return $input;
         }
         return self::getInstance()->typeConverter->convertTo($input, $wantedType);

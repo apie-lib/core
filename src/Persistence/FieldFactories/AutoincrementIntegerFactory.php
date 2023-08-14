@@ -3,11 +3,9 @@ namespace Apie\Core\Persistence\FieldFactories;
 
 use Apie\Core\Identifiers\AutoIncrementInteger;
 use Apie\Core\Persistence\Fields\AutoincrementIntegerReference;
-use Apie\Core\Persistence\Fields\OneToMany;
 use Apie\Core\Persistence\PersistenceFieldFactoryInterface;
 use Apie\Core\Persistence\PersistenceFieldInterface;
 use Apie\Core\Persistence\PersistenceMetadataContext;
-use LogicException;
 use ReflectionProperty;
 
 class AutoincrementIntegerFactory implements PersistenceFieldFactoryInterface
