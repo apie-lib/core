@@ -43,3 +43,13 @@ services:
     arguments:
       - '%apie.datalayers%'
       - !tagged_locator apie.datalayer
+
+  Apie\Core\Persistence\PersistenceMetadataFactory:
+    factory: ['Apie\Core\Persistence\PersistenceMetadataFactory', 'create']
+
+  Apie\Core\Persistence\PersistenceMetadataFactoryInterface:
+    alias: Apie\Core\Persistence\PersistenceMetadataFactory
+
+  Apie\Core\Persistence\PersistenceLayerFactory:
+    arguments:
+      - '@Apie\Core\Persistence\PersistenceMetadataFactoryInterface'
