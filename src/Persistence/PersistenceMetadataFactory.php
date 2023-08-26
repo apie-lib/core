@@ -4,8 +4,6 @@ namespace Apie\Core\Persistence;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Persistence\FieldFactories\AutoincrementIntegerFactory;
-use Apie\Core\Persistence\FieldFactories\CompositeValueObjectFactory;
-use Apie\Core\Persistence\FieldFactories\DataTransferObjectFieldFactory;
 use Apie\Core\Persistence\FieldFactories\EnumFieldFactory;
 use Apie\Core\Persistence\FieldFactories\ListFieldFactory;
 use Apie\Core\Persistence\FieldFactories\OneOnOneFieldFactory;
