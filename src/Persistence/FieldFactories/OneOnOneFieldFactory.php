@@ -1,6 +1,8 @@
 <?php
 namespace Apie\Core\Persistence\FieldFactories;
 
+use Apie\Core\Dto\DtoInterface;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Persistence\Fields\FieldReference;
 use Apie\Core\Persistence\Fields\IgnoredField;
 use Apie\Core\Persistence\PersistenceFieldFactoryInterface;
@@ -12,16 +14,17 @@ use LogicException;
 use ReflectionClass;
 use ReflectionProperty;
 
-final class CompositeValueObjectFactory implements PersistenceFieldFactoryInterface
+final class OneOnOneFieldFactory implements PersistenceFieldFactoryInterface
 {
     public function supports(PersistenceMetadataContext $context): bool
     {
         $class = $context->getCurrentPropertyClass();
+        //composite value object
         if ($class instanceof ReflectionClass && $class->implementsInterface(ValueObjectInterface::class)) {
             return in_array(CompositeValueObject::class, $class->getTraitNames());
         }
-
-        return false;
+        // DTO or entity
+        return $class instanceof ReflectionClass && ($class->implementsInterface(DtoInterface::class) || $class->implementsInterface(EntityInterface::class));
     }
 
     public function createMetadataFor(PersistenceMetadataContext $context): PersistenceFieldInterface
