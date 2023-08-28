@@ -7,6 +7,7 @@ use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
 use Apie\Core\TypeConverters\StringToReflectionClassConverter;
 use Apie\DoctrineEntityConverter\TypeConverters\EntityToDtoTypeConverter;
+use Apie\DoctrineEntityConverter\TypeConverters\EntityToEntityTypeConverter;
 use Apie\DoctrineEntityConverter\TypeConverters\EntityToValueObjectTypeConverter;
 use Apie\TypeConverter\Converters\ObjectToObjectConverter;
 use Apie\TypeConverter\DefaultConvertersFactory;
@@ -35,6 +36,7 @@ final class ConverterUtils
         if (class_exists(EntityToValueObjectTypeConverter::class)) {
             $converters[] = new EntityToValueObjectTypeConverter();
             $converters[] = new EntityToDtoTypeConverter();
+            $converters[] = new EntityToEntityTypeConverter();
         }
         $this->typeConverter = new TypeConverter(
             new ObjectToObjectConverter(),
