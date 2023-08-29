@@ -37,9 +37,7 @@ class FromGetters implements IndexingStrategyInterface
             $value = $fieldMetadata->getValue($object, $context);
             if (is_object($value)) {
                 $embeddedObjectResult = $indexer->getIndexesForObject($value, $context, $indexer);
-                foreach ($embeddedObjectResult as $value => $prio) {
-                    $result[$value] = ($result[$value] ?? 0) + $prio;
-                }
+                $result = Indexer::merge($result, $embeddedObjectResult);
             } else if (is_string($value) || is_numeric($value)) {
                 $value = (string) $value;
                 $result[$value] = $this->getPrio($propertyName, $typehint, $fieldMetadata, $value, $result[$value] ?? 0);

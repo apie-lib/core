@@ -20,6 +20,7 @@ final class Indexer
         return new self(
             new FromAttribute(),
             new SkipPasswordFields(),
+            new FromItemListOrHashmap(),
             new FromValueObject(),
             new FromGetters()
         );
@@ -36,5 +37,19 @@ final class Indexer
             }
         }
         return [];
+    }
+
+    /**
+     * @param array<string, int> $input1
+     * @param array<string, int> $input2
+     * @return array<string, int>
+     */
+    public static function merge(array $input1, array $input2): array
+    {
+        foreach ($input2 as $value => $prio) {
+            $input1[$value] = ($input1[$value] ?? 0) + $prio;
+        }
+
+        return $input1;
     }
 }
