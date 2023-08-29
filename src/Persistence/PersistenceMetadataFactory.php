@@ -11,9 +11,11 @@ use Apie\Core\Persistence\FieldFactories\PrimitiveFieldFactory;
 use Apie\Core\Persistence\FieldFactories\PrimitiveValueObjectFactory;
 use Apie\Core\Persistence\Fields\AutoincrementInteger;
 use Apie\Core\Persistence\Fields\EntityGetIdValue;
+use Apie\Core\Persistence\Fields\IndexTableReference;
 use Apie\Core\Persistence\Lists\PersistenceFieldFactoryList;
 use Apie\Core\Persistence\Lists\PersistenceFieldList;
 use Apie\Core\Persistence\Lists\PersistenceTableFactoryList;
+use Apie\Core\Persistence\Metadata\EntityIndexMetadata;
 use Apie\Core\Persistence\Metadata\EntityInvariantMetadata;
 use Apie\Core\Persistence\Metadata\EntityMetadata;
 use Apie\Core\Persistence\TableFactories\AutoincrementIntegerTableFactory;
@@ -80,6 +82,13 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
         );
     }
 
+    public function createIndexTable(
+        ReflectionClass $class,
+        BoundedContext $boundedContext
+    ): PersistenceTableInterface {
+        return new EntityIndexMetadata($boundedContext->getId(), $class->name);
+    }
+
     public function createEntityMetadata(
         ReflectionClass $entity,
         BoundedContext $boundedContext,
@@ -93,12 +102,17 @@ final class PersistenceMetadataFactory implements PersistenceMetadataFactoryInte
                 $this
             );
         }
+        $currentObject = $context->getCurrentObject();
         $context = $context->useContext(
-            $context->getCurrentObject(),
+            $currentObject,
             $idField,
             $boundedContext
         );
         $fields = [$idField];
+        if ($currentObject) {
+            $fields[] = new IndexTableReference($currentObject, $boundedContext->getId());
+            $context->addIndexTable();
+        }
         foreach ($context->getProperties($entity) as $propertyContext) {
             $field = $this->createProperty($propertyContext);
             if ($field) {

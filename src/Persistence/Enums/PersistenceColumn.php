@@ -14,6 +14,7 @@ enum PersistenceColumn: string
     case FLOAT = 'float';
     case BOOLEAN = 'boolean';
     case STREAM = 'stream';
+    case RELATION = 'relation';
     case NULL = 'null';
 
     public function toType(): string
@@ -27,6 +28,7 @@ enum PersistenceColumn: string
             self::BOOLEAN => 'bool',
             self::STREAM => 'resource',
             self::NULL => '?int', // we still need php 8.1 support
+            self::RELATION => throw new LogicException('Relations have no column type'),
         };
     }
 
@@ -41,6 +43,7 @@ enum PersistenceColumn: string
             self::BOOLEAN => 'boolean',
             self::STREAM => 'blob',
             self::NULL => 'boolean',
+            self::RELATION => throw new LogicException('Relations have no column type'),
         };
     }
 

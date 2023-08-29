@@ -24,5 +24,13 @@ interface PersistenceMetadataFactoryInterface
         PersistenceMetadataContext $context
     ): PersistenceTableInterface;
 
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
+    public function createIndexTable(
+        ReflectionClass $class,
+        BoundedContext $boundedContext
+    ): PersistenceTableInterface;
+
     public function createProperty(PersistenceMetadataContext $context): ?PersistenceFieldInterface;
 }

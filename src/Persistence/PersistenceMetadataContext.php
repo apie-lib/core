@@ -112,6 +112,20 @@ final class PersistenceMetadataContext
         return null;
     }
 
+    public function addIndexTable(): self
+    {
+        $table = $this->factory->createIndexTable(
+            $this->getCurrentObject(),
+            $this->getCurrentBoundedContext()
+        );
+
+        $result = clone $this;
+        $result->tables = &$this->tables;
+        $result->tables[] = $table;
+
+        return $result;
+    }
+
     public function addFieldInvariant(PersistenceFieldInterface $field, ?string $invariantName = null): self
     {
         if ($invariantName === null) {

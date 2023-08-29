@@ -10,33 +10,32 @@ use Apie\Core\Persistence\Lists\PersistenceFieldList;
 use Apie\Core\Persistence\PersistenceTableInterface;
 use ReflectionClass;
 
-final class EntityAutoincrementMetadata implements PersistenceTableInterface
+class EntityIndexMetadata implements PersistenceTableInterface
 {
     /**
      * @param class-string<EntityInterface> $class
      */
     public function __construct(
         private readonly BoundedContextId $boundedContextId,
-        private readonly string $class,
-        private readonly string $propertyName
+        private readonly string $class
     ) {
+    }
+    
+    public function getName(): string
+    {
+        return 'apie_index_' . $this->boundedContextId . '_' . IdentifierUtils::classNameToUnderscore(new ReflectionClass($this->class));
     }
 
     public function getOriginalClass(): ?string
     {
-        return $this->class;
-    }
-
-    public function getName(): string
-    {
-        return 'apie_entity_' . $this->boundedContextId . '_' . IdentifierUtils::classNameToUnderscore(new ReflectionClass($this->class)) . '___fk__'  . $this->propertyName;
+        return null;
     }
 
     public function getFields(): PersistenceFieldList
     {
         return new PersistenceFieldList([
             new AutoincrementInteger(),
-            new ManyToEntityReference('entity', $this->class, $this->boundedContextId)
+            new ManyToEntityReference('entity', $this->class, $this->boundedContextId),
         ]);
     }
 }
