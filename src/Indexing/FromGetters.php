@@ -37,7 +37,16 @@ class FromGetters implements IndexingStrategyInterface
             if ($value instanceof ValueObjectInterface) {
                 $value = $value->toNative();
             }
-            if ($value === null || is_array($value) || is_object($value)) {
+            if (is_object($value)) {
+                $embeddedObjectResult = $this->getIndexes($value, $context);
+                $result = $embeddedObjectResult + $result;
+                continue;
+            }
+            if (is_array($value)) {
+                // TODO
+                continue;
+            }
+            if ($value === null) {
                 continue;
             }
             $value = (string) $value;

@@ -19,6 +19,7 @@ final class Indexer
     public static function create(): self
     {
         return new self(
+            new SkipPasswordFields(),
             new FromAttribute(),
             new FromGetters()
         );
