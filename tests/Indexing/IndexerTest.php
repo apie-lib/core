@@ -11,6 +11,7 @@ use Apie\Fixtures\Identifiers\OrderLineIdentifier;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
+use Apie\Fixtures\ValueObjects\IsStringValueObjectExample;
 use Apie\TextValueObjects\DatabaseText;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -26,12 +27,18 @@ class IndexerTest extends TestCase
         $testItem = Indexer::create();
         $this->assertEquals(
             $expected,
-            $testItem->getIndexesForEntity($input, new ApieContext())
+            $testItem->getIndexesForObject($input, new ApieContext())
         );
     }
 
     public function provideIndexes(): Generator
     {
+        yield [
+            [
+                'test' => 1,
+            ],
+            new IsStringValueObjectExample('test'),
+        ];
         yield [
             [
                 '5d75a0aa-01a2-48f1-b0f0-57383fb1ad5f' => 1,

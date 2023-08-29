@@ -14,7 +14,7 @@ class SkipPasswordFields implements IndexingStrategyInterface
         return $object instanceof ValueObjectInterface && in_array(IsPasswordValueObject::class, $refl->getTraitNames());
     }
 
-    public function getIndexes(object $object, ApieContext $context): array
+    public function getIndexes(object $object, ApieContext $context, Indexer $indexer): array
     {
         return [];
     }

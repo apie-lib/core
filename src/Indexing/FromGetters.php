@@ -2,6 +2,7 @@
 namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Dto\DtoInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\GetterInterface;
@@ -14,13 +15,13 @@ class FromGetters implements IndexingStrategyInterface
 {
     public function support(object $object): bool
     {
-        return $object instanceof EntityInterface;
+        return $object instanceof EntityInterface || $object instanceof DtoInterface;
     }
 
     /**
      * @return array<string, int>
      */
-    public function getIndexes(object $object, ApieContext $context): array
+    public function getIndexes(object $object, ApieContext $context, Indexer $indexer): array
     {
         $metadata = MetadataFactory::getResultMetadata(new ReflectionClass($object), $context);
         $result = [];
@@ -34,23 +35,15 @@ class FromGetters implements IndexingStrategyInterface
                 continue;
             }
             $value = $fieldMetadata->getValue($object, $context);
-            if ($value instanceof ValueObjectInterface) {
-                $value = $value->toNative();
-            }
             if (is_object($value)) {
-                $embeddedObjectResult = $this->getIndexes($value, $context);
-                $result = $embeddedObjectResult + $result;
-                continue;
+                $embeddedObjectResult = $indexer->getIndexesForObject($value, $context, $indexer);
+                foreach ($embeddedObjectResult as $value => $prio) {
+                    $result[$value] = ($result[$value] ?? 0) + $prio;
+                }
+            } else if (is_string($value) || is_numeric($value)) {
+                $value = (string) $value;
+                $result[$value] = $this->getPrio($propertyName, $typehint, $fieldMetadata, $value, $result[$value] ?? 0);
             }
-            if (is_array($value)) {
-                // TODO
-                continue;
-            }
-            if ($value === null) {
-                continue;
-            }
-            $value = (string) $value;
-            $result[$value] = $this->getPrio($propertyName, $typehint, $fieldMetadata, $value, $result[$value] ?? 0);
         }
         return $result;
     }

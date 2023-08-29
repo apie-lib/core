@@ -17,7 +17,7 @@ class FromAttribute implements IndexingStrategyInterface
     /**
      * @return array<string, int>
      */
-    public function getIndexes(object $object, ApieContext $context): array
+    public function getIndexes(object $object, ApieContext $context, Indexer $indexer): array
     {
         $refl = new ReflectionClass($object);
         $result = [];

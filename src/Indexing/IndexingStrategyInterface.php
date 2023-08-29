@@ -10,5 +10,5 @@ interface IndexingStrategyInterface
     /**
      * @return array<string, int>
      */
-    public function getIndexes(object $class, ApieContext $context): array;
+    public function getIndexes(object $class, ApieContext $context, Indexer $indexer): array;
 }
