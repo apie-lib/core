@@ -1,10 +1,8 @@
 <?php
 namespace Apie\Core\Indexing;
 
-use Apie\Core\Attributes\ProvideIndex;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
-use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
 
