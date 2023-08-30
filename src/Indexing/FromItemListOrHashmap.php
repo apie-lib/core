@@ -22,7 +22,7 @@ class FromItemListOrHashmap implements IndexingStrategyInterface
         $result = [];
         if ($object instanceof ItemList) {
             foreach ($object as $item) {
-                $objectResult = $indexer->getIndexesForObject($item, $context, $indexer);
+                $objectResult = $indexer->getIndexesForObject($item, $context);
                 $result = Indexer::merge($result, $objectResult);
             }
             return $result;
@@ -30,7 +30,7 @@ class FromItemListOrHashmap implements IndexingStrategyInterface
         assert($object instanceof ItemHashmap);
         foreach ($object as $key => $item) {
             $result[$key] = ($result[$key] ?? 0) + 1;
-            $objectResult = $indexer->getIndexesForObject($item, $context, $indexer);
+            $objectResult = $indexer->getIndexesForObject($item, $context);
             $result = Indexer::merge($result, $objectResult);
         }
         return $result;

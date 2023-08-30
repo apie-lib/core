@@ -5,6 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 use ReflectionNamedType;
+use Stringable;
 
 class FromValueObject implements IndexingStrategyInterface
 {
@@ -28,6 +29,7 @@ class FromValueObject implements IndexingStrategyInterface
     public function getIndexes(object $object, ApieContext $context, Indexer $indexer): array
     {
         assert($object instanceof ValueObjectInterface);
+        assert($object instanceof Stringable);
         $value = (string) $object;
         return [$value => 1];
     }

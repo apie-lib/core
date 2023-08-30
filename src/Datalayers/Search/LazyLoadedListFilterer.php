@@ -31,7 +31,7 @@ final class LazyLoadedListFilterer
     public function appliesSearch(EntityInterface $object, QuerySearch $querySearch, ApieContext $apieContext = new ApieContext()): bool
     {
         $searchTerm = $querySearch->getTextSearch();
-        $indexes = $this->indexer->getIndexesForEntity($object, $apieContext);
+        $indexes = $this->indexer->getIndexesForObject($object, $apieContext);
         if (in_array($searchTerm, $indexes) || in_array(strtoupper($searchTerm), $indexes) || in_array(strtolower($searchTerm), $indexes)) {
             return true;
         }
@@ -47,7 +47,7 @@ final class LazyLoadedListFilterer
     public function appliesPartialSearch(EntityInterface $object, QuerySearch $querySearch, ApieContext $apieContext = new ApieContext()): bool
     {
         $searchTerm = $querySearch->getTextSearch();
-        $indexes = $this->indexer->getIndexesForEntity($object, $apieContext);
+        $indexes = $this->indexer->getIndexesForObject($object, $apieContext);
         foreach (array_keys($indexes) as $index) {
             if (strpos($index, $searchTerm) !== false) {
                 return true;
