@@ -3,6 +3,7 @@ namespace Apie\Core\Exceptions;
 
 use Apie\Core\Entities\EntityInterface;
 use ReflectionClass;
+use Throwable;
 
 final class EntityAlreadyPersisted extends ApieException implements HttpStatusCodeException
 {
