@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Datalayers;
 
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
+use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 use ReflectionClass;
@@ -11,9 +11,9 @@ interface ApieDatalayer
     /**
      * @template T of EntityInterface
      * @param ReflectionClass<T> $class
-     * @return LazyLoadedList<T>
+     * @return EntityListInterface<T>
      */
-    public function all(ReflectionClass $class): LazyLoadedList;
+    public function all(ReflectionClass $class): EntityListInterface;
 
     /**
      * @template T of EntityInterface

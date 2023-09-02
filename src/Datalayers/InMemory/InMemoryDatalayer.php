@@ -3,8 +3,9 @@ namespace Apie\Core\Datalayers\InMemory;
 
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
-use Apie\Core\Datalayers\ValueObjects\LazyLoadedListIdentifier;
+use Apie\Core\Datalayers\Lists\EntityListInterface;
+use Apie\Core\Datalayers\Lists\InMemoryEntityList;
+use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
@@ -24,29 +25,27 @@ class InMemoryDatalayer implements ApieDatalayer
     private array $stored = [];
 
     /**
-     * @var array<class-string<EntityInterface>, LazyLoadedList<EntityInterface>>
+     * @var array<class-string<EntityInterface>, EntityListInterface<EntityInterface>>
      */
     private array $alreadyLoadedLists = [];
 
     private Generator $generator;
 
-    public function __construct(private BoundedContextId $boundedContextId)
+    public function __construct(private BoundedContextId $boundedContextId, private LazyLoadedListFilterer $filterer)
     {
         $this->generator = Factory::create();
     }
 
-    public function all(ReflectionClass $class): LazyLoadedList
+    public function all(ReflectionClass $class): EntityListInterface
     {
         $className = $class->name;
+        $this->stored[$className] ??= [];
         if (!isset($this->alreadyLoadedLists[$className])) {
-            $callable = function () use ($className) {
-                return $this->stored[$className] ?? [];
-            };
-            $this->alreadyLoadedLists[$className] = new LazyLoadedList(
-                LazyLoadedListIdentifier::createFrom($this->boundedContextId, $class),
-                new GetFromArray($callable),
-                new TakeFromArray($callable),
-                new CountArray($callable)
+            $this->alreadyLoadedLists[$className] = new InMemoryEntityList(
+                $class,
+                $this->boundedContextId,
+                $this->filterer,
+                $this->stored[$className]
             );
         }
         return $this->alreadyLoadedLists[$className];

@@ -2,7 +2,7 @@
 namespace Apie\Core\Datalayers;
 
 use Apie\Core\BoundedContext\BoundedContext;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
+use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 use ReflectionClass;
@@ -12,9 +12,9 @@ interface BoundedContextAwareApieDatalayer extends ApieDatalayer
     /**
      * @template T of EntityInterface
      * @param ReflectionClass<T> $class
-     * @return LazyLoadedList<T>
+     * @return EntityListInterface<T>
      */
-    public function all(ReflectionClass $class, ?BoundedContext $boundedContext = null): LazyLoadedList;
+    public function all(ReflectionClass $class, ?BoundedContext $boundedContext = null): EntityListInterface;
 
     /**
      * @template T of EntityInterface

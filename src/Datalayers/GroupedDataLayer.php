@@ -4,7 +4,7 @@ namespace Apie\Core\Datalayers;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
+use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 use ReflectionClass;
@@ -29,7 +29,7 @@ final class GroupedDataLayer implements BoundedContextAwareApieDatalayer, ApieDa
         return true;
     }
 
-    public function all(ReflectionClass $class, ?BoundedContext $boundedContext = null): LazyLoadedList
+    public function all(ReflectionClass $class, ?BoundedContext $boundedContext = null): EntityListInterface
     {
         return $this->hashmap->pickDataLayerFor($class, $boundedContext->getId())
             ->all($class, $boundedContext);

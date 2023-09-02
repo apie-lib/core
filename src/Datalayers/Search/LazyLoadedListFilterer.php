@@ -2,7 +2,6 @@
 namespace Apie\Core\Datalayers\Search;
 
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Indexing\Indexer;
 use Apie\Core\PropertyAccess;
@@ -13,19 +12,6 @@ final class LazyLoadedListFilterer
     public function __construct(
         private readonly Indexer $indexer
     ) {
-    }
-
-    /**
-     * @template T of EntityInterface
-     * @param LazyLoadedList<T> $lazyLoadedList
-     * @return LazyLoadedList<T>
-     */
-    public function filterList(LazyLoadedList $lazyLoadedList, ApieContext $apieContext, QuerySearch $querySearch, bool $partialSearch = false): LazyLoadedList
-    {
-        $method = $partialSearch ? 'appliesPartialSearch' : 'appliesSearch';
-        return $lazyLoadedList->filterList(function (EntityInterface $object) use ($method, $querySearch, $apieContext) {
-            return $this->$method($object, $querySearch, $apieContext);
-        });
     }
 
     public function appliesSearch(EntityInterface $object, QuerySearch $querySearch, ApieContext $apieContext = new ApieContext()): bool
@@ -47,6 +33,9 @@ final class LazyLoadedListFilterer
     public function appliesPartialSearch(EntityInterface $object, QuerySearch $querySearch, ApieContext $apieContext = new ApieContext()): bool
     {
         $searchTerm = $querySearch->getTextSearch();
+        if (null === $searchTerm) {
+            return true;
+        }
         $indexes = $this->indexer->getIndexesForObject($object, $apieContext);
         foreach (array_keys($indexes) as $index) {
             if (strpos($index, $searchTerm) !== false) {

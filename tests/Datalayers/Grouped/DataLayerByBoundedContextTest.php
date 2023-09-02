@@ -8,6 +8,7 @@ use Apie\Core\Datalayers\Grouped\DataLayerByClass;
 use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
+use Apie\Fixtures\TestHelpers\TestWithInMemoryDatalayer;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionClass;
@@ -15,6 +16,7 @@ use ReflectionClass;
 class DataLayerByBoundedContextTest extends TestCase
 {
     use ProphecyTrait;
+    use TestWithInMemoryDatalayer;
 
     /**
      * @test
@@ -23,7 +25,7 @@ class DataLayerByBoundedContextTest extends TestCase
     {
         $datalayerByClass = new DataLayerByClass(
             [
-                Order::class => new InMemoryDatalayer(new BoundedContextId('input')),
+                Order::class => $this->givenAnInMemoryDataLayer(),
             ]
         );
         $otherClass = $this->prophesize(ApieDatalayer::class)->reveal();
