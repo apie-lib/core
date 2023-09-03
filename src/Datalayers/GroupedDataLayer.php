@@ -7,9 +7,10 @@ use Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext;
 use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
+use Apie\Core\Lists\StringList;
 use ReflectionClass;
 
-final class GroupedDataLayer implements BoundedContextAwareApieDatalayer, ApieDatalayerWithSupport
+final class GroupedDataLayer implements ApieDatalayerWithFilters, BoundedContextAwareApieDatalayer, ApieDatalayerWithSupport
 {
     public function __construct(private readonly DataLayerByBoundedContext $hashmap)
     {
@@ -27,6 +28,15 @@ final class GroupedDataLayer implements BoundedContextAwareApieDatalayer, ApieDa
             return $datalayer->isSupported($instance, $boundedContextId);
         }
         return true;
+    }
+
+    public function getFilterColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList
+    {
+        $datalayer = $this->hashmap->pickDataLayerFor($class, $boundedContextId);
+        if ($datalayer instanceof ApieDatalayerWithFilters) {
+            return $datalayer->getFilterColumns($class, $boundedContextId);
+        }
+        return null;
     }
 
     public function all(ReflectionClass $class, ?BoundedContext $boundedContext = null): EntityListInterface
