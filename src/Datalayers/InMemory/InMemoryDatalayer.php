@@ -61,14 +61,13 @@ class InMemoryDatalayer implements ApieDatalayer
         $id = $entity->getId();
         if ($id instanceof AutoIncrementInteger) {
             $id = $id::createRandom($this->generator);
+            $reflProperty = new ReflectionProperty($entity, 'id');
+            $reflProperty->setValue($entity, $id);
         }
-        $reflProperty = new ReflectionProperty($entity, 'id');
-        $reflProperty->setAccessible(true);
-        $reflProperty->setValue($entity, $id);
         $className = $id::getReferenceFor()->name;
         $id = $entity->getId()->toNative();
         $className = $entity->getId()::getReferenceFor()->name;
-        foreach ($this->stored[$className] ?? [] as $key => $entityInList) {
+        foreach ($this->stored[$className] ?? [] as $entityInList) {
             if ($entityInList->getId()->toNative() === $id) {
                 throw new EntityAlreadyPersisted($entity);
             }
