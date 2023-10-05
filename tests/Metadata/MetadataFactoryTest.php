@@ -6,6 +6,7 @@ use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
@@ -30,6 +31,7 @@ use Apie\Fixtures\ValueObjects\CompositeValueObjectWithOptionalFields;
 use Apie\Fixtures\ValueObjects\Password;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Stringable;
 
 class MetadataFactoryTest extends TestCase
 {
@@ -78,6 +80,12 @@ class MetadataFactoryTest extends TestCase
         ];
         yield [
             ValueObjectStrategy::class, Password::class,
+        ];
+        yield [
+            BuiltInPhpClassStrategy::class, Stringable::class,
+        ];
+        yield [
+            BuiltInPhpClassStrategy::class, ReflectionClass::class,
         ];
     
         yield [
