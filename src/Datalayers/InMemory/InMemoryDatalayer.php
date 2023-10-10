@@ -106,4 +106,18 @@ class InMemoryDatalayer implements ApieDatalayer
         }
         throw new EntityNotFoundException($identifier);
     }
+
+    public function removeExisting(EntityInterface $entity): void
+    {
+        $identifier = $entity->getId();
+        $className = $identifier::getReferenceFor()->name;
+        $id = $identifier->toNative();
+        $newList = [];
+        foreach ($this->stored[$className] ?? [] as $entityInList) {
+            if ($entityInList->getId()->toNative() !== $id) {
+                $newList[] = $entityInList;
+            }
+        }
+        $this->stored[$className] = $newList;
+    }
 }

@@ -62,4 +62,10 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, BoundedContext
         return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext->getId())
             ->persistExisting($entity, $boundedContext);
     }
+    
+    public function removeExisting(EntityInterface $entity, ?BoundedContext $boundedContext = null): void
+    {
+        $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext->getId())
+            ->removeExisting($entity, $boundedContext);
+    }
 }

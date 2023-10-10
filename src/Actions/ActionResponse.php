@@ -49,6 +49,12 @@ final class ActionResponse
         return $res;
     }
 
+    public static function createRemovedSuccess(ApieFacadeInterface $apieFacade, ApieContext $apieContext): self
+    {
+        $res = new self($apieFacade, $apieContext, ActionResponseStatus::DELETED);
+        return $res;
+    }
+
     /**
      * Returns HTTP status code that should be returned if you create a response.
      */

@@ -42,6 +42,8 @@ interface ApieFacadeInterface
      */
     public function persistExisting(EntityInterface $entity, BoundedContext|BoundedContextId $boundedContext): EntityInterface;
 
+    public function removeExisting(EntityInterface $entity, BoundedContext|BoundedContextId $boundedContext): void;
+
     public function normalize(mixed $object, ApieContext $apieContext): string|int|float|bool|ItemList|ItemHashmap|null;
 
     /**

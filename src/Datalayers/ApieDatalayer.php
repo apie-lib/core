@@ -35,4 +35,6 @@ interface ApieDatalayer
      * @return T
      */
     public function persistExisting(EntityInterface $entity): EntityInterface;
+
+    public function removeExisting(EntityInterface $entity): void;
 }

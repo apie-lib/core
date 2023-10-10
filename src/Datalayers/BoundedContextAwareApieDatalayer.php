@@ -36,4 +36,6 @@ interface BoundedContextAwareApieDatalayer extends ApieDatalayer
      * @return T
      */
     public function persistExisting(EntityInterface $entity, ?BoundedContext $boundedContext = null): EntityInterface;
+
+    public function removeExisting(EntityInterface $entity, ?BoundedContext $boundedContext = null): void;
 }
