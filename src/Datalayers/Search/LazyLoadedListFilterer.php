@@ -36,9 +36,10 @@ final class LazyLoadedListFilterer
         if (null === $searchTerm) {
             return true;
         }
+        $searchTerm = trim($searchTerm);
         $indexes = $this->indexer->getIndexesForObject($object, $apieContext);
         foreach (array_keys($indexes) as $index) {
-            if (strpos($index, $searchTerm) !== false) {
+            if (stripos($index, $searchTerm) !== false) {
                 return true;
             }
         }
