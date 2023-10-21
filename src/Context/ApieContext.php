@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Context;
 
+use Apie\Common\ContextConstants;
 use Apie\Core\Attributes\AllApplies;
 use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
@@ -11,6 +12,7 @@ use Apie\Core\Attributes\Not;
 use Apie\Core\Attributes\Requires;
 use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\Attributes\StaticCheck;
+use Apie\Core\Entities\EntityWithStatesInterface;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use ReflectionClass;
 use ReflectionEnumUnitCase;
@@ -144,8 +146,21 @@ final class ApieContext
     public function getApplicableMethods(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
         $list = [];
+        $filter = function (ReflectionMethod $method) {
+            return !preg_match('/^(__|create|set|get|has|is).+$/i', $method->name);
+        };
+        if ($runtimeChecks && $this->hasContext(ContextConstants::RESOURCE)) {
+            $resource = $this->getContext(ContextConstants::RESOURCE);
+            if ($resource instanceof EntityWithStatesInterface) {
+                $allowedMethods = $resource->provideAllowedMethods()->toArray();
+                $allowedMethodsMap = array_combine($allowedMethods, $allowedMethods);
+                $filter = function (ReflectionMethod $method) use (&$allowedMethodsMap) {
+                    return isset($allowedMethodsMap[$method->name]);
+                };
+            }
+        }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (!preg_match('/^(__|create|set|get|has|is).+$/i', $method->name) && $this->appliesToContext($method, $runtimeChecks)) {
+            if ($this->appliesToContext($method, $runtimeChecks) && $filter($method)) {
                 $list[$method->name] = $method;
             }
         }
