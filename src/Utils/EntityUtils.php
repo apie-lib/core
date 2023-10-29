@@ -83,7 +83,7 @@ final class EntityUtils
 
     /**
      * Converts discriminator mappings from an array into the linked class.
-     *
+     * 
      * @template T of PolymorphicEntityInterface
      * @param array<string, string> $discriminators
      * @param ReflectionClass<T> $base
@@ -100,7 +100,7 @@ final class EntityUtils
         $current = new ReflectionClass($mapping->getClassNameFromDiscriminator($value));
         $last = $base->name;
         while ($current->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name !== $last) {
-            $mapping = $base->getMethod('getDiscriminatorMapping')->invoke(null);
+            $mapping = $current->getMethod('getDiscriminatorMapping')->invoke(null);
             $value = $discriminators[$mapping->getPropertyName()] ?? null;
             if (!isset($value)) {
                 throw new IndexNotFoundException($mapping->getPropertyName());
