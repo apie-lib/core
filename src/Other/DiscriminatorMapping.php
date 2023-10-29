@@ -32,15 +32,18 @@ final class DiscriminatorMapping
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     * @param ReflectionClass<PolymorphicEntityInterface>|PolymorphicEntityInterface $class
      */
-    public function getDiscriminatorForClass(ReflectionClass $class): string
+    public function getConfigForClass(ReflectionClass|PolymorphicEntityInterface $class): DiscriminatorConfig
     {
+        if ($class instanceof PolymorphicEntityInterface) {
+            $class = new ReflectionClass($class);
+        }
         $classes = [];
         foreach ($this->configs as $config) {
             $refl = new ReflectionClass($config->getClassName());
             if ($refl->name === $class->name || $class->isSubclassOf($refl)) {
-                return $config->getDiscriminator();
+                return $config;
             }
             $classes[] = $config->getClassName();
         }
@@ -50,20 +53,17 @@ final class DiscriminatorMapping
         );
     }
 
+    /**
+     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     */
+    public function getDiscriminatorForClass(ReflectionClass $class): string
+    {
+        return $this->getConfigForClass($class)->getDiscriminator();
+    }
+
     public function getDiscriminatorForObject(object $object): string
     {
-        $classes = [];
-        foreach ($this->configs as $config) {
-            $refl = new ReflectionClass($config->getClassName());
-            if ($refl->isInstance($object)) {
-                return $config->getDiscriminator();
-            }
-            $classes[] = $config->getClassName();
-        }
-        throw new InvalidTypeException(
-            $object,
-            $classes ? implode(', ', $classes) : 'none'
-        );
+        return $this->getConfigForClass($object)->getDiscriminator();
     }
 
     public function getClassNameFromDiscriminator(string $discriminatorValue): string
