@@ -83,7 +83,7 @@ final class EntityUtils
 
     /**
      * Converts discriminator mappings from an array into the linked class.
-     * 
+     *
      * @template T of PolymorphicEntityInterface
      * @param array<string, string> $discriminators
      * @param ReflectionClass<T> $base
