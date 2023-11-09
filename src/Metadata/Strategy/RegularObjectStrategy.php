@@ -80,7 +80,10 @@ final class RegularObjectStrategy implements StrategyInterface
         $list = [];
         foreach ($this->class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (!$property->getAttributes(Internal::class)) {
-                $list[$property->getName()] = new PublicProperty($property, !empty($property->getAttributes(Optional::class)));
+                $list[$property->getName()] = new PublicProperty(
+                    $property,
+                    !empty($property->getAttributes(Optional::class))
+                );
             }
         }
         foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
