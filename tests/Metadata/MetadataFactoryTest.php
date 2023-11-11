@@ -15,6 +15,7 @@ use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
 use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
+use Apie\CountryAndPhoneNumber\DutchPhoneNumber;
 use Apie\Fixtures\Dto\DefaultExampleDto;
 use Apie\Fixtures\Dto\EmptyDto;
 use Apie\Fixtures\Dto\ExampleDto;
@@ -92,6 +93,13 @@ class MetadataFactoryTest extends TestCase
             CompositeValueObjectStrategy::class,
             CompositeValueObjectExample::class,
         ];
+
+        if (class_exists(DutchPhoneNumber::class)) {
+            yield [
+                ValueObjectStrategy::class,
+                DutchPhoneNumber::class
+            ];
+        }
     }
 
     /**

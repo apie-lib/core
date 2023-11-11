@@ -32,7 +32,7 @@ final class ValueObjectUtils
     public static function isValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        if (!$class || !$class->implementsInterface(ValueObjectInterface::class) || $class->isAbstract()) {
+        if (!$class || in_array(ValueObjectInterface::class, $class->getInterfaceNames()) || $class->isAbstract()) {
             return false;
         }
         return true;
@@ -44,7 +44,7 @@ final class ValueObjectUtils
     public static function isNonCompositeValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        if (!self::isValueObject($class)) {
+        if (!$class || !in_array(ValueObjectInterface::class, $class->getInterfaceNames())) {
             return false;
         }
 
@@ -62,7 +62,7 @@ final class ValueObjectUtils
     public static function isCompositeValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        if (!self::isValueObject($class)) {
+        if (!$class || !in_array(ValueObjectInterface::class, $class->getInterfaceNames())) {
             return false;
         }
 
