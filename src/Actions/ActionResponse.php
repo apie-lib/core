@@ -52,6 +52,8 @@ final class ActionResponse
     public static function createRemovedSuccess(ApieFacadeInterface $apieFacade, ApieContext $apieContext): self
     {
         $res = new self($apieFacade, $apieContext, ActionResponseStatus::DELETED);
+        $res->result = true;
+        $res->resource = true;
         return $res;
     }
 
