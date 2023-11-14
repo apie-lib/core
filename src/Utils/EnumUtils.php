@@ -23,7 +23,7 @@ final class EnumUtils
     {
         $result = [];
         foreach ($enumClass->getCases() as $enumCase) {
-            $result[] = $enumCase->getValue()->name;
+            $result[$enumCase->getValue()->value ?? $enumCase->getValue()->name] = $enumCase->getValue()->name;
         }
         return $result;
     }
