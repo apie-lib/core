@@ -17,6 +17,18 @@ final class EnumUtils
     }
 
     /**
+     * @return array<int, string>
+     */
+    public static function getValues(ReflectionEnum $enumClass): array
+    {
+        $result = [];
+        foreach ($enumClass->getCases() as $enumCase) {
+            $result[] = $enumCase->getValue()->name;
+        }
+        return $result;
+    }
+
+    /**
      * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
