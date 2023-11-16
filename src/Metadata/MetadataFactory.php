@@ -2,8 +2,10 @@
 namespace Apie\Core\Metadata;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Metadata\Fields\ConstructorParameter;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
@@ -19,6 +21,7 @@ use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use LogicException;
 use ReflectionClass;
 use ReflectionIntersectionType;
+use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
@@ -112,6 +115,15 @@ final class MetadataFactory
         }
 
         return $strategy;
+    }
+
+    public static function getMethodMetadata(ReflectionMethod $method, ApieContext $context): MetadataInterface
+    {
+        $fields = [];
+        foreach ($method->getParameters() as $parameter) {
+            $fields[$parameter->name] = new ConstructorParameter($parameter);
+        }
+        return new CompositeMetadata(new MetadataFieldHashmap($fields));
     }
 
     /**
