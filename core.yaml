@@ -27,6 +27,8 @@ services:
   Apie\Core\Datalayers\GroupedDataLayer:
     arguments:
       - '@Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext'
+    tags:
+      - apie.context
 
   apie.datalayer:
     alias: Apie\Core\Datalayers\ApieDatalayer

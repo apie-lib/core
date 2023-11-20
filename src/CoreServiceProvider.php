@@ -50,6 +50,14 @@ class CoreServiceProvider extends ServiceProvider
                 );
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Core\Datalayers\GroupedDataLayer::class,
+            array(
+              0 => 'apie.context',
+            )
+        );
+        $this->app->tag([\Apie\Core\Datalayers\GroupedDataLayer::class], 'apie.context');
         $this->app->bind('apie.datalayer', \Apie\Core\Datalayers\ApieDatalayer::class);
         
         $this->app->singleton(
