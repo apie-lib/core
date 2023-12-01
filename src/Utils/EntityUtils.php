@@ -4,6 +4,7 @@ namespace Apie\Core\Utils;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Exceptions\IndexNotFoundException;
+use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Other\DiscriminatorMapping;
 use ReflectionClass;
 use ReflectionMethod;
@@ -79,6 +80,25 @@ final class EntityUtils
             $current = new ReflectionClass($config->getClassName());
         }
         return $result;
+    }
+
+    /**
+     * @param ReflectionClass<PolymorphicEntityInterface> $base
+     */
+    public static function getDiscriminatorClasses(ReflectionClass $base): ReflectionClassList
+    {
+        $list = [];
+        /** @var DiscriminatorMapping $mapping */
+        $mapping = $base->getMethod('getDiscriminatorMapping')->invoke(null);
+        foreach ($mapping->getConfigs() as $config) {
+            $refl = new ReflectionClass($config->getClassName());
+            if ($refl->isInstantiable()) {
+                $list[] = $refl;
+            } else {
+                $list = [...$list, ...self::getDiscriminatorClasses($refl)];
+            }
+        }
+        return new ReflectionClassList($list);
     }
 
     /**
