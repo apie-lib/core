@@ -2,6 +2,7 @@
 namespace Apie\Tests\Core\Metadata;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\CompositeMetadata;
@@ -25,11 +26,14 @@ use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\Polymorphic\Cow;
 use Apie\Fixtures\Enums\EmptyEnum;
+use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
 use Apie\Fixtures\Lists\ImmutableStringOrIntHashmap;
 use Apie\Fixtures\Lists\ImmutableStringOrIntList;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectExample;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectWithOptionalFields;
 use Apie\Fixtures\ValueObjects\Password;
+use Apie\TypeConverter\ReflectionTypeFactory;
+use Generator;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stringable;
@@ -100,6 +104,31 @@ class MetadataFactoryTest extends TestCase
                 DutchPhoneNumber::class
             ];
         }
+    }
+
+    /**
+     * @dataProvider getScalarForTypeProvider
+     */
+    public function testGetScalarForType(ScalarType $expected, ?string $typehint)
+    {
+        $type = $typehint === null ? null : ReflectionTypeFactory::createReflectionType($typehint);
+        $this->assertEquals($expected, MetadataFactory::getScalarForType($type));
+    }
+
+    public function getScalarForTypeProvider(): Generator
+    {
+        yield 'string typehint' => [
+            ScalarType::STRING,
+            'string'
+        ];
+        yield 'nullable string typehint' => [
+            ScalarType::STRING,
+            '?string'
+        ];
+        yield 'value object' => [
+            ScalarType::INTEGER,
+            UserAutoincrementIdentifier::class
+        ];
     }
 
     /**

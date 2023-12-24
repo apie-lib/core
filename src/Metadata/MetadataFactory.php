@@ -74,6 +74,16 @@ final class MetadataFactory
         throw new InvalidTypeException($class->name, 'Apie');
     }
 
+    public static function getScalarForType(?ReflectionType $typehint, bool $nullable = true): ScalarType
+    {
+        if ($typehint === null) {
+            return ScalarType::MIXED;
+        }
+        return self::getMetadataStrategyForType($typehint)
+            ->getResultMetadata(new ApieContext())
+            ->toScalarType($nullable);
+    }
+
     public static function getMetadataStrategyForType(ReflectionType $typehint): StrategyInterface
     {
         if ($typehint instanceof ReflectionUnionType) {

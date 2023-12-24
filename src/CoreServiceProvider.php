@@ -87,25 +87,6 @@ class CoreServiceProvider extends ServiceProvider
                 
             }
         );
-        $this->app->singleton(
-            \Apie\Core\Persistence\PersistenceMetadataFactory::class,
-            function ($app) {
-                return \Apie\Core\Persistence\PersistenceMetadataFactory::create(
-                
-                );
-                
-            }
-        );
-        $this->app->bind(\Apie\Core\Persistence\PersistenceMetadataFactoryInterface::class, \Apie\Core\Persistence\PersistenceMetadataFactory::class);
-        
-        $this->app->singleton(
-            \Apie\Core\Persistence\PersistenceLayerFactory::class,
-            function ($app) {
-                return new \Apie\Core\Persistence\PersistenceLayerFactory(
-                    $app->make(\Apie\Core\Persistence\PersistenceMetadataFactoryInterface::class)
-                );
-            }
-        );
         
     }
 }

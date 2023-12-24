@@ -16,6 +16,11 @@ final class GetterMethod implements FieldInterface, GetterInterface
     {
     }
 
+    public function getReflectionMethod(): ReflectionMethod
+    {
+        return $this->method;
+    }
+
     public function allowsNull(): bool
     {
         $type = $this->method->getReturnType();

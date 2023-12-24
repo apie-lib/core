@@ -16,9 +16,19 @@ enum ScalarType: string
     case MIXED = 'mixed';
     case STDCLASS = stdClass::class;
 
+    public const PRIMITIVES = [self::STRING, self::FLOAT, self::INTEGER, self::BOOLEAN];
+
     public function toReflectionType(): ReflectionType
     {
         return ReflectionTypeFactory::createReflectionType($this->value);
+    }
+
+    public function toDoctrineType(): string
+    {
+        if ($this === self::INTEGER) {
+            return 'integer';
+        }
+        return $this->value;
     }
 
     public function toJsonSchemaType(): string

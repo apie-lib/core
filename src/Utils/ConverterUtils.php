@@ -5,10 +5,8 @@ use Apie\Core\TypeConverters\IntToAutoincrementIntegerConverter;
 use Apie\Core\TypeConverters\ReflectionMethodToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
+use Apie\Core\TypeConverters\ReflectionUnionTypeToReflectionClassConverter;
 use Apie\Core\TypeConverters\StringToReflectionClassConverter;
-use Apie\DoctrineEntityConverter\TypeConverters\EntityToDtoTypeConverter;
-use Apie\DoctrineEntityConverter\TypeConverters\EntityToEntityTypeConverter;
-use Apie\DoctrineEntityConverter\TypeConverters\EntityToValueObjectTypeConverter;
 use Apie\TypeConverter\Converters\ObjectToObjectConverter;
 use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
@@ -32,12 +30,8 @@ final class ConverterUtils
             new ReflectionMethodToReflectionClassConverter(),
             new ReflectionPropertyToReflectionClassConverter(),
             new ReflectionTypeToReflectionClassConverter(),
+            new ReflectionUnionTypeToReflectionClassConverter(),
         ];
-        if (class_exists(EntityToValueObjectTypeConverter::class)) {
-            $converters[] = new EntityToValueObjectTypeConverter();
-            $converters[] = new EntityToDtoTypeConverter();
-            $converters[] = new EntityToEntityTypeConverter();
-        }
         $this->typeConverter = new TypeConverter(
             new ObjectToObjectConverter(),
             ...DefaultConvertersFactory::create(
