@@ -1,6 +1,8 @@
 <?php
 namespace Apie\Core\Utils;
 
+use Apie\Core\TypeConverters\ArrayToDoctrineCollection;
+use Apie\Core\TypeConverters\DoctrineCollectionToArray;
 use Apie\Core\TypeConverters\IntToAutoincrementIntegerConverter;
 use Apie\Core\TypeConverters\ReflectionMethodToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
@@ -25,6 +27,8 @@ final class ConverterUtils
     private function __construct()
     {
         $converters = [
+            new ArrayToDoctrineCollection(),
+            new DoctrineCollectionToArray(),
             new IntToAutoincrementIntegerConverter(),
             new StringToReflectionClassConverter(),
             new ReflectionMethodToReflectionClassConverter(),
