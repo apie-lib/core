@@ -3,6 +3,7 @@ namespace Apie\Core\Utils;
 
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -24,6 +25,18 @@ final class HashmapUtils
     {
         $class = ConverterUtils::toReflectionClass($input);
         return $class->name === ItemHashmap::class || $class->isSubclassOf(ItemHashmap::class);
+    }
+
+    /**
+     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     */
+    public static function getArrayType(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): ReflectionType
+    {
+        $class = ConverterUtils::toReflectionClass($input);
+        if ($class === null) {
+            return ReflectionTypeFactory::createReflectionType('mixed');
+        }
+        return $class->getMethod('offsetGet')->getReturnType() ?? ReflectionTypeFactory::createReflectionType('mixed');
     }
 
     /**
