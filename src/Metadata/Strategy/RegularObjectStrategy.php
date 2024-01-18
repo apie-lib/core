@@ -22,7 +22,7 @@ final class RegularObjectStrategy implements StrategyInterface
      */
     public static function supports(ReflectionClass $class): bool
     {
-        return $class->isInstantiable();
+        return $class->isInstantiable() || $class->isInterface();
     }
 
     /**

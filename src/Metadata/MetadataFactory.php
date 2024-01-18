@@ -71,7 +71,7 @@ final class MetadataFactory
             return new RegularObjectStrategy($class);
         }
 
-        throw new InvalidTypeException($class->name, 'Apie');
+        throw new InvalidTypeException($class->name, 'Apie supported object');
     }
 
     public static function getScalarForType(?ReflectionType $typehint, bool $nullable = true): ScalarType
