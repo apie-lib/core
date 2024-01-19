@@ -25,7 +25,7 @@ class UrlRouteDefinition implements StringValueObjectInterface
      */
     public function getPlaceholders(): array
     {
-        if (preg_match_all('/\{\s*(?<placeholder>[a-z]+)\s*\}/', $this->internal, $matches)) {
+        if (preg_match_all('/\{\s*(?<placeholder>[a-zA-Z0-9_]+)\s*\}/', $this->internal, $matches)) {
             return $matches['placeholder'] ?? [];
         }
         return [];
