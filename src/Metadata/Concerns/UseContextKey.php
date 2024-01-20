@@ -28,7 +28,7 @@ trait UseContextKey
             return $parameter->name;
         }
 
-        return $this->getContextKeyForType($apieContext, $type);
+        return $this->getContextKeyForType($apieContext, $type, $returnNull);
     }
 
     private function getContextKeyForType(ApieContext $apieContext, ReflectionType $type, bool $returnNull = true): ?string

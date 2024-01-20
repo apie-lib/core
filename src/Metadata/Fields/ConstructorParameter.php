@@ -7,6 +7,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\SetterInterface;
+use Apie\Core\Utils\ConverterUtils;
 use ReflectionParameter;
 use ReflectionType;
 
@@ -38,6 +39,10 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
             return $this->getDefaultValue();
         }
         $contextKey = $this->getContextKey($apieContext, $this->parameter);
+        $parameterType = $this->parameter->getType();
+        if ($parameterType) {
+            return ConverterUtils::dynamicCast($apieContext->getContext($contextKey), $parameterType);
+        }
         return $apieContext->getContext($contextKey);
     }
 
