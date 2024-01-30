@@ -36,12 +36,19 @@ final class ApieContext
         Equals::class,
         Not::class
     ];
+    /** @var array<string, \Closure> */
+    private array $predefined;
 
     /**
      * @param array<string, mixed> $context
      */
     public function __construct(private array $context = [])
     {
+        $this->predefined = [
+            ApieContext::class => function () {
+                return $this;
+            }
+        ];
     }
 
     public function withContext(string $key, mixed $value): self
@@ -53,11 +60,14 @@ final class ApieContext
 
     public function hasContext(string $key): bool
     {
-        return array_key_exists($key, $this->context);
+        return array_key_exists($key, $this->context) || isset($this->predefined[$key];
     }
 
     public function getContext(string $key): mixed
     {
+        if (isset($this->predefined[$key])) {
+            return $this->predefined[$key]();
+        }
         if (!array_key_exists($key, $this->context)) {
             throw new IndexNotFoundException($key);
         }
