@@ -60,7 +60,7 @@ final class ApieContext
 
     public function hasContext(string $key): bool
     {
-        return array_key_exists($key, $this->context) || isset($this->predefined[$key];
+        return array_key_exists($key, $this->context) || isset($this->predefined[$key]);
     }
 
     public function getContext(string $key): mixed
