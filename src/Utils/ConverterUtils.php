@@ -9,6 +9,7 @@ use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionUnionTypeToReflectionClassConverter;
 use Apie\Core\TypeConverters\StringToReflectionClassConverter;
+use Apie\StorageMetadataBuilder\Interfaces\MixedStorageInterface;
 use Apie\TypeConverter\Converters\ObjectToObjectConverter;
 use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
@@ -70,6 +71,9 @@ final class ConverterUtils
 
     public static function dynamicCast(mixed $input, ReflectionType $wantedType): mixed
     {
+        if ($input instanceof MixedStorageInterface) {
+            $input = $input->toOriginalObject();
+        }
         if ($input === null && $wantedType->allowsNull()) {
             return null;
         }
