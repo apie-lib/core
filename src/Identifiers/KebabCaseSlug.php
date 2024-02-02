@@ -28,4 +28,19 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
     {
         return '/^[a-z0-9]+(\-[a-z0-9]+)*$/';
     }
+
+    public function toCamelCaseSlug(): CamelCaseSlug
+    {
+        return new CamelCaseSlug(lcfirst(str_replace('-', '', ucwords($this->internal, '-'))));
+    }
+
+    public function toPascalCaseSlug(): PascalCaseSlug
+    {
+        return new PascalCaseSlug(str_replace('-', '', ucwords($this->internal, '-')));
+    }
+
+    public function toSnakeCaseSlug(): SnakeCaseSlug
+    {
+        return new SnakeCaseSlug(str_replace('-', '_', $this->internal));
+    }
 }

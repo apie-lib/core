@@ -5,6 +5,7 @@ use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use Apie\Fixtures\TestHelpers\TestWithOpenapiSchema;
+use Generator;
 use PHPUnit\Framework\TestCase;
 
 class KebabCaseSlugTest extends TestCase
@@ -87,5 +88,69 @@ class KebabCaseSlugTest extends TestCase
                 'pattern' => true,
             ]
         );
+    }
+
+    /**
+     * @test
+     * @dataProvider otherFormatsProvider
+     */
+    public function it_can_be_converted_in_other_slug_formats(string $expected, string $input, string $methodCall)
+    {
+        $testItem = new KebabCaseSlug($input);
+        $actual = $testItem->$methodCall()->toNative();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function otherFormatsProvider(): Generator
+    {
+        yield [
+            'slugExample',
+            'slug-example',
+            'toCamelCaseSlug'
+        ];
+        yield [
+            'short',
+            'short',
+            'toCamelCaseSlug',
+        ];
+        yield [
+            'example3Example3',
+            'example3-example3',
+            'toCamelCaseSlug',
+        ];
+
+        yield [
+            'SlugExample',
+            'slug-example',
+            'toPascalCaseSlug'
+        ];
+        yield [
+            'Short',
+            'short',
+            'toPascalCaseSlug',
+        ];
+        yield [
+            'Example3Example3',
+            'example3-example3',
+            'toPascalCaseSlug',
+        ];
+
+        
+        yield [
+            'slug_example',
+            'slug-example',
+            'toSnakeCaseSlug'
+        ];
+        yield [
+            'short',
+            'short',
+            'toSnakeCaseSlug',
+        ];
+        yield [
+            'example3_example3',
+            'example3-example3',
+            'toSnakeCaseSlug',
+        ];
+
     }
 }
