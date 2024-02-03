@@ -78,6 +78,14 @@ class CoreServiceProvider extends ServiceProvider
             }
         );
         $this->app->singleton(
+            \Apie\Core\Other\FileWriterInterface::class,
+            function ($app) {
+                return new \Apie\Core\Other\ActualFileWriter(
+                
+                );
+            }
+        );
+        $this->app->singleton(
             \Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class,
             function ($app) {
                 return \Apie\Common\Wrappers\GeneralServiceFactory::createDataLayerMap(

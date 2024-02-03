@@ -40,6 +40,9 @@ services:
     arguments:
       - '@Apie\Core\Indexing\Indexer'
 
+  Apie\Core\Other\FileWriterInterface:
+    class: Apie\Core\Other\ActualFileWriter
+
   Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext:
     factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
     arguments:
