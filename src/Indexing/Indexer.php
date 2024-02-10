@@ -2,6 +2,7 @@
 namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
+use Apie\CountWords\WordCounter;
 
 final class Indexer
 {
@@ -24,6 +25,34 @@ final class Indexer
             new FromValueObject(),
             new FromGetters()
         );
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function getIndexesFor(mixed $instance, ApieContext $apieContext): array
+    {
+        if (is_object($instance)) {
+            return $this->getIndexesForObject($instance, $apieContext);
+        }
+        if (is_array($instance)) {
+            $result = [];
+            foreach ($instance as $key => $item) {
+                $result[$key] = ($result[$key] ?? 0) + 1;
+                $objectResult = $this->getIndexesFor($item, $apieContext);
+                $result = Indexer::merge($result, $objectResult);
+            }
+            return $result;
+        }
+        if (is_string($instance)) {
+            return WordCounter::countFromString($instance);
+        }
+        return match(get_debug_type($instance)) {
+            'int' => [$instance => 1],
+            'float' => [$instance => 1],
+            'bool' => $instance ? ['1' => 1] : ['0' => 1],
+            default => [],
+        };
     }
 
     /**
