@@ -24,7 +24,7 @@ final class HashmapUtils
     public static function isHashmap(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return $class->name === ItemHashmap::class || $class->isSubclassOf(ItemHashmap::class);
+        return $class !== null && ($class->name === ItemHashmap::class || $class->isSubclassOf(ItemHashmap::class));
     }
 
     /**
@@ -45,6 +45,6 @@ final class HashmapUtils
     public static function isList(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return $class->name === ItemList::class || $class->isSubclassOf(ItemList::class);
+        return $class !== null && ($class->name === ItemList::class || $class->isSubclassOf(ItemList::class));
     }
 }
