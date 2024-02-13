@@ -18,6 +18,11 @@ final class ApieLib
 
     public const VERSION = '1.0-dev';
 
+    public const APIE_FORM_ELEMENTS = '0.0.5';
+
+    public const APIE_STACKTRACE = '0.1.6';
+
+
     /**
      * Workaround for many integration tests in validating string value objects in OneOf or AllOf schema's.
      *
