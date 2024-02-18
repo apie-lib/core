@@ -18,7 +18,7 @@ final class ApieLib
 
     public const VERSION = '1.0-dev';
 
-    public const APIE_FORM_ELEMENTS = '0.0.7';
+    public const APIE_FORM_ELEMENTS = '0.0.8';
 
     public const APIE_STACKTRACE = '0.1.6';
 
