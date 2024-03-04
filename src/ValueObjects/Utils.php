@@ -68,6 +68,13 @@ final class Utils
         if ($input instanceof ValueObjectInterface) {
             $input = $input->toNative();
         }
+        $inputString = trim(self::toString($input));
+        if (!preg_match('/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/', $inputString)) {
+            throw new InvalidTypeException(
+                $inputString,
+                'float'
+            );
+        }
         return (float) $input;
     }
 

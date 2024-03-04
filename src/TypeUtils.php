@@ -1,16 +1,61 @@
 <?php
 namespace Apie\Core;
 
+use Apie\Core\Utils\ConverterUtils;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
+use Throwable;
 
 final class TypeUtils
 {
     private function __construct()
     {
+    }
+
+    public static function allowEmptyString(
+        ?ReflectionType $type
+    ): bool
+    {
+        if ($type === null) {
+            return true;
+        }
+        if ($type instanceof ReflectionNamedType) {
+            if ($type->getName() === 'string' || $type->getName() === 'mixed') {
+                return true;
+            }
+            $class = ConverterUtils::toReflectionClass($type);
+            if (!$class) {
+                return false;
+            }
+            if (in_array(ValueObjectInterface::class, $class->getInterfaceNames())) {
+                try {
+                    $class->getMethod('fromNative')->invoke(null, '');
+                    return true;
+                } catch (Throwable) {
+                    return false;
+                }
+            }
+            return false;
+        }
+        if ($type instanceof ReflectionIntersectionType) {
+            foreach ($type->getTypes() as $type) {
+                if (!self::allowEmptyString($type)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        assert($type instanceof ReflectionUnionType);
+        foreach ($type->getTypes() as $type) {
+            if (self::allowEmptyString($type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function matchesType(
