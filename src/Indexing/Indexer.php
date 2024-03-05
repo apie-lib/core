@@ -44,6 +44,9 @@ final class Indexer
             }
             return $result;
         }
+        if ($instance === null) {
+            return [];
+        }
         if (is_string($instance)) {
             return WordCounter::countFromString($instance);
         }
