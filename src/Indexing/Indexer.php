@@ -21,6 +21,7 @@ final class Indexer
         return new self(
             new FromAttribute(),
             new SkipPasswordFields(),
+            new FromEnum(),
             new FromItemListOrHashmap(),
             new FromValueObject(),
             new FromGetters()

@@ -6,6 +6,7 @@ use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\ValueObjects\Interfaces\TimeRelatedValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use BackedEnum;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -44,6 +45,9 @@ final class Utils
 
     public static function toString(mixed $input): string
     {
+        if (! $input instanceof Stringable && $input instanceof BackedEnum) {
+            return (string) $input->value;
+        }
         return (string) $input;
     }
 
