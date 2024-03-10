@@ -18,8 +18,7 @@ final class TypeUtils
 
     public static function allowEmptyString(
         ?ReflectionType $type
-    ): bool
-    {
+    ): bool {
         if ($type === null) {
             return true;
         }
