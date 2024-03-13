@@ -20,6 +20,7 @@ final class Indexer
     {
         return new self(
             new FromAttribute(),
+            new FromPhoneNumber(),
             new SkipPasswordFields(),
             new FromEnum(),
             new FromItemListOrHashmap(),
