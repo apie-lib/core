@@ -7,6 +7,9 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\StrategyInterface;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use ReflectionClass;
 use ReflectionEnum;
 use ReflectionFiber;
@@ -35,7 +38,10 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     ];
 
     private const STRING_NAME_CLASSES = [
-        Stringable::class
+        Stringable::class,
+        DateTimeInterface::class,
+        DateTime::class,
+        DateTimeImmutable::class,
     ];
 
     public static function supports(ReflectionClass $class): bool
