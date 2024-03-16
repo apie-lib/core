@@ -15,12 +15,16 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
     use IsStringWithRegexValueObject;
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty $class
+     * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|string $class
      */
-    public static function fromClass(ReflectionClass|ReflectionMethod|ReflectionProperty $class): self
+    public static function fromClass(ReflectionClass|ReflectionMethod|ReflectionProperty|string $class): self
     {
-        $shortName = $class instanceof ReflectionClass ? $class->getShortName() : $class->name;
-        $short = preg_replace('/([a-z])([A-Z])/', '$1-$2', $shortName);
+        if (is_object($class)) {
+            $shortName = $class instanceof ReflectionClass ? $class->getShortName() : $class->name;
+            $short = preg_replace('/([a-z])([A-Z])/', '$1-$2', $shortName);
+        } else {
+            $short = $class;
+        }
         return static::fromNative(strtolower($short));
     }
 
