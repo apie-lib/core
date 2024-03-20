@@ -2,23 +2,22 @@
 namespace Apie\Core\Context;
 
 use Apie\Common\ContextConstants;
-use Apie\Core\Attributes\AllApplies;
-use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
-use Apie\Core\Attributes\CustomContextCheck;
-use Apie\Core\Attributes\Equals;
 use Apie\Core\Attributes\Internal;
-use Apie\Core\Attributes\Not;
-use Apie\Core\Attributes\Requires;
 use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\Attributes\StaticCheck;
 use Apie\Core\Entities\EntityWithStatesInterface;
+use Apie\Core\Exceptions\ActionNotAllowedException;
 use Apie\Core\Exceptions\IndexNotFoundException;
+use Apie\Core\Metadata\Concerns\UseContextKey;
+use Apie\Core\Utils\EntityUtils;
+use LogicException;
 use ReflectionClass;
 use ReflectionEnumUnitCase;
 use ReflectionMethod;
 use ReflectionProperty;
 use ReflectionType;
+use Throwable;
 
 /**
  * ApieContext is used as builder/mediator and passed though many Apie functions. It can be used to filter (for example
@@ -26,15 +25,11 @@ use ReflectionType;
  */
 final class ApieContext
 {
+    use UseContextKey;
+
     /** @var array<int, class-string<ApieContextAttribute>> */
     private const ATTRIBUTES = [
-        StaticCheck::class,
-        Requires::class,
-        CustomContextCheck::class,
-        AllApplies::class,
-        AnyApplies::class,
-        Equals::class,
-        Not::class
+        StaticCheck::class
     ];
     /** @var array<string, \Closure> */
     private array $predefined;
@@ -63,12 +58,15 @@ final class ApieContext
         return array_key_exists($key, $this->context) || isset($this->predefined[$key]);
     }
 
-    public function getContext(string $key): mixed
+    public function getContext(string $key, bool $throwError = true): mixed
     {
         if (isset($this->predefined[$key])) {
             return $this->predefined[$key]();
         }
         if (!array_key_exists($key, $this->context)) {
+            if (!$throwError) {
+                return null;
+            }
             throw new IndexNotFoundException($key);
         }
 
@@ -180,7 +178,7 @@ final class ApieContext
     /**
      * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
      */
-    public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method, bool $runtimeChecks = true): bool
+    public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method, bool $runtimeChecks = true, ?Throwable $errorToThrow = null): bool
     {
         if ($method->getAttributes(Internal::class)) {
             return false;
@@ -188,14 +186,52 @@ final class ApieContext
         $attributesToCheck = $runtimeChecks ? [RuntimeCheck::class, ...self::ATTRIBUTES] : self::ATTRIBUTES;
         foreach ($attributesToCheck as $attribute) {
             foreach ($method->getAttributes($attribute) as $reflAttribute) {
-                if (!in_array($reflAttribute->getName(), [StaticCheck::class, RuntimeCheck::class])) {
-                    @trigger_error('Use of attribute ' . $reflAttribute->getName() . ' directly is deprecated', E_USER_DEPRECATED);
-                }
                 if (!$reflAttribute->newInstance()->applies($this)) {
+                    if ($errorToThrow) {
+                        throw $errorToThrow;
+                    }
+                    return false;
+                }
+            }
+        }
+        if ($method instanceof ReflectionMethod && $runtimeChecks) {
+            foreach (EntityUtils::getContextParameters($method) as $parameter) {
+                $key = $this->getContextKey($this, $parameter);
+                if ($key === null) {
+                    if ($errorToThrow) {
+                        throw new LogicException(
+                            'Parameter ' . $parameter->name . ' has an invalid context key',
+                            0,
+                            $errorToThrow
+                        );
+                    }
+                    return false;
+                }
+                if (!isset($this->context[$key])) {
+                    if ($errorToThrow) {
+                        throw new IndexNotFoundException($key);
+                    }
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public function checkAuthorization(): void
+    {
+        try {
+            if (!$this->isAuthorized(runtimeChecks: true, throwError: true)) {
+                throw new ActionNotAllowedException();
+            }
+        } catch (Throwable $error) {
+            throw new ActionNotAllowedException($error);
+        }
+    }
+
+    public function isAuthorized(bool $runtimeChecks, bool $throwError = false): bool
+    {
+        $actionClass = $this->getContext(ContextConstants::APIE_ACTION, $throwError);
+        return $actionClass::isAuthorized($this, $runtimeChecks, $throwError);
     }
 }

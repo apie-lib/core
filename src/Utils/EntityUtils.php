@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Utils;
 
+use Apie\Core\Attributes\Context;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Exceptions\IndexNotFoundException;
@@ -8,6 +9,7 @@ use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Other\DiscriminatorMapping;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
 
@@ -99,6 +101,36 @@ final class EntityUtils
             }
         }
         return new ReflectionClassList($list);
+    }
+
+    /**
+     * Returns context related parameters of a method. This depends on the method type.
+     * A context related parameter gets his value not from user input, but from a
+     * Apie context variable.
+     *
+     * @return ReflectionParameter[]
+     */
+    public static function getContextParameters(ReflectionMethod $method): array
+    {
+        // getters: all arguments are context related
+        if (preg_match('/^(get|is|has).+/i', $method->name)) {
+            return $method->getParameters();
+        }
+        // setters: all arguments, except the last one
+        if (preg_match('/^set.+/i', $method->name)) {
+            $parameters = $method->getParameters();
+            array_pop($parameters);
+            return $parameters;
+        }
+        // other methods: constructor, actions. Only with #[Context] attributes.
+        $parameters = [];
+        foreach ($method->getParameters() as $parameter) {
+            $attributes = $parameter->getAttributes(Context::class);
+            if (!empty($attributes)) {
+                $parameters[] = $parameter;
+            }
+        }
+        return $parameters;
     }
 
     /**

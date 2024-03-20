@@ -22,6 +22,11 @@ interface ActionInterface
     public function __invoke(ApieContext $context, array $rawContents): ActionResponse;
 
     /**
+     * Returns true if this action is allowed in this context.
+     */
+    public static function isAuthorized(ApieContext $context, bool $runtimeChecks, bool $throwError = false): bool;
+
+    /**
      * Gets input type of action, for example it should create the object on POST or do a method call.
      *
      * @template T of EntityInterface
