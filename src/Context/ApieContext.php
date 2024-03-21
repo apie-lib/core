@@ -207,7 +207,7 @@ final class ApieContext
                     }
                     return false;
                 }
-                if (!isset($this->context[$key])) {
+                if (!isset($this->context[$key]) && !isset($this->predefined[$key])) {
                     if ($errorToThrow) {
                         throw new IndexNotFoundException($key);
                     }
@@ -224,6 +224,8 @@ final class ApieContext
             if (!$this->isAuthorized(runtimeChecks: true, throwError: true)) {
                 throw new ActionNotAllowedException();
             }
+        } catch (ActionNotAllowedException) {
+            throw new ActionNotAllowedException();
         } catch (Throwable $error) {
             throw new ActionNotAllowedException($error);
         }
