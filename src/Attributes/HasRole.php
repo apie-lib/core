@@ -23,7 +23,6 @@ final class HasRole implements ApieContextAttribute
         if ($user instanceof HasRolesInterface) {
             $roles = $user->getRoles()->toArray();
             $diff = array_intersect($this->roles, $roles);
-            dump($diff);
             return !empty($diff);
         }
 
