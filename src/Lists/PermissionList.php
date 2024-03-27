@@ -10,4 +10,19 @@ final class PermissionList extends ItemList
     {
         return parent::offsetGet($offset);
     }
+
+    public function toStringList(): StringList
+    {
+        $res = [];
+        foreach ($this as $value) {
+            if ($value instanceof PermissionInterface) {
+                foreach ($value->getPermissionIdentifiers()->toStringList() as $identifier) {
+                    $res[] = $identifier;
+                }
+            } else {
+                $res[] = (string) $value;
+            }
+        }
+        return new StringList($res);
+    }
 }
