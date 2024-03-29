@@ -55,7 +55,7 @@ final class Indexer
         }
         return match(get_debug_type($instance)) {
             'int' => [$instance => 1],
-            'float' => [$instance => 1],
+            'float' => [((string)$instance) => 1],
             'bool' => $instance ? ['1' => 1] : ['0' => 1],
             default => [],
         };

@@ -59,6 +59,9 @@ final class Utils
         if ($input instanceof ValueObjectInterface) {
             $input = $input->toNative();
         }
+        if (is_array($input)) {
+            throw new InvalidTypeException($input, 'int');
+        }
         $iInput = (int) $input;
         $sInput = (string) $input;
         if ($sInput !== ((string) $iInput)) {
