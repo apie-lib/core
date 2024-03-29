@@ -45,6 +45,12 @@ final class Utils
 
     public static function toString(mixed $input): string
     {
+        if ($input instanceof ValueObjectInterface) {
+            $input = $input instanceof Stringable ? $input->__toString() : $input->toNative();
+        }
+        if (is_array($input)) {
+            throw new InvalidTypeException($input, 'string');
+        }
         if (! $input instanceof Stringable && $input instanceof BackedEnum) {
             return (string) $input->value;
         }
