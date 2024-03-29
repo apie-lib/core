@@ -7,6 +7,8 @@ use Apie\Core\Indexing\Indexer;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
+use Apie\Fixtures\Enums\ColorEnum;
+use Apie\Fixtures\Enums\NoValueEnum;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
 use Apie\Fixtures\Identifiers\OrderLineIdentifier;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
@@ -80,6 +82,14 @@ class IndexerTest extends TestCase
         yield 'DateTime object' => [
             [$date->format(DateTime::ATOM) => 1],
             $date,
+        ];
+        yield 'Enum' => [
+            ['RED' => 1],
+            NoValueEnum::RED,
+        ];
+        yield 'Backed enum' => [
+            ['RED' => 1, 'red' => 1],
+            ColorEnum::RED,
         ];
         yield 'string value object' => [
             [
