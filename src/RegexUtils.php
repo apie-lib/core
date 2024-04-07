@@ -31,12 +31,16 @@ final class RegexUtils
         if ($removeDelimiters) {
             $regularExpression = self::removeDelimiters($regularExpression);
         }
-        // regular expression should start with ^ and end with $ to determine max length of an
-        // accepted string.
-        $regex = CompiledRegularExpression::createFromRegexWithoutDelimiters($regularExpression);
-        if (!$regex->hasStartOfRegexMarker() || !$regex->hasEndOfRegexMarker()) {
-            return null;
+        if (!isset(self::$alreadyCalculated[$regularExpression])) {
+            $regex = CompiledRegularExpression::createFromRegexWithoutDelimiters($regularExpression);
+            // regular expression should start with ^ and end with $ to determine max length of an
+            // accepted string.
+            if (!$regex->hasStartOfRegexMarker() || !$regex->hasEndOfRegexMarker()) {
+                return self::$alreadyCalculated[$regularExpression] = null;
+            }
+            return self::$alreadyCalculated[$regularExpression] = $regex->getMaximumPossibleLength();
         }
-        return $regex->getMaximumPossibleLength();
+
+        return self::$alreadyCalculated[$regularExpression];        
     }
 }
