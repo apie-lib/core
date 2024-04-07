@@ -26,8 +26,7 @@ final class RegexUtils
     public static function getMaximumAcceptedStringLengthOfRegularExpression(
         string $regularExpression,
         bool $removeDelimiters = true
-    ): ?int
-    {
+    ): ?int {
         if ($removeDelimiters) {
             $regularExpression = self::removeDelimiters($regularExpression);
         }
@@ -41,6 +40,6 @@ final class RegexUtils
             return self::$alreadyCalculated[$regularExpression] = $regex->getMaximumPossibleLength();
         }
 
-        return self::$alreadyCalculated[$regularExpression];        
+        return self::$alreadyCalculated[$regularExpression];
     }
 }
