@@ -24,4 +24,22 @@ final class PermissionList extends ItemList
         }
         return new StringList($res);
     }
+
+    public function hasOverlap(PermissionList $permissionList): bool
+    {
+        $currentList = $this->toStringList()->toArray();
+        $currentList = array_combine($currentList, $currentList);
+        foreach ($permissionList as $item) {
+            if ($item instanceof PermissionInterface) {
+                foreach ($item->getPermissionIdentifiers()->toStringList() as $identifier) {
+                    if (isset($currentList[$identifier])) {
+                        return true;
+                    }
+                }
+            } elseif (isset($currentList[$item])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

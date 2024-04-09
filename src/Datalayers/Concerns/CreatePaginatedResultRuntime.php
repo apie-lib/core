@@ -21,7 +21,7 @@ trait CreatePaginatedResultRuntime
 {
     abstract public function getIterator(): Iterator;
 
-    public function toPaginatedResult(QuerySearch $search, ApieContext $apieContext = new ApieContext()): PaginatedResult
+    public function toPaginatedResult(QuerySearch $search): PaginatedResult
     {
         $found = 0;
         $pageIndex = $search->getPageIndex();
@@ -32,7 +32,7 @@ trait CreatePaginatedResultRuntime
         $totalCount = 0;
         foreach ($this->getIterator() as $entity) {
             assert($entity instanceof EntityInterface);
-            $added = $found < $endOffset && $this->filterer->appliesPartialSearch($entity, $search, $apieContext);
+            $added = $found < $endOffset && $this->filterer->appliesFiltering($entity, $search);
             $totalCount++;
             if ($added) {
                 $found++;

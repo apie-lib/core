@@ -234,6 +234,9 @@ final class ApieContext
     public function isAuthorized(bool $runtimeChecks, bool $throwError = false): bool
     {
         $actionClass = $this->getContext(ContextConstants::APIE_ACTION, $throwError);
+        if (!$actionClass) {
+            return true;
+        }
         return $actionClass::isAuthorized($this, $runtimeChecks, $throwError);
     }
 }
