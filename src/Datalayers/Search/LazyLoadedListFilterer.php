@@ -86,6 +86,6 @@ final class LazyLoadedListFilterer
         } catch (Exception) {
             return false;
         }
-        return $value1 === $value2;
+        return strpos($value2, $value1) !== false;
     }
 }
