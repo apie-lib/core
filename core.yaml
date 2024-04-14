@@ -6,6 +6,11 @@ services:
   Apie\Core\BoundedContext\BoundedContextHashmap:
     factory: ["@apie.bounded_context.hashmap_factory", "create"]
 
+  Apie\Core\Translator\ApieTranslatorInterface:
+    factory: ['Apie\Core\Translator\ApieTranslator', 'create']
+    tags:
+      - apie.context
+
   Apie\Core\ContextBuilders\ContextBuilderFactory:
     factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
     arguments:

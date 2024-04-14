@@ -2,7 +2,6 @@
 namespace Apie\Core\Datalayers\Concerns;
 
 use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
 use Apie\Core\Datalayers\Search\QuerySearch;

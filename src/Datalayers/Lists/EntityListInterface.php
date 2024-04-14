@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Core\Datalayers\Lists;
 
-use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\Search\QuerySearch;
 use Apie\Core\Entities\EntityInterface;
 use IteratorAggregate;

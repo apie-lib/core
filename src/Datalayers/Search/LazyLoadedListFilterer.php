@@ -2,7 +2,6 @@
 namespace Apie\Core\Datalayers\Search;
 
 use Apie\Common\ContextConstants;
-use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Indexing\Indexer;
 use Apie\Core\Permissions\PermissionInterface;
@@ -10,7 +9,6 @@ use Apie\Core\Permissions\RequiresPermissionsInterface;
 use Apie\Core\PropertyAccess;
 use Apie\Core\ValueObjects\Utils;
 use Exception;
-use Throwable;
 
 final class LazyLoadedListFilterer
 {
