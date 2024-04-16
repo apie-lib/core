@@ -29,6 +29,9 @@ final class TranslationString implements HasRegexValueObjectInterface
         return $this;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     public static function createForResourceName(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): self
     {
         if ($boundedContextId === null) {
