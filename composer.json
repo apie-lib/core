@@ -35,6 +35,35 @@
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9.5"
   },
+  "extra": {
+    "apie-objects": [
+      "Apie\\Core\\Enums\\ConsoleCommand",
+      "Apie\\Core\\Enums\\RequestMethod",
+      "Apie\\Core\\Enums\\ScalarType",
+      "Apie\\Core\\Identifiers\\AutoIncrementInteger",
+      "Apie\\Core\\Identifiers\\CamelCaseSlug",
+      "Apie\\Core\\Identifiers\\Identifier",
+      "Apie\\Core\\Identfiers\\KebabCaseSlug",
+      "Apie\\Core\\Identifiers\\PascalCaseSlug",
+      "Apie\\Core\\Identifiers\\SnakeCaseSlug",
+      "Apie\\Core\\Identifiers\\Uuid",
+      "Apie\\Core\\Identifiers\\UUidV1",
+      "Apie\\Core\\Identifiers\\UUidV2",
+      "Apie\\Core\\Identifiers\\UUidV3",
+      "Apie\\Core\\Identifiers\\UUidV4",
+      "Apie\\Core\\Identifiers\\UUidV5",
+      "Apie\\Core\\Identifiers\\UUidV6",
+      "Apie\\Core\\Lists\\IntegerHashmap",
+      "Apie\\Core\\Lists\\IntegerList",
+      "Apie\\Core\\Lists\\ItemHashmap",
+      "Apie\\Core\\Lists\\ItemList",
+      "Apie\\Core\\Lists\\StringHashmap",
+      "Apie\\Core\\Lists\\StringList",
+      "Apie\\Core\\Translator\\Enums\\FromFileLanguage",
+      "Apie\\Core\\Translator\\ValueObjects\\TranslationString",
+      "Apie\\Core\\ValueObjects\\UrlRouteDefinition"
+    ]
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
