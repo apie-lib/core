@@ -21,6 +21,7 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
     {
         if (is_object($class)) {
             $shortName = $class instanceof ReflectionClass ? $class->getShortName() : $class->name;
+            $shortName = preg_replace('/^__/', 'magicMethod', $shortName);
             $short = preg_replace('/([a-z])([A-Z])/', '$1-$2', $shortName);
         } else {
             $short = $class;
