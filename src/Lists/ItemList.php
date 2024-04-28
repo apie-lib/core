@@ -134,6 +134,15 @@ class ItemList implements ItemListInterface
         }
     }
 
+    public function append(mixed $value): self
+    {
+        $this->typeCheck($value);
+        $returnValue = $this->mutable ? $this : clone $this;
+        $returnValue->internal[] = $value;
+
+        return $returnValue;
+    }
+
     /**
      * @param T $value
      */
