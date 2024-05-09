@@ -47,25 +47,25 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, BoundedContext
 
     public function find(IdentifierInterface $identifier, ?BoundedContext $boundedContext = null): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($identifier::getReferenceFor(), $boundedContext->getId())
+        return $this->hashmap->pickDataLayerFor($identifier::getReferenceFor(), $boundedContext?->getId())
             ->find($identifier, $boundedContext);
     }
 
     public function persistNew(EntityInterface $entity, ?BoundedContext $boundedContext = null): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext->getId())
+        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext?->getId())
             ->persistNew($entity, $boundedContext);
     }
 
     public function persistExisting(EntityInterface $entity, ?BoundedContext $boundedContext = null): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext->getId())
+        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext?->getId())
             ->persistExisting($entity, $boundedContext);
     }
     
     public function removeExisting(EntityInterface $entity, ?BoundedContext $boundedContext = null): void
     {
-        $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext->getId())
+        $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContext?->getId())
             ->removeExisting($entity, $boundedContext);
     }
 }

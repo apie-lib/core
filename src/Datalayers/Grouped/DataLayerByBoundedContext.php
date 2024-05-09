@@ -30,9 +30,9 @@ final class DataLayerByBoundedContext extends ItemHashmap
     /**
      * @param ReflectionClass<EntityInterface> $class
      */
-    public function pickDataLayerFor(ReflectionClass $class, BoundedContextId $boundedContextId): ApieDatalayer
+    public function pickDataLayerFor(ReflectionClass $class, ?BoundedContextId $boundedContextId): ApieDatalayer
     {
-        if (isset($this[$boundedContextId->toNative()])) {
+        if ($boundedContextId && isset($this[$boundedContextId->toNative()])) {
             return $this[$boundedContextId->toNative()]->pickDataLayerFor($class);
         }
         if ($this->defaultDataLayer instanceof DataLayerByClass) {
