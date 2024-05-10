@@ -196,6 +196,9 @@ final class ApieContext
         }
         if ($method instanceof ReflectionMethod && $runtimeChecks) {
             foreach (EntityUtils::getContextParameters($method) as $parameter) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    continue;
+                }
                 $key = $this->getContextKey($this, $parameter);
                 if ($key === null) {
                     if ($errorToThrow) {

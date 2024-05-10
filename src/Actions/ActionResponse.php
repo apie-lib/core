@@ -16,8 +16,11 @@ final class ActionResponse
 
     private mixed $nativeData;
 
-    private function __construct(private readonly ApieFacadeInterface $apieFacade, public readonly ApieContext $apieContext, public readonly ActionResponseStatus $status)
+    public readonly ApieContext $apieContext;
+
+    private function __construct(private readonly ApieFacadeInterface $apieFacade, ApieContext $apieContext, public readonly ActionResponseStatus $status)
     {
+        $this->apieContext = $apieContext->withContext(ActionResponse::class, $this);
     }
 
     public static function createClientError(ApieFacadeInterface $apieFacade, ApieContext $apieContext, Throwable $error): self
