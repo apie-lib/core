@@ -58,6 +58,7 @@
       "Apie\\Core\\Lists\\IntegerList",
       "Apie\\Core\\Lists\\ItemHashmap",
       "Apie\\Core\\Lists\\ItemList",
+      "Apie\\Core\\Lists\\ItemSet",
       "Apie\\Core\\Lists\\StringHashmap",
       "Apie\\Core\\Lists\\StringList",
       "Apie\\Core\\Translator\\Enums\\FromFileLanguage",
