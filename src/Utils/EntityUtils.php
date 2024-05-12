@@ -8,6 +8,7 @@ use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Other\DiscriminatorMapping;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -27,7 +28,11 @@ final class EntityUtils
      */
     public static function isEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
-        $class = ConverterUtils::toReflectionClass($input);
+        try {
+            $class = ConverterUtils::toReflectionClass($input);
+        } catch (ReflectionException) {
+            return false;
+        }
         return $class->implementsInterface(EntityInterface::class)
             && !$class->isInterface();
     }
@@ -37,7 +42,11 @@ final class EntityUtils
      */
     public static function isNonPolymorphicEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
-        $class = ConverterUtils::toReflectionClass($input);
+        try {
+            $class = ConverterUtils::toReflectionClass($input);
+        } catch (ReflectionException) {
+            return false;
+        }
         return !$class->implementsInterface(PolymorphicEntityInterface::class)
             && $class->implementsInterface(EntityInterface::class)
             && !$class->isInterface();
@@ -48,7 +57,11 @@ final class EntityUtils
      */
     public static function isPolymorphicEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
-        $class = ConverterUtils::toReflectionClass($input);
+        try {
+            $class = ConverterUtils::toReflectionClass($input);
+        } catch (ReflectionException) {
+            return false;
+        }
         return $class->implementsInterface(PolymorphicEntityInterface::class)
             && !$class->isInterface();
     }
