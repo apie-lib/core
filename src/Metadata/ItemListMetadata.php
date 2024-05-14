@@ -6,10 +6,13 @@ use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Metadata\Concerns\NoValueOptions;
 use ReflectionClass;
 
 final class ItemListMetadata implements MetadataInterface
 {
+    use NoValueOptions;
+
     /**
      * @param ReflectionClass<ItemList> $class
      */

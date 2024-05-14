@@ -1,9 +1,11 @@
 <?php
 namespace Apie\Core\Metadata;
 
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Metadata\Fields\OptionalField;
 use ReflectionClass;
 
@@ -97,5 +99,18 @@ class UnionTypeMetadata implements NullableMetadataInterface
             }
         }
         return $arrayType ?? null;
+    }
+
+    public function getValueOptions(ApieContext $context, bool $runtimeFilter = false): ?ValueOptionList
+    {
+        $result = [];
+        foreach ($this->metadata as $objectData) {
+            $valueOptions = $objectData->getValueOptions($context, $runtimeFilter);
+            if ($valueOptions === null) {
+                return null;
+            }
+            $result = [...$result, ...$valueOptions];
+        }
+        return new ValueOptionList($result);
     }
 }

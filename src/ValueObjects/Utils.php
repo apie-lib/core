@@ -54,6 +54,9 @@ final class Utils
         if (! $input instanceof Stringable && $input instanceof BackedEnum) {
             return (string) $input->value;
         }
+        if (! $input instanceof Stringable && $input instanceof UnitEnum) {
+            return (string) $input->name;
+        }
         if ($input instanceof DateTimeInterface) {
             return $input->format(DateTimeInterface::ATOM);
         }

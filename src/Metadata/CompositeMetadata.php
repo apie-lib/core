@@ -4,11 +4,20 @@ namespace Apie\Core\Metadata;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Metadata\Concerns\NoValueOptions;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
+/**
+ * Composite value objects
+ * - Implements ValueObjectInterface
+ * - has CompositeValueObject trait
+ * - is always mapped as an object
+ */
 final class CompositeMetadata implements MetadataInterface
 {
+    use NoValueOptions;
+
     private ?StringList $requiredFields = null;
 
     /**

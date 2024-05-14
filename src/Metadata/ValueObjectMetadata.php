@@ -5,11 +5,14 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Metadata\Concerns\NoValueOptions;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use ReflectionClass;
 
 class ValueObjectMetadata implements NullableMetadataInterface
 {
+    // TODO: check regex to see if the options are limited?
+    use NoValueOptions;
     /**
      * @param ReflectionClass<ValueObjectInterface> $class
      */
