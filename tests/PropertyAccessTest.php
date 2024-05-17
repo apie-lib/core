@@ -4,6 +4,7 @@ namespace Apie\Tests\Core;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\PropertyAccess;
+use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -13,7 +14,6 @@ use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
 use Apie\Fixtures\ValueObjects\Password;
-use Apie\TextValueObjects\DatabaseText;
 use Generator;
 use PHPUnit\Framework\TestCase;
 

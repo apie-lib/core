@@ -5,11 +5,11 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\Exceptions\UnknownExistingEntityError;
+use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
 use Apie\Fixtures\TestHelpers\TestWithInMemoryDatalayer;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
-use Apie\TextValueObjects\DatabaseText;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 

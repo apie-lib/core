@@ -65,6 +65,7 @@
       "Apie\\Core\\Lists\\StringList",
       "Apie\\Core\\Translator\\Enums\\FromFileLanguage",
       "Apie\\Core\\Translator\\ValueObjects\\TranslationString",
+      "Apie\\Core\\ValueObjects\\DatabaseText",
       "Apie\\Core\\ValueObjects\\UrlRouteDefinition"
     ]
   },
