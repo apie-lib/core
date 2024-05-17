@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Tests\Core\Indexing;
 
-use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Indexing\Indexer;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\Entities\Order;

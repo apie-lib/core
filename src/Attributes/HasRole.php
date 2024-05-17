@@ -1,9 +1,9 @@
 <?php
 namespace Apie\Core\Attributes;
 
-use Apie\Common\ContextConstants;
 use Apie\Common\Interfaces\HasRolesInterface;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 
 /**
  * Tell Apie you need to be logged in with a specific role to see/execute a class/method/property.

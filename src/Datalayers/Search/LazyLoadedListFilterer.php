@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Datalayers\Search;
 
-use Apie\Common\ContextConstants;
+use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Indexing\Indexer;
 use Apie\Core\Permissions\PermissionInterface;

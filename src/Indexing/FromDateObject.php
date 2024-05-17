@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Core\Indexing;
 
-use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Lists\StringList;
 use DateTimeInterface;
 use Stringable;

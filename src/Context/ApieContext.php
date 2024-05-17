@@ -1,11 +1,11 @@
 <?php
 namespace Apie\Core\Context;
 
-use Apie\Common\ContextConstants;
 use Apie\Core\Attributes\ApieContextAttribute;
 use Apie\Core\Attributes\Internal;
 use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\Attributes\StaticCheck;
+use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityWithStatesInterface;
 use Apie\Core\Exceptions\ActionNotAllowedException;
 use Apie\Core\Exceptions\IndexNotFoundException;

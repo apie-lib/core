@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Core\Attributes;
 
-use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 
 /**
  * Tell Apie you should not be logged in to see/execute a class/method/property.
