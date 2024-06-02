@@ -35,7 +35,7 @@ class ScalarStrategyTest extends TestCase
         yield [ScalarType::FLOAT, 'float'];
         yield [ScalarType::INTEGER, 'int'];
         yield [ScalarType::MIXED, 'mixed'];
-        yield [ScalarType::NULL, 'null'];
+        yield [ScalarType::NULLVALUE, 'null'];
         yield [ScalarType::BOOLEAN, 'false'];
         if (PHP_VERSION_ID >= 80200) {
             yield [ScalarType::BOOLEAN, 'true'];

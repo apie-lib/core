@@ -152,6 +152,5 @@ class PascalCaseSlugTest extends TestCase
             'Example3Example3',
             'toCamelCaseSlug',
         ];
-
     }
 }

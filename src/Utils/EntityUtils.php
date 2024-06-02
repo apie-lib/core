@@ -86,7 +86,7 @@ final class EntityUtils
         $result = [];
         $current = $base;
         $last = null;
-        while($current->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name !== $last && $current->name !== $entityClass) {
+        while ($current->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name !== $last && $current->name !== $entityClass) {
             /** @var DiscriminatorMapping $mapping */
             $mapping = $current->getMethod('getDiscriminatorMapping')->invoke(null);
             $config = $mapping->getConfigForClass($entity);

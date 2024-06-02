@@ -99,7 +99,7 @@ final class MetadataFactory
         assert($typehint instanceof ReflectionNamedType);
         if ($typehint->isBuiltin()) {
             if ($typehint->getName() === 'null') {
-                return new ScalarStrategy(ScalarType::NULL);
+                return new ScalarStrategy(ScalarType::NULLVALUE);
             }
             if ($typehint->getName() === 'mixed') {
                 return new ScalarStrategy(ScalarType::MIXED);
@@ -121,7 +121,7 @@ final class MetadataFactory
             $strategy = self::getMetadataStrategy(new ReflectionClass($typehint->getName()));
         }
         if ($typehint->allowsNull()) {
-            return new UnionTypeStrategy($strategy, new ScalarMetadata(ScalarType::NULL));
+            return new UnionTypeStrategy($strategy, new ScalarMetadata(ScalarType::NULLVALUE));
         }
 
         return $strategy;

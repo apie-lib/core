@@ -151,6 +151,5 @@ class KebabCaseSlugTest extends TestCase
             'example3-example3',
             'toSnakeCaseSlug',
         ];
-
     }
 }

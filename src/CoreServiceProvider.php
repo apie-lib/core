@@ -22,7 +22,6 @@ class CoreServiceProvider extends ServiceProvider
                 return $this->app->make('apie.bounded_context.hashmap_factory')->create(
                 
                 );
-                
             }
         );
         $this->app->singleton(
@@ -31,7 +30,6 @@ class CoreServiceProvider extends ServiceProvider
                 return \Apie\Core\Translator\ApieTranslator::create(
                 
                 );
-                
             }
         );
         \Apie\ServiceProviderGenerator\TagMap::register(
@@ -50,7 +48,6 @@ class CoreServiceProvider extends ServiceProvider
                     $app->bound(\Apie\Serializer\DecoderHashmap::class) ? $app->make(\Apie\Serializer\DecoderHashmap::class) : null,
                     $this->getTaggedServicesIterator('apie.core.context_builder')
                 );
-                
             }
         );
         $this->app->bind('apie.bounded_context.hashmap', \Apie\Core\BoundedContext\BoundedContextHashmap::class);
@@ -83,7 +80,6 @@ class CoreServiceProvider extends ServiceProvider
                 return \Apie\Core\Indexing\Indexer::create(
                 
                 );
-                
             }
         );
         $this->app->singleton(
@@ -109,9 +105,7 @@ class CoreServiceProvider extends ServiceProvider
                     $this->parseArgument('%apie.datalayers%'),
                     $this->getTaggedServicesServiceLocator('apie.datalayer')
                 );
-                
             }
         );
-        
     }
 }

@@ -26,7 +26,5 @@ class ReflectionUnionTypeToReflectionClassConverter implements ConverterInterfac
         }
 
         return null;
-      
-        
     }
 }

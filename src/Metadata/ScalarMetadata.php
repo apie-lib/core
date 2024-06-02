@@ -23,7 +23,7 @@ final class ScalarMetadata implements MetadataInterface
                 new ValueOption('False', false),
             ]);
         }
-        if ($this->type === ScalarType::NULL) {
+        if ($this->type === ScalarType::NULLVALUE) {
             return new ValueOptionList([
                 new ValueOption('(null)', null)
             ]);

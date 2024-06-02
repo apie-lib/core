@@ -53,7 +53,7 @@ final class Indexer
         if (is_string($instance)) {
             return WordCounter::countFromString($instance);
         }
-        return match(get_debug_type($instance)) {
+        return match (get_debug_type($instance)) {
             'int' => [$instance => 1],
             'float' => [((string)$instance) => 1],
             'bool' => $instance ? ['1' => 1] : ['0' => 1],

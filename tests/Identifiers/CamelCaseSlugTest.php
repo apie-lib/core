@@ -151,6 +151,5 @@ class CamelCaseSlugTest extends TestCase
             'example3Example3',
             'toSnakeCaseSlug',
         ];
-
     }
 }

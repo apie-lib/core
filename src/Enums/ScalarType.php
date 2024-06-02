@@ -10,7 +10,7 @@ enum ScalarType: string
     case STRING = 'string';
     case FLOAT = 'float';
     case INTEGER = 'int';
-    case NULL = 'null';
+    case NULLVALUE = 'null';
     case ARRAY = 'array';
     case BOOLEAN = 'bool';
     case MIXED = 'mixed';

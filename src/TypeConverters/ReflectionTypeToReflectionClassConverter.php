@@ -26,7 +26,5 @@ class ReflectionTypeToReflectionClassConverter implements ConverterInterface
         }
 
         return null;
-      
-        
     }
 }

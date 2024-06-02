@@ -78,7 +78,7 @@ class UnionTypeMetadata implements NullableMetadataInterface
         $current = null;
         foreach ($this->metadata as $objectData) {
             $type = $objectData->toScalarType($ignoreNull);
-            if ($ignoreNull && $type === ScalarType::NULL) {
+            if ($ignoreNull && $type === ScalarType::NULLVALUE) {
                 continue;
             }
             if ($current === null) {
