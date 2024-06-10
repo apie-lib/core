@@ -12,6 +12,9 @@ use Throwable;
 
 final class TypeUtils
 {
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }
