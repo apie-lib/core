@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\ResourceName;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
@@ -289,8 +290,13 @@ final class Utils
     {
         if ($class instanceof ReflectionClass) {
             $className = $class->getShortName();
+            $refl = $class;
         } else {
-            $className = (new ReflectionClass($class))->getShortName();
+            $refl = new ReflectionClass($class);
+            $className = $refl->getShortName();
+        }
+        foreach ($refl->getAttributes(ResourceName::class) as $attribute) {
+            return $attribute->newInstance()->name;
         }
         if (strcasecmp($className, 'Abstract') === 0 || strcasecmp($className, 'AbstractInterface') === 0) {
             return 'Abstract';

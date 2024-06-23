@@ -3,11 +3,13 @@ namespace Apie\Core;
 
 use Apie\Core\Utils\ConverterUtils;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
 
 final class TypeUtils
@@ -54,6 +56,25 @@ final class TypeUtils
         assert($type instanceof ReflectionUnionType);
         foreach ($type->getTypes() as $type) {
             if (self::allowEmptyString($type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function couldBeAStream(
+        ?ReflectionType $type
+    ): bool {
+        if ($type === null) {
+            return true;
+        }
+        if ($type instanceof ReflectionNamedType) {
+            return in_array($type->getName(), ['mixed', 'resource', UploadedFile::class, UploadedFileInterface::class]);
+        }
+        assert($type instanceof ReflectionIntersectionType || $type instanceof ReflectionUnionType);
+    
+        foreach ($type->getTypes() as $type) {
+            if (self::couldBeAStream($type)) {
                 return true;
             }
         }
