@@ -48,6 +48,13 @@ services:
   Apie\Core\Other\FileWriterInterface:
     class: Apie\Core\Other\ActualFileWriter
 
+  Apie\Core\FileStorage\ChainedFileStorage:
+    factory: ['Apie\Core\FileStorage\FileStorageFactory', 'create']
+    arguments:
+      - '%apie.storage%'
+    tags:
+      - apie.context
+
   Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext:
     factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
     arguments:

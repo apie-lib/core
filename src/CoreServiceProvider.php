@@ -22,6 +22,7 @@ class CoreServiceProvider extends ServiceProvider
                 return $this->app->make('apie.bounded_context.hashmap_factory')->create(
                 
                 );
+                
             }
         );
         $this->app->singleton(
@@ -30,6 +31,7 @@ class CoreServiceProvider extends ServiceProvider
                 return \Apie\Core\Translator\ApieTranslator::create(
                 
                 );
+                
             }
         );
         \Apie\ServiceProviderGenerator\TagMap::register(
@@ -48,6 +50,7 @@ class CoreServiceProvider extends ServiceProvider
                     $app->bound(\Apie\Serializer\DecoderHashmap::class) ? $app->make(\Apie\Serializer\DecoderHashmap::class) : null,
                     $this->getTaggedServicesIterator('apie.core.context_builder')
                 );
+                
             }
         );
         $this->app->bind('apie.bounded_context.hashmap', \Apie\Core\BoundedContext\BoundedContextHashmap::class);
@@ -80,6 +83,7 @@ class CoreServiceProvider extends ServiceProvider
                 return \Apie\Core\Indexing\Indexer::create(
                 
                 );
+                
             }
         );
         $this->app->singleton(
@@ -99,13 +103,32 @@ class CoreServiceProvider extends ServiceProvider
             }
         );
         $this->app->singleton(
+            \Apie\Core\FileStorage\ChainedFileStorage::class,
+            function ($app) {
+                return \Apie\Core\FileStorage\FileStorageFactory::create(
+                    $this->parseArgument('%apie.storage%')
+                );
+                
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Core\FileStorage\ChainedFileStorage::class,
+            array(
+              0 => 'apie.context',
+            )
+        );
+        $this->app->tag([\Apie\Core\FileStorage\ChainedFileStorage::class], 'apie.context');
+        $this->app->singleton(
             \Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class,
             function ($app) {
                 return \Apie\Common\Wrappers\GeneralServiceFactory::createDataLayerMap(
                     $this->parseArgument('%apie.datalayers%'),
                     $this->getTaggedServicesServiceLocator('apie.datalayer')
                 );
+                
             }
         );
+        
     }
 }
