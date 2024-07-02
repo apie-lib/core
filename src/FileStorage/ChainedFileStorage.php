@@ -2,6 +2,7 @@
 namespace Apie\Core\FileStorage;
 
 use Apie\Core\Exceptions\FileStorageException;
+use LogicException;
 use Psr\Http\Message\UploadedFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
@@ -49,6 +50,9 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
             } catch (Throwable $error) {
                 $collectedExceptions[] = $error;
             }
+        }
+        if (empty($collectedExceptions)) {
+            $collectedExceptions[] = new LogicException('There is no configured storage class for ' . $methodName);
         }
         throw new FileStorageException('There was a problem calling ' . $methodName, $collectedExceptions);
     }

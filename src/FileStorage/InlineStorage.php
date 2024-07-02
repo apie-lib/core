@@ -1,15 +1,14 @@
 <?php
 namespace Apie\Core\FileStorage;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\StreamInterface;
+use Apie\Core\Other\UploadedFileFactory;
 use Psr\Http\Message\UploadedFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Store files by just returning a path containing mime type, original filename and contents
  */
-class InlineStorage implements UploadedFileAwareStorageInterface, ResourceAwareStorageInterface
+class InlineStorage implements PsrAwareStorageInterface, UploadedFileAwareStorageInterface, ResourceAwareStorageInterface
 {
     public function uploadedFileToPath(UploadedFile $uploadedFile): string
     {
@@ -61,43 +60,6 @@ class InlineStorage implements UploadedFileAwareStorageInterface, ResourceAwareS
     public function pathToPsr(string $path): UploadedFileInterface
     {
         list($mimeType, $originalName, $contents) = explode('|', $path, 3);
-        return new class($contents, $originalName, $mimeType) implements UploadedFileInterface {
-            public function __construct(
-                private string $contents,
-                private string $originalName,
-                private string $mimeType
-            ) {
-            }
-            public function getStream(): StreamInterface
-            {
-                $factory = new Psr17Factory();
-                return $factory->createStream($this->contents);
-            }
-            public function moveTo(string $targetPath): void
-            {
-                throw new \RuntimeException('Not implemented');
-            }
-    
-            public function getSize(): int
-            {
-                return strlen($this->contents);
-            }
-    
-            public function getError(): int
-            {
-                return UPLOAD_ERR_OK;
-            }
-    
-            public function getClientFilename(): string
-            {
-                return $this->originalName;
-            }
-            
-            public function getClientMediaType(): string
-            {
-                return $this->mimeType;
-            }
-
-        };
+        return UploadedFileFactory::createUploadedFileFromString($contents, $originalName, $mimeType);
     }
 }
