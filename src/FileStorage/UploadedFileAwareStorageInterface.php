@@ -3,7 +3,7 @@ namespace Apie\Core\FileStorage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-interface UploadedFileAwareStorageInterface
+interface UploadedFileAwareStorageInterface extends FileStorageInterface
 {
     public function uploadedFileToPath(UploadedFile $uploadedFile): string;
 

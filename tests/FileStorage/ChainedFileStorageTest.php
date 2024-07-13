@@ -25,7 +25,7 @@ class ChainedFileStorageTest extends TestCase
     {
         $testItem = $this->createTestItem();
         $actual = $testItem->pathToUploadedFile(
-            'application/json|original.txt|This is a text|This is a text'
+            'application/json|original.txt|' . base64_encode('This is a text|This is a text')
         );
         try {
             $this->assertEquals('original.txt', $actual->getClientOriginalName());
@@ -49,7 +49,7 @@ class ChainedFileStorageTest extends TestCase
             file_put_contents($tempFile, $contents);
             $uploadedFile = new UploadedFile($tempFile, 'ChainedFileStorageTest.php', test: true);
             $actual = $testItem->uploadedFileToPath($uploadedFile);
-            $this->assertEquals('text/x-php|ChainedFileStorageTest.php|' . $contents, $actual);
+            $this->assertEquals('text/x-php|ChainedFileStorageTest.php|' . base64_encode($contents), $actual);
         } finally {
             @unlink($tempFile);
         }
@@ -64,7 +64,7 @@ class ChainedFileStorageTest extends TestCase
         $resource = fopen(__FILE__, 'r');
         try {
             $actual = $testItem->resourceToPath($resource);
-            $this->assertEquals(file_get_contents(__FILE__), $actual);
+            $this->assertEquals(base64_encode(file_get_contents(__FILE__)), $actual);
         } finally {
             fclose($resource);
         }
@@ -76,7 +76,7 @@ class ChainedFileStorageTest extends TestCase
     public function it_can_restore_resources()
     {
         $testItem = $this->createTestItem();
-        $actual = $testItem->pathToResource('Hello');
+        $actual = $testItem->pathToResource(base64_encode('Hello'));
         $this->assertEquals('Hello', stream_get_contents($actual));
     }
 }

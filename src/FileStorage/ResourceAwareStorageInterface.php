@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\FileStorage;
 
-interface ResourceAwareStorageInterface
+interface ResourceAwareStorageInterface extends FileStorageInterface
 {
     /**
      * @param resource $resource

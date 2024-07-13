@@ -2,6 +2,7 @@
 namespace Apie\Core\FileStorage;
 
 use Apie\Core\Exceptions\FileStorageException;
+use Exception;
 use LogicException;
 use Psr\Http\Message\UploadedFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -36,6 +37,55 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
         $this->psrAwareStorages = is_array($psrAwareStorages) ? $psrAwareStorages : iterator_to_array($psrAwareStorages);
         $this->resourceAwareStorages = is_array($resourceAwareStorages) ? $resourceAwareStorages : iterator_to_array($resourceAwareStorages);
         $this->uploadedAwareStorages = is_array($uploadedAwareStorages) ? $uploadedAwareStorages : iterator_to_array($uploadedAwareStorages);
+    }
+
+    public function createNewUpload(
+        UploadedFileInterface $fileUpload,
+        string $className = StoredFile::class
+    ): StoredFile {
+        foreach ($this->psrAwareStorages as $psrAwareStorage) {
+            return $psrAwareStorage->createNewUpload($fileUpload, $className);
+        }
+        foreach ($this->uploadedAwareStorages as $uploadedAwareStorage) {
+            return $uploadedAwareStorage->createNewUpload($fileUpload, $className);
+        }
+        foreach ($this->resourceAwareStorages as $resourceAwareStorage) {
+            return $resourceAwareStorage->createNewUpload($fileUpload, $className);
+        }
+
+        throw new \LogicException("I can not create an upload");
+    }
+
+    public function getProxy(
+        string $storagePath,
+        string $className = StoredFile::class
+    ): StoredFile {
+        return $className::createFromStorage(
+            $this,
+            $storagePath
+        );
+    }
+
+    /**
+     * @template T of StoredFile
+     * @param class-string<T> $className
+     * @return T
+     */
+    public function loadFromStorage(
+        string $storagePath,
+        string $className = StoredFile::class
+    ): StoredFile{
+        $errors = [];
+        $list = [...$this->psrAwareStorages, ...$this->uploadedAwareStorages, ...$this->resourceAwareStorages];
+        foreach ($list as $psrAwareStorage) {
+            try {
+                return $psrAwareStorage->loadFromStorage($storagePath, $className);
+            } catch (Exception $error) {
+                $errors[] = $error;
+            }
+        }
+
+        throw new FileStorageException('I can not load from "' . $storagePath . '"', $errors);
     }
 
     /**
