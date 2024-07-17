@@ -15,7 +15,6 @@ use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
 use Nyholm\Psr7\Stream;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;

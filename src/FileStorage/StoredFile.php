@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Core\FileStorage;
 
+use Apie\Core\Dto\DtoInterface;
 use Apie\Core\Enums\UploadedFileStatus;
 use Apie\CountWords\WordCounter;
 use finfo;
 use Nyholm\Psr7\Stream;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use ReflectionClass;
 use RuntimeException;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -39,13 +41,12 @@ class StoredFile implements UploadedFileInterface
     {
     }
 
-    public function withBeingStored(FileStorageInterface $storage, string $storagePath): static
+    public function markBeingStored(FileStorageInterface $storage, string $storagePath): static
     {
-        $res = clone $this;
-        $res->status = UploadedFileStatus::StoredInStorage;
-        $res->storage = $storage;
-        $res->storagePath = $storagePath;
-        return $res;
+        $this->status = UploadedFileStatus::StoredInStorage;
+        $this->storage = $storage;
+        $this->storagePath = $storagePath;
+        return $this;
     }
 
     final public function __destruct()
@@ -55,7 +56,7 @@ class StoredFile implements UploadedFileInterface
         }
     }
 
-    public final static function createFromStorage(FileStorageInterface $storage, string $storagePath): static
+    final public static function createFromStorage(FileStorageInterface $storage, string $storagePath): static
     {
         return new static(
             UploadedFileStatus::StoredInStorage,
@@ -64,7 +65,7 @@ class StoredFile implements UploadedFileInterface
         );
     }
 
-    public final static function createFromString(
+    final public static function createFromString(
         string $content,
         ?string $clientMimeType = null,
         ?string $clientOriginalFile = null
@@ -77,7 +78,7 @@ class StoredFile implements UploadedFileInterface
         );
     }
 
-    public final static function createFromLocalFile(string $serverPath, ?string $clientMimeType = null, bool $removeOnDestruct = false): static
+    final public static function createFromLocalFile(string $serverPath, ?string $clientMimeType = null, bool $removeOnDestruct = false): static
     {
         return new static(
             UploadedFileStatus::CreatedLocally,
@@ -90,12 +91,11 @@ class StoredFile implements UploadedFileInterface
     /**
      * @param resource $resource
      */
-    public final static function createFromResource(
+    final public static function createFromResource(
         mixed $resource,
         ?string $clientMimeType = null,
         ?string $clientOriginalFile = null,
-    ): static
-    {
+    ): static {
         assert(is_resource($resource));
         assert('stream' === get_resource_type($resource));
         return new static(
@@ -106,7 +106,7 @@ class StoredFile implements UploadedFileInterface
         );
     }
 
-    public final static function createFromUploadedFile(UploadedFileInterface $uploadedFile, ?string $storagePath = null): static
+    final public static function createFromUploadedFile(UploadedFileInterface $uploadedFile, ?string $storagePath = null): static
     {
         if (get_class($uploadedFile) === static::class) {
             return $uploadedFile;
@@ -135,12 +135,27 @@ class StoredFile implements UploadedFileInterface
         );
     }
 
-    public final function getStatus(): UploadedFileStatus
+    final public static function createFromDto(DtoInterface $dto): static
+    {
+        $arguments = ['status' => UploadedFileStatus::StoredInStorage];
+        $props = get_object_vars($dto);
+        $constructor = (new ReflectionClass(StoredFile::class))->getConstructor();
+        assert($constructor !== null);
+        foreach ($constructor->getParameters() as $parameter) {
+            $name = $parameter->name;
+            if ($name !== 'status') {
+                $arguments[$name] = $props[$name] ?? $parameter->getDefaultValue();
+            }
+        }
+        return new static(...$arguments);
+    }
+
+    final public function getStatus(): UploadedFileStatus
     {
         return $this->status;
     }
 
-    public final function getContent(): string
+    final public function getContent(): string
     {
         if ($this->content !== null) {
             return $this->content;
@@ -207,7 +222,7 @@ class StoredFile implements UploadedFileInterface
         return $tempStream;
     }
 
-    public final function getStream(): StreamInterface
+    final public function getStream(): StreamInterface
     {
         if ($this->content !== null) {
             return Stream::create($this->content);
@@ -253,26 +268,29 @@ class StoredFile implements UploadedFileInterface
             move_uploaded_file($this->serverPath, $targetPath);
         }
     }
-    public final function getSize(): ?int
+    final public function getSize(): ?int
     {
         if ($this->fileSize !== null) {
             return $this->fileSize;
         }
         if ($this->content !== null) {
-            return strlen($this->content);
+            return $this->fileSize = strlen($this->content);
         }
         if ($this->serverPath) {
-            $size = filesize($this->serverPath);
+            $size = @filesize($this->serverPath);
             // size < 0 is possible on 32bit systems with files larger than 2GB.
             if ($size === false || $size < 0) {
                 return null;
             }
             return $size;
         }
+        if ($this->internalFile) {
+            return $this->fileSize = $this->internalFile->getSize();
+        }
 
         return null;
     }
-    public final function getError(): int
+    final public function getError(): int
     {
         if (null !== $this->internalFile) {
             return $this->internalFile->getError();
@@ -282,7 +300,7 @@ class StoredFile implements UploadedFileInterface
         }
         return UPLOAD_ERR_OK;
     }
-    public final function getClientFilename(): ?string
+    final public function getClientFilename(): ?string
     {
         if (null !== $this->internalFile) {
             return $this->internalFile->getClientFilename();
@@ -295,7 +313,7 @@ class StoredFile implements UploadedFileInterface
         }
         return null;
     }
-    public final function getClientMediaType(): ?string
+    final public function getClientMediaType(): ?string
     {
         if (null !== $this->internalFile) {
             return $this->internalFile->getClientMediaType();
@@ -303,7 +321,7 @@ class StoredFile implements UploadedFileInterface
         return $this->clientMimeType;
     }
 
-    public final function getServerMimeType(): string
+    final public function getServerMimeType(): string
     {
         if (!$this->serverMimeType) {
             if ($this->serverPath && file_exists($this->serverPath)) {
@@ -318,12 +336,13 @@ class StoredFile implements UploadedFileInterface
                 $finfo = new finfo();
                 return $this->serverMimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
             }
+            $this->serverMimeType = 'application/octet-stream';
         }
 
         return $this->serverMimeType;
     }
 
-    public final function getServerPath(): ?string
+    final public function getServerPath(): ?string
     {
         return $this->serverPath;
     }

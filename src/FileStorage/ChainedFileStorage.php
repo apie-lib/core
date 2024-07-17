@@ -74,7 +74,7 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
     public function loadFromStorage(
         string $storagePath,
         string $className = StoredFile::class
-    ): StoredFile{
+    ): StoredFile {
         $errors = [];
         $list = [...$this->psrAwareStorages, ...$this->uploadedAwareStorages, ...$this->resourceAwareStorages];
         foreach ($list as $psrAwareStorage) {

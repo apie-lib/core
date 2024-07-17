@@ -78,7 +78,7 @@ class StoredFileTest extends TestCase
     {
         $expectedContents = '<html></html>';
         $testItem = StoredFile::createFromStorage(
-            new ChainedFileStorage([new InlineStorage()],[], []),
+            new ChainedFileStorage([new InlineStorage()], [], []),
             'text/html|test.html|' . base64_encode($expectedContents)
         );
 
