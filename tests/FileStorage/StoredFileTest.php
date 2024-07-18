@@ -3,6 +3,7 @@ namespace Apie\Tests\Core\FileStorage;
 
 use Apie\Core\Enums\UploadedFileStatus;
 use Apie\Core\FileStorage\ChainedFileStorage;
+use Apie\Core\FileStorage\FileStorageFactory;
 use Apie\Core\FileStorage\ImageFile;
 use Apie\Core\FileStorage\InlineStorage;
 use Apie\Core\FileStorage\StoredFile;
@@ -78,7 +79,7 @@ class StoredFileTest extends TestCase
     {
         $expectedContents = '<html></html>';
         $testItem = StoredFile::createFromStorage(
-            new ChainedFileStorage([new InlineStorage()], [], []),
+            FileStorageFactory::create(),
             'text/html|test.html|' . base64_encode($expectedContents)
         );
 

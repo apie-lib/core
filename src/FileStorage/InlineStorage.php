@@ -14,8 +14,7 @@ class InlineStorage implements PsrAwareStorageInterface, UploadedFileAwareStorag
         string $className = StoredFile::class
     ): StoredFile {
         $storagePath = $this->psrToPath($fileUpload);
-        return $className::createFromUploadedFile($fileUpload, $storagePath)
-            ->markBeingStored($this, $storagePath);
+        return $this->loadFromStorage($storagePath, $className);
     }
 
     public function getProxy(

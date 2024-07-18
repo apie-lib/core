@@ -168,14 +168,15 @@ class StoredFile implements UploadedFileInterface
             $this->content = stream_get_contents($this->resource);
             return $this->content;
         }
-        if ($this->storage instanceof ChainedFileStorage) {
-            $this->internalFile = $this->storage->pathToPsr($this->storagePath);
+        $internalFile = $this->internalFile;
+        if ($this->storage instanceof PsrAwareStorageInterface && $this->storagePath && !$internalFile) {
+            $internalFile = $this->storage->pathToPsr($this->storagePath);
         }
-        if ($this->internalFile !== null) {
-            if ($this->internalFile instanceof StoredFile) {
-                return $this->content = $this->internalFile->getContent();
+        if ($internalFile !== null) {
+            if ($internalFile instanceof StoredFile) {
+                return $this->content = $internalFile->getContent();
             }
-            return $this->content = $this->internalFile->getStream()->__toString();
+            return $this->content = $internalFile->getStream()->__toString();
         }
 
         throw new \LogicException('Could not load content');
@@ -189,6 +190,13 @@ class StoredFile implements UploadedFileInterface
         if (null !== $this->indexing) {
             return $this->indexing;
         }
+        if ($this->storage instanceof PsrAwareStorageInterface && $this->storagePath && !$this->internalFile) {
+            $file = $this->storage->pathToPsr($this->storagePath);
+            if ($file instanceof StoredFile) {
+                return $this->indexing = $file->getIndexing();
+            }
+            $this->internalFile = $file;
+        }
         if ($this->internalFile instanceof StoredFile) {
             return $this->indexing = $this->internalFile->getIndexing();
         }
@@ -198,7 +206,7 @@ class StoredFile implements UploadedFileInterface
         if (is_resource($this->resource)) {
             return $this->indexing = WordCounter::countFromResource($this->resource);
         }
-        return [];
+        return $this->indexing = [];
     }
 
     public function getStoragePath(): ?string
@@ -302,11 +310,18 @@ class StoredFile implements UploadedFileInterface
     }
     final public function getClientFilename(): ?string
     {
-        if (null !== $this->internalFile) {
-            return $this->internalFile->getClientFilename();
-        }
         if ($this->clientOriginalFile !== null) {
             return $this->clientOriginalFile;
+        }
+        if ($this->storage instanceof PsrAwareStorageInterface && $this->storagePath && !$this->internalFile) {
+            $file = $this->storage->pathToPsr($this->storagePath);
+            if ($file instanceof StoredFile) {
+                return $this->clientOriginalFile = $file->getClientFilename();
+            }
+            $this->internalFile = $file;
+        }
+        if (null !== $this->internalFile) {
+            return $this->clientOriginalFile = $this->internalFile->getClientFilename();
         }
         if ($this->serverPath !== null) {
             return $this->clientOriginalFile = basename($this->serverPath);
@@ -315,8 +330,18 @@ class StoredFile implements UploadedFileInterface
     }
     final public function getClientMediaType(): ?string
     {
+        if ($this->clientMimeType !== null) {
+            return $this->clientMimeType;
+        }
+        if ($this->storage instanceof PsrAwareStorageInterface && $this->storagePath && !$this->internalFile) {
+            $file = $this->storage->pathToPsr($this->storagePath);
+            if ($file instanceof StoredFile) {
+                return $this->clientMimeType = $file->getClientMediaType();
+            }
+            $this->internalFile = $file;
+        }
         if (null !== $this->internalFile) {
-            return $this->internalFile->getClientMediaType();
+            return $this->clientMimeType = $this->internalFile->getClientMediaType();
         }
         return $this->clientMimeType;
     }
