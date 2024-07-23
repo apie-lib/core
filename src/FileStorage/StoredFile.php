@@ -200,16 +200,34 @@ class StoredFile implements UploadedFileInterface
         if ($this->internalFile instanceof StoredFile) {
             return $this->indexing = $this->internalFile->getIndexing();
         }
+        $extension = null;
+        if ($this->clientOriginalFile !== null) {
+            $extension = pathinfo($this->clientOriginalFile, PATHINFO_EXTENSION) ? : null;
+        }
         if ($this->serverPath && file_exists($this->serverPath)) {
-            return $this->indexing = WordCounter::countFromFile($this->serverPath);
+            return $this->indexing = WordCounter::countFromFile(
+                $this->serverPath,
+                mimeType: $this->getServerMimeType()
+            );
         }
         if (is_resource($this->resource)) {
-            return $this->indexing = WordCounter::countFromResource($this->resource);
+            return $this->indexing = WordCounter::countFromResource(
+                $this->resource,
+                mimeType: $this->getServerMimeType(),
+                extension: $extension
+            );
+        }
+        if ($this->content !== null) {
+            return $this->indexing = WordCounter::countFromString(
+                $this->content,
+                mimeType: $this->getServerMimeType(),
+                extension: $extension
+            );
         }
         return $this->indexing = [];
     }
 
-    public function getStoragePath(): ?string
+    final public function getStoragePath(): ?string
     {
         return $this->storagePath;
     }
@@ -224,8 +242,12 @@ class StoredFile implements UploadedFileInterface
         if ($tempStream === false) {
             throw new RuntimeException('Unable to create a temporary file');
         }
-        stream_copy_to_stream($resource, $tempStream);
-        rewind($tempStream);
+        if (!stream_copy_to_stream($resource, $tempStream)) {
+            throw new \RuntimeException('Could not copy stream');
+        }
+        if (!rewind($tempStream)) {
+            throw new \RuntimeException('Could not rewind stream');
+        }
 
         return $tempStream;
     }
@@ -240,9 +262,10 @@ class StoredFile implements UploadedFileInterface
         }
         if (is_resource($this->resource)) {
             $meta = stream_get_meta_data($this->resource);
-            if (!is_writable($meta['uri']) || !is_readable($meta['uri']) || 'a' === $meta['mode']) {
+            if (!$meta['seekable']) {
                 $this->resource = $this->makeRewindable($this->resource);
             }
+            rewind($this->resource);
             return new Stream($this->makeRewindable($this->resource));
         }
         if ($this->storage instanceof ChainedFileStorage) {
@@ -370,5 +393,15 @@ class StoredFile implements UploadedFileInterface
     final public function getServerPath(): ?string
     {
         return $this->serverPath;
+    }
+
+    /**
+     * @internal
+     * @param array<string, int> $indexing
+     */
+    final public function setIndexing(array $indexing): static
+    {
+        $this->indexing = $indexing;
+        return $this;
     }
 }

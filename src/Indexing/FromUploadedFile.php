@@ -3,7 +3,6 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\FileStorage\StoredFile;
-use Apie\Core\Utils\ConverterUtils;
 use Apie\CountWords\WordCounter;
 use Psr\Http\Message\UploadedFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -26,7 +25,7 @@ class FromUploadedFile implements IndexingStrategyInterface
             return $object->getIndexing();
         }
         if ($object instanceof UploadedFileInterface) {
-            $resource = ConverterUtils::extractResourceFromStream($object->getStream());
+            $resource = $object->getStream()->detach();
             if (!is_resource($resource)) {
                 return [];
             }

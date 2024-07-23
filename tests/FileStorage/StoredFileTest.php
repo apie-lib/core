@@ -2,10 +2,8 @@
 namespace Apie\Tests\Core\FileStorage;
 
 use Apie\Core\Enums\UploadedFileStatus;
-use Apie\Core\FileStorage\ChainedFileStorage;
 use Apie\Core\FileStorage\FileStorageFactory;
 use Apie\Core\FileStorage\ImageFile;
-use Apie\Core\FileStorage\InlineStorage;
 use Apie\Core\FileStorage\StoredFile;
 use LogicException;
 use PHPUnit\Framework\TestCase;
@@ -69,6 +67,43 @@ class StoredFileTest extends TestCase
                 rename($tempPath, __FILE__);
             }
             @unlink(@$tempPath);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_create_copies_of_a_non_rewindable_stream()
+    {
+        $stream = @fopen('https://example.com/', 'r');
+        if (!$stream) {
+            $this->markTestSkipped('Could not use test url');
+        }
+        $testItem = StoredFile::createFromResource($stream);
+        $actual = $testItem->getStream()->__toString();
+        $this->assertSame($actual, $testItem->getStream()->__toString());
+        $this->assertSame($actual, $testItem->getStream()->__toString());
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_the_file_on_destruction_if_marked_temporary()
+    {
+        $tmpFile = tempnam(sys_get_temp_dir(), __FUNCTION__);
+        try {
+            file_put_contents($tmpFile, 'This is an example');
+            $this->assertTrue(file_exists($tmpFile));
+            $testItem = StoredFile::createFromLocalFile(
+                $tmpFile,
+                removeOnDestruct: true
+            );
+            $testItem->getContent();
+            unset($testItem);
+            gc_collect_cycles();
+            $this->assertFalse(file_exists($tmpFile));
+        } finally {
+            @unlink($tmpFile);
         }
     }
 

@@ -13,8 +13,6 @@ use Apie\StorageMetadataBuilder\Interfaces\MixedStorageInterface;
 use Apie\TypeConverter\Converters\ObjectToObjectConverter;
 use Apie\TypeConverter\DefaultConvertersFactory;
 use Apie\TypeConverter\TypeConverter;
-use Nyholm\Psr7\Stream;
-use Psr\Http\Message\StreamInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -97,17 +95,5 @@ final class ConverterUtils
         }
 
         return self::$instance;
-    }
-
-    /**
-     * @return resource|null
-     */
-    public static function extractResourceFromStream(StreamInterface $uploadedFile): mixed
-    {
-        if ($uploadedFile instanceof Stream) {
-            $refl = new ReflectionProperty(Stream::class, 'stream');
-            return $refl->getValue($uploadedFile);
-        }
-        return null;
     }
 }
