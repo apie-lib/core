@@ -272,7 +272,8 @@ class StoredFile implements UploadedFileInterface
             $this->internalFile = $this->storage->pathToPsr($this->storagePath);
         }
         if (null !== $this->internalFile) {
-            return $this->internalFile->getStream();
+            $this->resource = $this->makeRewindable($this->internalFile->getStream()->detach());
+            return new Stream($this->makeRewindable($this->resource));
         }
         throw new \LogicException("I have no idea how to make a stream for this uploaded file");
     }
