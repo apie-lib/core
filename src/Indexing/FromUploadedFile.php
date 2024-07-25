@@ -3,43 +3,33 @@ namespace Apie\Core\Indexing;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\FileStorage\StoredFile;
-use Apie\CountWords\WordCounter;
 use Psr\Http\Message\UploadedFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FromUploadedFile implements IndexingStrategyInterface
 {
     public function support(object $object): bool
     {
-        return $object instanceof UploadedFileInterface
-            || $object instanceof UploadedFile;
+        return $object instanceof UploadedFileInterface;
     }
 
     /**
-     * @param UploadedFileInterface|UploadedFile $object
+     * @param UploadedFileInterface $object
      * @return array<string, int>
      */
     public function getIndexes(object $object, ApieContext $context, Indexer $indexer): array
     {
-        if ($object instanceof StoredFile) {
-            return $object->getIndexing();
+        $object = StoredFile::createFromUploadedFile($object);
+        $index = $object->getIndexing();
+        $filename = $object->getClientFilename();
+        if ($filename) {
+            $index[$filename] = ($index[$filename] ?? 0) + 1;
         }
-        if ($object instanceof UploadedFileInterface) {
-            $resource = $object->getStream()->detach();
-            if (!is_resource($resource)) {
-                return [];
-            }
-            return WordCounter::countFromResource(
-                $resource,
-                [],
-                $object->getClientMediaType(),
-                pathinfo($object->getClientFilename(), PATHINFO_EXTENSION)
-            );
+        $mime = $object->getClientMediaType();
+        if ($mime) {
+            $index[$mime] = ($index[$mime] ?? 0) + 1;
         }
-        return WordCounter::countFromFile(
-            $object->getPath(),
-            [],
-            $object->getMimeType()
-        );
+        $server = $object->getServerMimeType();
+        $index[$server] = ($index[$server] ?? 0) + 1;
+        return $index;
     }
 }

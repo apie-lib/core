@@ -5,10 +5,9 @@ use Apie\Core\Exceptions\FileStorageException;
 use Exception;
 use LogicException;
 use Psr\Http\Message\UploadedFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
 
-final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwareStorageInterface, UploadedFileAwareStorageInterface
+final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwareStorageInterface
 {
     /**
      * @var array<int, PsrAwareStorageInterface> $psrAwareStorages
@@ -21,22 +20,15 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
     private array $resourceAwareStorages;
 
     /**
-     * @var array<int, UploadedFileAwareStorageInterface> $uploadedAwareStorages
-     */
-    private array $uploadedAwareStorages;
-    /**
      * @param array<int, PsrAwareStorageInterface> $psrAwareStorages
      * @param array<int, ResourceAwareStorageInterface> $resourceAwareStorages
-     * @param array<int, UploadedFileAwareStorageInterface> $uploadedAwareStorages
      */
     public function __construct(
         iterable $psrAwareStorages,
-        iterable $resourceAwareStorages,
-        iterable $uploadedAwareStorages
+        iterable $resourceAwareStorages
     ) {
         $this->psrAwareStorages = is_array($psrAwareStorages) ? $psrAwareStorages : iterator_to_array($psrAwareStorages);
         $this->resourceAwareStorages = is_array($resourceAwareStorages) ? $resourceAwareStorages : iterator_to_array($resourceAwareStorages);
-        $this->uploadedAwareStorages = is_array($uploadedAwareStorages) ? $uploadedAwareStorages : iterator_to_array($uploadedAwareStorages);
     }
 
     public function createNewUpload(
@@ -45,9 +37,6 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
     ): StoredFile {
         foreach ($this->psrAwareStorages as $psrAwareStorage) {
             return $psrAwareStorage->createNewUpload($fileUpload, $className);
-        }
-        foreach ($this->uploadedAwareStorages as $uploadedAwareStorage) {
-            return $uploadedAwareStorage->createNewUpload($fileUpload, $className);
         }
         foreach ($this->resourceAwareStorages as $resourceAwareStorage) {
             return $resourceAwareStorage->createNewUpload($fileUpload, $className);
@@ -76,7 +65,7 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
         string $className = StoredFile::class
     ): StoredFile {
         $errors = [];
-        $list = [...$this->psrAwareStorages, ...$this->uploadedAwareStorages, ...$this->resourceAwareStorages];
+        $list = [...$this->psrAwareStorages, ...$this->resourceAwareStorages];
         foreach ($list as $psrAwareStorage) {
             try {
                 return $psrAwareStorage->loadFromStorage($storagePath, $className);
@@ -125,15 +114,5 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
     public function pathToResource(string $path): mixed
     {
         return $this->iterate($this->resourceAwareStorages, 'pathToResource', $path);
-    }
-
-    public function uploadedFileToPath(UploadedFile $uploadedFile): string
-    {
-        return $this->iterate($this->uploadedAwareStorages, 'uploadedFileToPath', $uploadedFile);
-    }
-
-    public function pathToUploadedFile(string $path): UploadedFile
-    {
-        return $this->iterate($this->resourceAwareStorages, 'pathToUploadedFile', $path);
     }
 }

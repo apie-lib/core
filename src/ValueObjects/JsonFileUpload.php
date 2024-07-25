@@ -16,7 +16,12 @@ final class JsonFileUpload implements ValueObjectInterface
     ) {
     }
 
-    public function toUploadedFile(): StoredFile
+    /**
+     * @template T of StoredFile
+     * @param class-string<T> $className
+     * @return T
+     */
+    public function toUploadedFile(string $className = StoredFile::class): StoredFile
     {
         return StoredFile::createFromString(
             $this->contents->toNative(),

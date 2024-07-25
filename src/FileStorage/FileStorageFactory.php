@@ -18,7 +18,6 @@ final class FileStorageFactory
         $options ??= [['class' => InlineStorage::class]];
         $psrAwareStorages = [];
         $resourceAwareStorages = [];
-        $uploadedAwareStorages = [];
         foreach ($options as $option) {
             $instance = new ($option['class'])($option['options'] ?? null);
             if ($instance instanceof PsrAwareStorageInterface) {
@@ -27,10 +26,7 @@ final class FileStorageFactory
             if ($instance instanceof ResourceAwareStorageInterface) {
                 $resourceAwareStorages[] = $instance;
             }
-            if ($instance instanceof UploadedFileAwareStorageInterface) {
-                $uploadedAwareStorages[] = $instance;
-            }
         }
-        return new ChainedFileStorage($psrAwareStorages, $resourceAwareStorages, $uploadedAwareStorages);
+        return new ChainedFileStorage($psrAwareStorages, $resourceAwareStorages);
     }
 }

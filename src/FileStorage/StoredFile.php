@@ -242,7 +242,8 @@ class StoredFile implements UploadedFileInterface
         if ($tempStream === false) {
             throw new RuntimeException('Unable to create a temporary file');
         }
-        if (!stream_copy_to_stream($resource, $tempStream)) {
+        @rewind($resource);
+        if (false === stream_copy_to_stream($resource, $tempStream)) {
             throw new \RuntimeException('Could not copy stream');
         }
         if (!rewind($tempStream)) {

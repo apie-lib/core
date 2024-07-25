@@ -5,11 +5,10 @@ use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\ValueObjects\Utils;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\UploadedFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Mime\MimeTypes;
 use WeakMap;
 
-final class LocalFileStorage implements PsrAwareStorageInterface, UploadedFileAwareStorageInterface
+final class LocalFileStorage implements PsrAwareStorageInterface
 {
     private string $path;
 
@@ -95,27 +94,5 @@ final class LocalFileStorage implements PsrAwareStorageInterface, UploadedFileAw
         );
         $this->mappedPaths[$result] = $path;
         return $result;
-    }
-
-    public function uploadedFileToPath(UploadedFile $uploadedFile): string
-    {
-        $fullPath = $uploadedFile->getPathname();
-        if (!str_starts_with($fullPath, $this->path)) {
-            throw new \LogicException('I do not know this uploaded file as full path is unknown, full path: ' . $fullPath . ' path given: ' .  $this->path);
-        }
-        return substr($fullPath, strlen($this->path));
-    }
-
-    public function pathToUploadedFile(string $path): UploadedFile
-    {
-        $path = ltrim($this->normalizePath($path), '\\/');
-        $fullPath = $this->path . $path;
-        return new UploadedFile(
-            $fullPath,
-            basename($fullPath),
-            MimeTypes::getDefault()->guessMimeType($fullPath),
-            null,
-            true
-        );
     }
 }

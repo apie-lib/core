@@ -2,12 +2,11 @@
 namespace Apie\Core\FileStorage;
 
 use Psr\Http\Message\UploadedFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Store files by just returning a path containing mime type, original filename and contents
  */
-class InlineStorage implements PsrAwareStorageInterface, UploadedFileAwareStorageInterface, ResourceAwareStorageInterface
+class InlineStorage implements PsrAwareStorageInterface, ResourceAwareStorageInterface
 {
     public function createNewUpload(
         UploadedFileInterface $fileUpload,
@@ -34,31 +33,6 @@ class InlineStorage implements PsrAwareStorageInterface, UploadedFileAwareStorag
         list($mimeType, $originalName, $contents) = explode('|', $storagePath, 3);
         return $className::createFromString(base64_decode($contents), $mimeType, $originalName)
             ->markBeingStored($this, $storagePath);
-    }
-
-    public function uploadedFileToPath(UploadedFile $uploadedFile): string
-    {
-        return sprintf(
-            '%s|%s|%s',
-            str_replace('|', '', $uploadedFile->getMimeType()),
-            str_replace('|', '', $uploadedFile->getClientOriginalName()),
-            base64_encode($uploadedFile->getContent())
-        );
-    }
-
-    public function pathToUploadedFile(string $path): UploadedFile
-    {
-        list($mimeType, $originalName, $contents) = explode('|', $path, 3);
-        $tmpFilePath = sys_get_temp_dir() . '/upload-' . md5($path);
-        file_put_contents($tmpFilePath, base64_decode($contents));
-
-        return new UploadedFile(
-            $tmpFilePath,
-            $originalName,
-            $mimeType,
-            UPLOAD_ERR_OK,
-            true
-        );
     }
 
     public function resourceToPath(mixed $resource): string

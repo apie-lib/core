@@ -9,7 +9,6 @@ use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
 
 final class TypeUtils
@@ -69,7 +68,7 @@ final class TypeUtils
             return true;
         }
         if ($type instanceof ReflectionNamedType) {
-            return in_array($type->getName(), ['mixed', 'resource', UploadedFile::class, UploadedFileInterface::class]);
+            return in_array($type->getName(), ['mixed', 'resource', UploadedFileInterface::class]);
         }
         assert($type instanceof ReflectionIntersectionType || $type instanceof ReflectionUnionType);
     
