@@ -17,6 +17,7 @@ use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
 use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ScalarStrategy;
 use Apie\Core\Metadata\Strategy\UnionTypeStrategy;
+use Apie\Core\Metadata\Strategy\UploadedFileStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use LogicException;
 use ReflectionClass;
@@ -66,6 +67,9 @@ final class MetadataFactory
         }
         if (ExceptionStrategy::supports($class)) {
             return new ExceptionStrategy($class);
+        }
+        if (UploadedFileStrategy::supports($class)) {
+            return new UploadedFileStrategy($class);
         }
         if (RegularObjectStrategy::supports($class)) {
             return new RegularObjectStrategy($class);
