@@ -13,7 +13,7 @@ class SecureRandomizer implements RandomizerInterface
     }
     public function randomElement(array $elements): mixed
     {
-        return $elements[random_int(0, count($elements))];
+        return $elements[random_int(0, count($elements) - 1)];
     }
     public function randomDigit(): int
     {
@@ -30,8 +30,8 @@ class SecureRandomizer implements RandomizerInterface
         // n log n is sufficient number of shuffles between 2 items
         $numberOfShuffles = ($count * log10($count));
         for ($i = 0; $i < $numberOfShuffles; $i++) {
-            $left = random_int(0, $count);
-            $right = random_int(0, $count);
+            $left = random_int(0, $count - 1);
+            $right = random_int(0, $count - 1);
             $tmp = $list[$left];
             $list[$left] = $list[$right];
             $list[$right] = $tmp;
