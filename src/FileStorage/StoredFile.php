@@ -199,6 +199,8 @@ class StoredFile implements UploadedFileInterface
         }
         if ($this->internalFile instanceof StoredFile) {
             return $this->indexing = $this->internalFile->getIndexing();
+        } else if ($this->internalFile instanceof UploadedFileInterface) {
+            $this->resource = $this->makeRewindable($this->internalFile->getStream()->detach());
         }
         $extension = null;
         if ($this->clientOriginalFile !== null) {
