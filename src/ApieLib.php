@@ -4,7 +4,9 @@ namespace Apie\Core;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
+use Beste\Clock\SystemClock;
 use League\OpenAPIValidation\Schema\TypeFormats\FormatsContainer;
+use Psr\Clock\ClockInterface;
 use ReflectionClass;
 
 final class ApieLib
@@ -21,6 +23,8 @@ final class ApieLib
     public const APIE_FORM_ELEMENTS = '0.2.2';
 
     public const APIE_STACKTRACE = '0.1.6';
+
+    private static ClockInterface $clock;
 
 
     /**
@@ -39,5 +43,18 @@ final class ApieLib
                 FormatsContainer::registerFormat('number', $format, new JsonSchemaFormatValidator($class));
             }
         }
+    }
+
+    public static function getPsrClock(): ClockInterface
+    {
+        if (!isset(self::$clock)) {
+            self::$clock = SystemClock::create();
+        }
+        return self::$clock;
+    }
+
+    public static function setPsrClock(ClockInterface $clock): void
+    {
+        self::$clock = $clock;
     }
 }
