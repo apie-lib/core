@@ -9,4 +9,9 @@ class UploadedFileList extends ItemList
     {
         return parent::offsetGet($offset);
     }
+
+    public static function createRandom(): self
+    {
+        return new UploadedFileList([]);
+    }
 }

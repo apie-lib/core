@@ -1,8 +1,10 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
+use Faker\Generator;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -10,6 +12,7 @@ use ReflectionProperty;
 /**
  * Indicate an identifier written with underscores and lowercase only(pascal_case).
  */
+#[FakeMethod('createRandom')]
 class SnakeCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;
@@ -46,5 +49,10 @@ class SnakeCaseSlug implements HasRegexValueObjectInterface
     public function toKebabCaseSlug(): KebabCaseSlug
     {
         return new KebabCaseSlug(str_replace('_', '-', $this->internal));
+    }
+
+    public static function createRandom(Generator $faker): static
+    {
+        return new static(CamelCaseSlug::createRandom($faker)->toSnakeCaseSlug()->toNative());
     }
 }
