@@ -53,6 +53,7 @@
       "Apie\\Core\\Identifiers\\KebabCaseSlug",
       "Apie\\Core\\Identifiers\\PascalCaseSlug",
       "Apie\\Core\\Identifiers\\SnakeCaseSlug",
+      "Apie\\Core\\Identifiers\\Ulid",
       "Apie\\Core\\Identifiers\\Uuid",
       "Apie\\Core\\Identifiers\\UuidV1",
       "Apie\\Core\\Identifiers\\UuidV2",

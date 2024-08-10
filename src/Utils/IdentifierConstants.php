@@ -1,7 +1,8 @@
 <?php
 namespace Apie\Core\Utils;
 
-final class IdentifierConstants {
+final class IdentifierConstants
+{
     public const RANDOM_IDENTIFIERS = [
         'firstName',
         'lastName',

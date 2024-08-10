@@ -199,7 +199,7 @@ class StoredFile implements UploadedFileInterface
         }
         if ($this->internalFile instanceof StoredFile) {
             return $this->indexing = $this->internalFile->getIndexing();
-        } elseif ($this->internalFile instanceof UploadedFileInterface) {
+        } elseif ($this->internalFile instanceof UploadedFileInterface && !is_resource($this->resource)) {
             $this->resource = $this->makeRewindable($this->internalFile->getStream()->detach());
         }
         $extension = null;
