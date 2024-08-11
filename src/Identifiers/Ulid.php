@@ -13,6 +13,7 @@ class Ulid implements HasRegexValueObjectInterface
 
     public static function getRegularExpression(): string
     {
+        // TODO stricter base58
         return '/^[a-zA-Z0-9]{22}$/i';
     }
 

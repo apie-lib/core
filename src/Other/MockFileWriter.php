@@ -12,4 +12,15 @@ final class MockFileWriter implements FileWriterInterface
     {
         $this->writtenFiles[$filename] = $fileContents;
     }
+
+    public function clearPath(string $path): void
+    {
+        $this->writtenFiles = array_filter(
+            $this->writtenFiles,
+            function (string $fileContents, string $fileName) use ($path) {
+                return !str_starts_with($fileName, $path . '/');
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
 }

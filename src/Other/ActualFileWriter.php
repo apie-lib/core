@@ -12,4 +12,15 @@ final class ActualFileWriter implements FileWriterInterface
             throw new RuntimeException('I can not write to file: ' . $filename);
         }
     }
+
+    public function clearPath(string $path): void
+    {
+        if (is_dir($path)) {
+            system('rm -rf ' . escapeshellarg($path));
+        }
+        if ($path === '/') {
+            throw new \LogicException('I will not remove everything');
+        }
+        @mkdir($path, recursive: true);
+    }
 }
