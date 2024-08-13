@@ -25,4 +25,24 @@ class Identifier implements HasRegexValueObjectInterface
         }
         return new static($faker->words($faker->numberBetween(1, 3), true));
     }
+
+    public function toCamelCaseSlug(): CamelCaseSlug
+    {
+        return new CamelCaseSlug($this->internal);
+    }
+
+    public function toKebabCaseSlug(): KebabCaseSlug
+    {
+        return new KebabCaseSlug($this->internal);
+    }
+
+    public function toPascalCaseSlug(): PascalCaseSlug
+    {
+        return new PascalCaseSlug(ucfirst($this->internal));
+    }
+
+    public function toSnakeCaseSlug(): SnakeCaseSlug
+    {
+        return new SnakeCaseSlug($this->internal);
+    }
 }
