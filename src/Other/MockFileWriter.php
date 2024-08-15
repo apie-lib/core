@@ -1,7 +1,7 @@
 <?php
 namespace Apie\Core\Other;
 
-final class MockFileWriter implements FileWriterInterface
+final class MockFileWriter implements FileWriterInterface, FileReaderInterface
 {
     /**
      * @var array<string, string>
@@ -22,5 +22,14 @@ final class MockFileWriter implements FileWriterInterface
             },
             ARRAY_FILTER_USE_BOTH
         );
+    }
+
+    public function fileExists(string $filePath): bool
+    {
+        return array_key_exists($filePath, $this->writtenFiles);
+    }
+    public function readContents(string $filePath): string
+    {
+        return $this->writtenFiles[$filePath];
     }
 }

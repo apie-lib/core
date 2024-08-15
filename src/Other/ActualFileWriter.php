@@ -3,7 +3,7 @@ namespace Apie\Core\Other;
 
 use RuntimeException;
 
-final class ActualFileWriter implements FileWriterInterface
+final class ActualFileWriter implements FileWriterInterface, FileReaderInterface
 {
     public function writeFile(string $filename, string $fileContents): void
     {
@@ -22,5 +22,19 @@ final class ActualFileWriter implements FileWriterInterface
             throw new \LogicException('I will not remove everything');
         }
         @mkdir($path, recursive: true);
+    }
+
+    public function fileExists(string $filePath): bool
+    {
+        return file_exists($filePath) && !is_dir($filePath);
+    }
+
+    public function readContents(string $filePath): string
+    {
+        $contents = @file_get_contents($filePath);
+        if ($contents === false) {
+            throw new \RuntimeException('Could not read ' . $filePath);
+        }
+        return $contents;
     }
 }
