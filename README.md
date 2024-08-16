@@ -6,7 +6,7 @@
 
 
 
- [![Latest Stable Version](http://poser.pugx.org/apie/core/v)](https://packagist.org/packages/apie/core) [![Total Downloads](http://poser.pugx.org/apie/core/downloads)](https://packagist.org/packages/apie/core) [![Latest Unstable Version](http://poser.pugx.org/apie/core/v/unstable)](https://packagist.org/packages/apie/core) [![License](http://poser.pugx.org/apie/core/license)](https://packagist.org/packages/apie/core) [![PHP Composer](https://apie-lib.github.io/projectCoverage/coverage-core.svg)](https://apie-lib.github.io/projectCoverage/app/packages/core/index.html)  
+ [![Latest Stable Version](https://poser.pugx.org/apie/core/v)](https://packagist.org/packages/apie/core) [![Total Downloads](https://poser.pugx.org/apie/core/downloads)](https://packagist.org/packages/apie/core) [![Latest Unstable Version](https://poser.pugx.org/apie/core/v/unstable)](https://packagist.org/packages/apie/core) [![License](https://poser.pugx.org/apie/core/license)](https://packagist.org/packages/apie/core) [![PHP Composer](https://apie-lib.github.io/projectCoverage/coverage-core.svg)](https://apie-lib.github.io/projectCoverage/core/index.html)  
 
 [![PHP Composer](https://github.com/apie-lib/core/actions/workflows/php.yml/badge.svg?event=push)](https://github.com/apie-lib/core/actions/workflows/php.yml)
 
