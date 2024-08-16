@@ -40,7 +40,7 @@ class CamelCaseSlug implements HasRegexValueObjectInterface
         if ($faker->boolean()) {
             return new static($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS));
         }
-        $words = $faker->words($faker->numberBetween(1, 3));
+        $words = $faker->words($faker->numberBetween(2, 3));
         $firstWord = array_shift($words);
         $words = array_map('ucfirst', $words);
         return new static($firstWord . implode('', $words));

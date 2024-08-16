@@ -23,7 +23,7 @@ class Identifier implements HasRegexValueObjectInterface
         if ($faker->boolean()) {
             return new static(strtolower($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS)));
         }
-        return new static($faker->words($faker->numberBetween(1, 3), true));
+        return new static(implode('', $faker->words($faker->numberBetween(1, 3))));
     }
 
     public function toCamelCaseSlug(): CamelCaseSlug
