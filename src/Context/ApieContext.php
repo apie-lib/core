@@ -12,6 +12,7 @@ use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Utils\EntityUtils;
 use LogicException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
 use ReflectionEnumUnitCase;
 use ReflectionMethod;
@@ -241,5 +242,14 @@ final class ApieContext
             return true;
         }
         return $actionClass::isAuthorized($this, $runtimeChecks, $throwError);
+    }
+
+    public function dispatchEvent(object $event): object
+    {
+        $dispatcher = $this->context[EventDispatcherInterface::class] ?? null;
+        if ($dispatcher instanceof EventDispatcherInterface) {
+            return $dispatcher->dispatch($event);
+        }
+        return $event;
     }
 }
