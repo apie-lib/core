@@ -60,7 +60,7 @@ class EnumMetadata implements MetadataInterface
         foreach ($cases as $case) {
             if ($context->appliesToContext($case, $runtimeFilter)) {
                 $result[] = new ValueOption(
-                    $case->getName(),
+                    $this->enum->isBacked() ? $case->getBackingValue() : $case->getName(),
                     $case->getValue()
                 );
             }

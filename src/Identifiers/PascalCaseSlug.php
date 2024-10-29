@@ -20,6 +20,11 @@ class PascalCaseSlug implements HasRegexValueObjectInterface
         return '/^[A-Z][a-zA-Z0-9]*$/';
     }
 
+    public function humanize(): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', ' $0', $this->internal));
+    }
+
     public function toCamelCaseSlug(): CamelCaseSlug
     {
         return new CamelCaseSlug(lcfirst($this->internal));

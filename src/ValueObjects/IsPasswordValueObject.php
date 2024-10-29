@@ -1,11 +1,19 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Attributes\CmsValidationCheck;
 use Apie\Core\Randomizer\RandomizerInterface;
 use Apie\Core\Randomizer\SecureRandomizer;
 use SensitiveParameter;
 use Stringable;
 
+#[CmsSingleInput(['password'])]
+#[CmsValidationCheck(message: 'apie.validation_errors.length', minLengthMethod: 'getMinLength', maxLengthMethod: 'getMaxLength')]
+#[CmsValidationCheck(message: 'apie.validation_errors.password.lower_case', patternMethod: 'getLowercaseRegularExpression')]
+#[CmsValidationCheck(message: 'apie.validation_errors.password.upper_case', patternMethod: 'getUppercaseRegularExpression')]
+#[CmsValidationCheck(message: 'apie.validation_errors.password.digit', patternMethod: 'getDigitRegularExpression')]
+#[CmsValidationCheck(message: 'apie.validation_errors.password.special', patternMethod: 'getSpecialCharactersRegularExpression')]
 trait IsPasswordValueObject
 {
     use IsStringWithRegexValueObject {
@@ -19,13 +27,51 @@ trait IsPasswordValueObject
 
     public static function getRegularExpression(): string
     {
-        $lowercase = '(?=(.*[a-z]){' . self::getMinLowercase() . ',})';
-        $uppercase = '(?=(.*[A-Z]){' . self::getMinUppercase() . ',})';
-        $digits = '(?=(.*[0-9]){' . self::getMinDigits() . ',})';
+        $lowercase = self::createRegexPart('[a-z]', self::getMinLowercase());
+        $uppercase = self::createRegexPart('[A-Z]', self::getMinUppercase());
+        $digits = self::createRegexPart('[0-9]', self::getMinDigits());
         $specialCharactersRegex = str_replace('\#', '#', preg_quote(self::getAllowedSpecialCharacters(), '/'));
-        $specialCharacter = '(?=(.*[' . $specialCharactersRegex . ']){' . self::getMinSpecialCharacters() . ',})';
+        $specialCharacter = self::createRegexPart('[' . $specialCharactersRegex . ']', self::getMinSpecialCharacters());
+        
         $totalSize = '[a-zA-Z0-9' . $specialCharactersRegex . ']{' . self::getMinLength() . ',' . self::getMaxLength() . '}';
         return '/^' . $lowercase . $uppercase . $digits . $specialCharacter . $totalSize . '$/';
+    }
+
+    private static function createRegexPart(string $expression, ?int $minCount = null): string
+    {
+        return '(?=(.*'
+            . $expression
+            . '){'
+            . ($minCount === null ? '' : $minCount)
+            . ',})';
+    }
+
+    public static function getLowercaseRegularExpression(): string
+    {
+        return '/^' . self::createRegexPart('[a-z]', self::getMinLowercase()) . '.*$/';
+    }
+
+    public static function getUppercaseRegularExpression(): string
+    {
+        return '/^' . self::createRegexPart('[A-Z]', self::getMinUppercase()) . '.*$/';
+    }
+
+    public static function getDigitRegularExpression(): string
+    {
+        return '/^' . self::createRegexPart('[0-9]', self::getMinDigits()) . '.*$/';
+    }
+
+    public static function getSpecialCharactersRegularExpression(): ?string
+    {
+        $allowedSpecial = self::getAllowedSpecialCharacters();
+        if (empty($allowedSpecial)) {
+            return null;
+        }
+        $specialCharactersRegex = str_replace('\#', '#', preg_quote($allowedSpecial, '/'));
+        return '/^' . self::createRegexPart(
+            '[' . $specialCharactersRegex . ']',
+            self::getMinSpecialCharacters()
+        ) . '.*$/';
     }
 
     abstract public static function getMinLength(): int;

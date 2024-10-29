@@ -32,6 +32,11 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
         return static::fromNative(strtolower($short));
     }
 
+    public function humanize(): string
+    {
+        return str_replace('-', ' ', $this->internal);
+    }
+
     public static function getRegularExpression(): string
     {
         return '/^[a-z0-9]+(\-[a-z0-9]+)*$/';

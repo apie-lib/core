@@ -26,6 +26,11 @@ class Identifier implements HasRegexValueObjectInterface
         return new static(implode('', $faker->words($faker->numberBetween(1, 3))));
     }
 
+    public function humanize(): string
+    {
+        return $this->toNative();
+    }
+
     public function toCamelCaseSlug(): CamelCaseSlug
     {
         return new CamelCaseSlug($this->internal);

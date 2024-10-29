@@ -29,6 +29,16 @@ final class TranslationString implements HasRegexValueObjectInterface
         return $this;
     }
 
+    public function getLastTranslationSegment(bool $trimUnderscoreAtStart = true): string
+    {
+        $fn = $trimUnderscoreAtStart ? function ($v) { return ltrim($v, '_'); } : function ($v) { return $v; };
+        $pos = strrpos($this->internal, '.');
+        if ($pos === false || $pos === 0) {
+            return $fn($this->internal);
+        }
+        return $fn(substr(strrchr($this->internal, '.'), 1));
+    }
+
     /**
      * @param ReflectionClass<object> $class
      */
@@ -37,6 +47,6 @@ final class TranslationString implements HasRegexValueObjectInterface
         if ($boundedContextId === null) {
             return new self('apie.resource.' . SnakeCaseSlug::fromClass($class) . '.singular');
         }
-        return new self('apie.bounded.' .  $boundedContextId . '.resource.singular');
+        return new self('apie.bounded.' .  $boundedContextId . '.resource.' . SnakeCaseSlug::fromClass($class) . '.singular');
     }
 }

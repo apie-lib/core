@@ -36,6 +36,11 @@ class SnakeCaseSlug implements HasRegexValueObjectInterface
         return static::fromNative(strtolower($short));
     }
 
+    public function humanize(): string
+    {
+        return str_replace('_', ' ', $this->internal);
+    }
+
     public function toCamelCaseSlug(): CamelCaseSlug
     {
         return new CamelCaseSlug(lcfirst(str_replace('_', '', ucwords($this->internal, '_'))));

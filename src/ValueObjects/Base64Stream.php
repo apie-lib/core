@@ -1,14 +1,18 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\SchemaMethod;
+use Apie\Core\Dto\CmsInputOption;
+use Apie\Core\Enums\FileStreamType;
 use Apie\Core\RegexUtils;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Faker\Generator;
 
 #[SchemaMethod("getSchema")]
 #[FakeMethod('createRandom')]
+#[CmsSingleInput(['stream', 'file'], new CmsInputOption(streamType: FileStreamType::Base64String))]
 final class Base64Stream implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

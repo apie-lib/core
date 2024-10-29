@@ -20,6 +20,11 @@ class CamelCaseSlug implements HasRegexValueObjectInterface
         return '/^[a-z][a-zA-Z0-9]*$/';
     }
 
+    public function humanize(): string
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', ' $0', $this->internal));
+    }
+
     public function toKebabCaseSlug(): KebabCaseSlug
     {
         return new KebabCaseSlug(strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $this->internal)));
