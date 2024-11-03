@@ -4,6 +4,7 @@ namespace Apie\Core\Metadata\Fields;
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\SetterInterface;
 use ReflectionProperty;
@@ -75,7 +76,9 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     public function setValue(object $object, mixed $value, ApieContext $apieContext): void
     {
-        $this->property->setValue($object, $value);
+        if ($value !== DoNotChangeUploadedFile::DoNotChange) {
+            $this->property->setValue($object, $value);
+        }
     }
 
     public function markValueAsMissing(): void

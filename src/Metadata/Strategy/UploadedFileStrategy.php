@@ -2,10 +2,16 @@
 namespace Apie\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Enums\DoNotChangeUploadedFile;
+use Apie\Core\Enums\ScalarType;
 use Apie\Core\FileStorage\StoredFile;
+use Apie\Core\Metadata\EnumMetadata;
+use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\StoredFileMetadata;
 use Apie\Core\Metadata\StrategyInterface;
+use Apie\Core\Metadata\UnionTypeMetadata;
 use ReflectionClass;
+use ReflectionEnum;
 
 final class UploadedFileStrategy implements StrategyInterface
 {
@@ -31,9 +37,13 @@ final class UploadedFileStrategy implements StrategyInterface
         return new StoredFileMetadata($this->class, false, true);
     }
 
-    public function getModificationMetadata(ApieContext $context): StoredFileMetadata
+    public function getModificationMetadata(ApieContext $context): UnionTypeMetadata
     {
-        return new StoredFileMetadata($this->class, false, false);
+        return new UnionTypeMetadata(
+            new EnumMetadata(new ReflectionEnum(DoNotChangeUploadedFile::class)),
+            new StoredFileMetadata($this->class, false, false),
+            new ScalarMetadata((ScalarType::NULLVALUE)),
+        );
     }
 
     public function getResultMetadata(ApieContext $context): StoredFileMetadata

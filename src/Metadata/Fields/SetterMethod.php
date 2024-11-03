@@ -3,6 +3,7 @@ namespace Apie\Core\Metadata\Fields;
 
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\SetterInterface;
 use ReflectionMethod;
@@ -62,6 +63,9 @@ final class SetterMethod implements FieldInterface, SetterInterface
 
     public function setValue(object $object, mixed $value, ApieContext $apieContext): void
     {
+        if ($value === DoNotChangeUploadedFile::DoNotChange) {
+            return;
+        }
         $parameters = $this->method->getParameters();
         // last argument is value set, so we skip that one.
         array_pop($parameters);
