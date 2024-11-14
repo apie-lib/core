@@ -55,6 +55,9 @@ final class ConverterUtils
         if ($input instanceof ReflectionClass) {
             return $input;
         }
+        if (is_string($input) && !class_exists($input)) {
+            return null;
+        }
         return self::getInstance()->typeConverter->convertTo($input, $strict ? 'ReflectionClass' : '?ReflectionClass');
     }
 

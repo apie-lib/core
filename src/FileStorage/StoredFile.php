@@ -20,19 +20,19 @@ class StoredFile implements UploadedFileInterface
      * @param array<string, int>|null $indexing
      */
     final protected function __construct(
-        private UploadedFileStatus $status,
-        private ?FileStorageInterface $storage = null,
-        private ?string $content = null,
-        private ?string $storagePath = null,
-        private mixed $resource = null,
-        private ?string $clientMimeType = null,
-        private ?string $clientOriginalFile = null,
-        private ?int $fileSize = null,
-        private ?string $serverMimeType = null,
-        private ?string $serverPath = null,
-        private ?UploadedFileInterface $internalFile = null,
-        private ?array $indexing = null,
-        private bool $removeOnDestruct = false,
+        protected UploadedFileStatus $status,
+        protected ?FileStorageInterface $storage = null,
+        protected ?string $content = null,
+        protected ?string $storagePath = null,
+        protected mixed $resource = null,
+        protected ?string $clientMimeType = null,
+        protected ?string $clientOriginalFile = null,
+        protected ?int $fileSize = null,
+        protected ?string $serverMimeType = null,
+        protected ?string $serverPath = null,
+        protected ?UploadedFileInterface $internalFile = null,
+        protected ?array $indexing = null,
+        protected bool $removeOnDestruct = false,
     ) {
         $this->validateState();
     }

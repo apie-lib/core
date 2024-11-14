@@ -33,7 +33,8 @@ final class EntityUtils
         } catch (ReflectionException) {
             return false;
         }
-        return $class->implementsInterface(EntityInterface::class)
+        return $class !== null
+            && $class->implementsInterface(EntityInterface::class)
             && !$class->isInterface();
     }
 
@@ -47,7 +48,8 @@ final class EntityUtils
         } catch (ReflectionException) {
             return false;
         }
-        return !$class->implementsInterface(PolymorphicEntityInterface::class)
+        return $class !== null
+            && !$class->implementsInterface(PolymorphicEntityInterface::class)
             && $class->implementsInterface(EntityInterface::class)
             && !$class->isInterface();
     }
@@ -62,7 +64,8 @@ final class EntityUtils
         } catch (ReflectionException) {
             return false;
         }
-        return $class->implementsInterface(PolymorphicEntityInterface::class)
+        return $class !== null
+            && $class->implementsInterface(PolymorphicEntityInterface::class)
             && !$class->isInterface();
     }
 
