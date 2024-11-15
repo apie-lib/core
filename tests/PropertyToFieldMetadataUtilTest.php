@@ -2,6 +2,7 @@
 namespace Apie\Tests\Core;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\FileStorage\ImageFile;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\Fields\ConstructorParameter;
 use Apie\Core\Metadata\Fields\FieldInterface;
@@ -13,15 +14,39 @@ use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionType;
 
 class PropertyToFieldMetadataUtilTest extends TestCase
 {
+    /**
+     * @test
+     * @dataProvider typehintProvider
+     */
+    public function it_can_find_typehints(bool $expected, string $input, string $searchType)
+    {
+        $this->assertEquals(
+            $expected,
+            PropertyToFieldMetadataUtil::hasPropertyWithType(
+                ReflectionTypeFactory::createReflectionType($input), 
+                ReflectionTypeFactory::createReflectionType($searchType), new ApieContext())
+        );
+    }
+
+    public function typehintProvider(): Generator
+    {
+        yield [true, 'string', 'string'];
+        yield [true, ImageFile::class, UploadedFileInterface::class];
+        yield [true, Order::class, OrderLine::class];
+    }
     /**
      * @test
      * @dataProvider fieldMetadataProvider

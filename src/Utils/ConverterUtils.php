@@ -4,6 +4,7 @@ namespace Apie\Core\Utils;
 use Apie\Core\TypeConverters\ArrayToDoctrineCollection;
 use Apie\Core\TypeConverters\DoctrineCollectionToArray;
 use Apie\Core\TypeConverters\IntToAutoincrementIntegerConverter;
+use Apie\Core\TypeConverters\ReflectionClassToReflectionTypeConverter;
 use Apie\Core\TypeConverters\ReflectionMethodToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionPropertyToReflectionClassConverter;
 use Apie\Core\TypeConverters\ReflectionTypeToReflectionClassConverter;
@@ -36,6 +37,7 @@ final class ConverterUtils
             new ReflectionPropertyToReflectionClassConverter(),
             new ReflectionTypeToReflectionClassConverter(),
             new ReflectionUnionTypeToReflectionClassConverter(),
+            new ReflectionClassToReflectionTypeConverter(),
         ];
         $this->typeConverter = new TypeConverter(
             new ObjectToObjectConverter(),

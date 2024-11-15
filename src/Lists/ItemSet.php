@@ -173,4 +173,9 @@ class ItemSet implements ItemListInterface
         }
         unset($this->internal[$offset]);
     }
+
+    public function clone(): static
+    {
+        return new static($this->internal);
+    }
 }
