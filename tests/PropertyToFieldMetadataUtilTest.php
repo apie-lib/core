@@ -21,9 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionNamedType;
 use ReflectionProperty;
-use ReflectionType;
 
 class PropertyToFieldMetadataUtilTest extends TestCase
 {
@@ -36,8 +34,10 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         $this->assertEquals(
             $expected,
             PropertyToFieldMetadataUtil::hasPropertyWithType(
-                ReflectionTypeFactory::createReflectionType($input), 
-                ReflectionTypeFactory::createReflectionType($searchType), new ApieContext())
+                ReflectionTypeFactory::createReflectionType($input),
+                ReflectionTypeFactory::createReflectionType($searchType),
+                new ApieContext()
+            )
         );
     }
 

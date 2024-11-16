@@ -2,11 +2,9 @@
 namespace Apie\Core\TypeConverters;
 
 use Apie\TypeConverter\ConverterInterface;
-use Apie\TypeConverter\Exceptions\CanNotConvertObjectException;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Apie\TypeConverter\TypeConverter;
 use ReflectionClass;
-use ReflectionMethod;
 use ReflectionType;
 
 /**

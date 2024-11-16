@@ -50,8 +50,7 @@ final class PropertyToFieldMetadataUtil
         ReflectionNamedType $searchType,
         ApieContext $apieContext,
         ReflectionTypeSet $visitedTypes = new ReflectionTypeSet()
-    ): bool
-    {
+    ): bool {
         if (isset($visitedTypes[$input])) {
             return false;
         }
