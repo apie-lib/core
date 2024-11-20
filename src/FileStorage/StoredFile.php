@@ -3,6 +3,7 @@ namespace Apie\Core\FileStorage;
 
 use Apie\Core\Dto\DtoInterface;
 use Apie\Core\Enums\UploadedFileStatus;
+use Apie\Core\ValueObjects\Utils;
 use Apie\CountWords\WordCounter;
 use finfo;
 use Nyholm\Psr7\Stream;
@@ -143,7 +144,10 @@ class StoredFile implements UploadedFileInterface
         assert($constructor !== null);
         foreach ($constructor->getParameters() as $parameter) {
             $name = $parameter->name;
-            if ($name !== 'status') {
+            if ($name === 'indexing') {
+                $val = ($props[$name] ?? null);
+                $arguments[$name] = $val === null ? null : Utils::toArray($val);
+            } elseif ($name !== 'status') {
                 $arguments[$name] = $props[$name] ?? $parameter->getDefaultValue();
             }
         }

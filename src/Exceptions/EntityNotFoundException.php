@@ -4,7 +4,7 @@ namespace Apie\Core\Exceptions;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 
-final class EntityNotFoundException extends ApieException
+final class EntityNotFoundException extends ApieException implements HttpStatusCodeException
 {
     /**
      * @param IdentifierInterface<EntityInterface> $identifier
@@ -18,5 +18,10 @@ final class EntityNotFoundException extends ApieException
                 $identifier->toNative()
             )
         );
+    }
+
+    public function getStatusCode(): int
+    {
+        return 404;
     }
 }

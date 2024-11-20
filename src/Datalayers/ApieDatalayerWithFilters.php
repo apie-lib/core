@@ -8,7 +8,7 @@ use ReflectionClass;
 /**
  * Implement this interface to a data layer class to add filters for the get resource list endpoint.
  */
-interface ApieDatalayerWithFilters
+interface ApieDatalayerWithFilters extends ApieDatalayer
 {
     /**
      * @param ReflectionClass<object> $class

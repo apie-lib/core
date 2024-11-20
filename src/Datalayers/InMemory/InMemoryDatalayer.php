@@ -36,7 +36,7 @@ class InMemoryDatalayer implements ApieDatalayer
         $this->generator = Factory::create();
     }
 
-    public function all(ReflectionClass $class): EntityListInterface
+    public function all(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): EntityListInterface
     {
         $className = $class->name;
         $this->stored[$className] ??= [];
@@ -56,7 +56,7 @@ class InMemoryDatalayer implements ApieDatalayer
      * @param T $entity
      * @return T
      */
-    public function persistNew(EntityInterface $entity): EntityInterface
+    public function persistNew(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $id = $entity->getId();
         if ($id instanceof AutoIncrementInteger) {
@@ -81,7 +81,7 @@ class InMemoryDatalayer implements ApieDatalayer
      * @param T $entity
      * @return T
      */
-    public function persistExisting(EntityInterface $entity): EntityInterface
+    public function persistExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $className = get_class($entity);
         $id = $entity->getId()->toNative();
@@ -95,7 +95,7 @@ class InMemoryDatalayer implements ApieDatalayer
         throw new UnknownExistingEntityError($entity);
     }
 
-    public function find(IdentifierInterface $identifier): EntityInterface
+    public function find(IdentifierInterface $identifier, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $className = $identifier::getReferenceFor()->name;
         $id = $identifier->toNative();
@@ -107,7 +107,7 @@ class InMemoryDatalayer implements ApieDatalayer
         throw new EntityNotFoundException($identifier);
     }
 
-    public function removeExisting(EntityInterface $entity): void
+    public function removeExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): void
     {
         $identifier = $entity->getId();
         $className = $identifier::getReferenceFor()->name;

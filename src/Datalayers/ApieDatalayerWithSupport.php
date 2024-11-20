@@ -6,7 +6,7 @@ use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 use ReflectionClass;
 
-interface ApieDatalayerWithSupport
+interface ApieDatalayerWithSupport extends ApieDatalayer
 {
     /**
      * @param EntityInterface|IdentifierInterface<EntityInterface>|ReflectionClass<EntityInterface|IdentifierInterface<EntityInterface>> $instance
