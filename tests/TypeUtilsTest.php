@@ -24,7 +24,11 @@ class TypeUtilsTest extends TestCase
     {
         yield 'no typehint' => [true, null];
         yield 'string' => [true, ReflectionTypeFactory::createReflectionType('string')];
+        yield 'nullable string' => [true, ReflectionTypeFactory::createReflectionType('?string')];
         yield 'integer' => [false, ReflectionTypeFactory::createReflectionType('int')];
+        yield 'nullable integer' => [false, ReflectionTypeFactory::createReflectionType('?int')];
+        yield 'floating point' => [false, ReflectionTypeFactory::createReflectionType('float')];
+        yield 'nullable floating point' => [false, ReflectionTypeFactory::createReflectionType('?float')];
         yield 'mixed' => [true, ReflectionTypeFactory::createReflectionType('mixed')];
         if (class_exists(NonEmptyString::class)) {
             yield 'non empty string value object' => [false, ReflectionTypeFactory::createReflectionType(NonEmptyString::class)];
