@@ -42,8 +42,9 @@ final class JsonFileUpload implements CompositeWithOwnValidation
      */
     public function toUploadedFile(string $className = StoredFile::class): StoredFile
     {
+        $contents = isset($this->contents) ? $this->contents->toNative() : $this->base64->decode()->toNative();
         return $className::createFromString(
-            $this->contents->toNative(),
+            $contents,
             isset($this->mime) ? $this->mime->toNative() : null,
             $this->originalFilename->toNative(),
         );

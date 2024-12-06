@@ -32,6 +32,11 @@ final class Base64Stream implements HasRegexValueObjectInterface
         return new self(base64_encode($generator->text()));
     }
 
+    public function decode(): BinaryStream
+    {
+        return new BinaryStream(base64_decode($this->internal));
+    }
+
     /**
      * @return array<string, string>
      */
