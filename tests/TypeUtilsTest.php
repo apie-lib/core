@@ -3,7 +3,7 @@ namespace Apie\Tests\Core;
 
 use Apie\Core\TypeUtils;
 use Apie\Core\ValueObjects\DatabaseText;
-use Apie\TextValueObjects\NonEmptyString;
+use Apie\Core\ValueObjects\NonEmptyString;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -30,10 +30,8 @@ class TypeUtilsTest extends TestCase
         yield 'floating point' => [false, ReflectionTypeFactory::createReflectionType('float')];
         yield 'nullable floating point' => [false, ReflectionTypeFactory::createReflectionType('?float')];
         yield 'mixed' => [true, ReflectionTypeFactory::createReflectionType('mixed')];
-        if (class_exists(NonEmptyString::class)) {
-            yield 'non empty string value object' => [false, ReflectionTypeFactory::createReflectionType(NonEmptyString::class)];
-            yield 'intersection type with value object' => [false, ReflectionTypeFactory::createReflectionType(NonEmptyString::class . '&' . DatabaseText::class)];
-        }
+        yield 'non empty string value object' => [false, ReflectionTypeFactory::createReflectionType(NonEmptyString::class)];
+        yield 'intersection type with value object' => [false, ReflectionTypeFactory::createReflectionType(NonEmptyString::class . '&' . DatabaseText::class)];
         yield 'non-value object' => [false, ReflectionTypeFactory::createReflectionType(__CLASS__)];
         yield 'value object with empty string allowed' => [true, ReflectionTypeFactory::createReflectionType(DatabaseText::class)];
         yield 'union type with value object' => [true, ReflectionTypeFactory::createReflectionType('null|' . DatabaseText::class)];

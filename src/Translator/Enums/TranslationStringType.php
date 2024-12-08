@@ -25,8 +25,7 @@ enum TranslationStringType: string
     public static function stringCasesFor(
         ReflectionClass $className,
         ?TranslationStringOperationType $type
-    ): array
-    {
+    ): array {
         $callable = function (FieldInterface $field) {
             return $field->isField();
         };
