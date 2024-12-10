@@ -8,6 +8,8 @@ use Beste\Clock\SystemClock;
 use League\OpenAPIValidation\Schema\TypeFormats\FormatsContainer;
 use Psr\Clock\ClockInterface;
 use ReflectionClass;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 final class ApieLib
 {
@@ -56,5 +58,15 @@ final class ApieLib
     public static function setPsrClock(ClockInterface $clock): void
     {
         self::$clock = $clock;
+    }
+
+    public static function dumpValueException(mixed $input): never
+    {
+        $cloner = new VarCloner();
+        $dumper = new CliDumper();
+        $output = fopen('php://memory', 'r+b');
+
+        $dumper->dump($cloner->cloneVar($input), $output);
+        throw new \LogicException(stream_get_contents($output, -1, 0));
     }
 }
