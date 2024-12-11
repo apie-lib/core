@@ -18,7 +18,7 @@ final class MockFileWriter implements FileWriterInterface, FileReaderInterface
         $this->writtenFiles = array_filter(
             $this->writtenFiles,
             function (string $fileContents, string $fileName) use ($path) {
-                return !str_starts_with($fileName, $path . '/');
+                return !str_starts_with($fileName, $path . '/') && $fileName !== $path;
             },
             ARRAY_FILTER_USE_BOTH
         );
