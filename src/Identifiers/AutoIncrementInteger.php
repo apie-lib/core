@@ -6,13 +6,14 @@ use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Faker\Generator;
+use Stringable;
 
 /**
  * Indicate an auto-increment integer.
  */
 #[FakeMethod("createRandom")]
 #[SchemaMethod("getSchema")]
-class AutoIncrementInteger implements ValueObjectInterface
+class AutoIncrementInteger implements ValueObjectInterface, Stringable
 {
     /**
      * @var array<string,int>
@@ -59,5 +60,10 @@ class AutoIncrementInteger implements ValueObjectInterface
             self::$hash[static::class] = $hash;
         }
         return new static(self::$fakeCounter[static::class]++);
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->internal;
     }
 }
