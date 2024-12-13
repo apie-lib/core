@@ -39,6 +39,9 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
             return $this->getDefaultValue();
         }
         $contextKey = $this->getContextKey($apieContext, $this->parameter);
+        if (!$apieContext->hasContext($contextKey) && $this->hasDefaultValue()) {
+            return $this->getDefaultValue();
+        }
         $parameterType = $this->parameter->getType();
         if ($parameterType) {
             return ConverterUtils::dynamicCast($apieContext->getContext($contextKey), $parameterType);
