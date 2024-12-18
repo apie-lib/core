@@ -25,9 +25,17 @@ final class PermissionList extends ItemList
         return new StringList($res);
     }
 
+    public function jsonSerialize(): array
+    {
+        return $this->toStringList()->toArray();
+    }
+
     public function hasOverlap(PermissionList $permissionList): bool
     {
         $currentList = $this->toStringList()->toArray();
+        if (empty($currentList)) {
+            $currentList = [''];
+        }
         $currentList = array_combine($currentList, $currentList);
         foreach ($permissionList as $item) {
             if ($item instanceof PermissionInterface) {

@@ -4,6 +4,7 @@ namespace Apie\Core\Datalayers\Search;
 use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Indexing\Indexer;
+use Apie\Core\Lists\PermissionList;
 use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\Permissions\RequiresPermissionsInterface;
 use Apie\Core\PropertyAccess;
@@ -33,7 +34,7 @@ final class LazyLoadedListFilterer
                 $hasPermisions = $user->getPermissionIdentifiers();
                 return $hasPermisions->hasOverlap($requiredPermissions);
             }
-            return false;
+            return $requiredPermissions->hasOverlap(new PermissionList(['']));
         }
         return $querySearch->getApieContext()->withContext(ContextConstants::RESOURCE, $object)->isAuthorized(true);
     }

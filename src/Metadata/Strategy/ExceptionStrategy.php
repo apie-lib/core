@@ -3,7 +3,6 @@ namespace Apie\Core\Metadata\Strategy;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
-use Apie\Core\Exceptions\HttpStatusCodeException;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\GetterMethod;
 use Apie\Core\Metadata\StrategyInterface;
@@ -44,9 +43,6 @@ final class ExceptionStrategy implements StrategyInterface
             'message' => new GetterMethod($this->class->getMethod('getMessage')),
             'code' => new GetterMethod($this->class->getMethod('getCode')),
         ];
-        if ($this->class->implementsInterface(HttpStatusCodeException::class)) {
-            $fields['statusCode'] = new GetterMethod($this->class->getMethod('getStatusCode'));
-        }
         if ($this->class->name === ValidationException::class) {
             $fields['errors'] = new GetterMethod($this->class->getMethod('getErrors'));
         }
