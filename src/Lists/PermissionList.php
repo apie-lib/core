@@ -10,7 +10,7 @@ final class PermissionList extends ItemList
         return parent::offsetGet($offset);
     }
 
-    public function toStringList(): StringList
+    public function toStringList(): StringSet
     {
         $res = [];
         foreach ($this as $value) {
@@ -22,7 +22,7 @@ final class PermissionList extends ItemList
                 $res[] = (string) $value;
             }
         }
-        return new StringList($res);
+        return new StringSet($res);
     }
 
     public function jsonSerialize(): array
@@ -33,18 +33,17 @@ final class PermissionList extends ItemList
     public function hasOverlap(PermissionList $permissionList): bool
     {
         $currentList = $this->toStringList()->toArray();
+        $compareList = $permissionList->toStringList();
         if (empty($currentList)) {
-            $currentList = [''];
+            return (isset($compareList[''])) ;
+        }
+        $compareList = $compareList->toArray();
+        if (empty($compareList)) {
+            $compareList[] = '';
         }
         $currentList = array_combine($currentList, $currentList);
-        foreach ($permissionList as $item) {
-            if ($item instanceof PermissionInterface) {
-                foreach ($item->getPermissionIdentifiers()->toStringList() as $identifier) {
-                    if (isset($currentList[$identifier])) {
-                        return true;
-                    }
-                }
-            } elseif (isset($currentList[$item])) {
+        foreach ($compareList as $item) {
+            if (isset($currentList[$item])) {
                 return true;
             }
         }

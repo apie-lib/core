@@ -27,6 +27,9 @@ final class LazyLoadedListFilterer
 
     public function appliesPermissions(EntityInterface $object, QuerySearch $querySearch): bool
     {
+        if (!$querySearch->getApieContext()->withContext(ContextConstants::RESOURCE, $object)->isAuthorized(true)) {
+            return false;
+        }
         if ($object instanceof RequiresPermissionsInterface) {
             $requiredPermissions = $object->getRequiredPermissions();
             $user = $querySearch->getApieContext()->getContext(ContextConstants::AUTHENTICATED_USER, false);
@@ -34,9 +37,9 @@ final class LazyLoadedListFilterer
                 $hasPermisions = $user->getPermissionIdentifiers();
                 return $hasPermisions->hasOverlap($requiredPermissions);
             }
-            return $requiredPermissions->hasOverlap(new PermissionList(['']));
+            return (new PermissionList(['']))->hasOverlap($requiredPermissions);
         }
-        return $querySearch->getApieContext()->withContext(ContextConstants::RESOURCE, $object)->isAuthorized(true);
+        return true;
     }
 
     public function appliesSearch(EntityInterface $object, QuerySearch $querySearch): bool
