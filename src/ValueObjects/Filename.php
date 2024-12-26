@@ -21,7 +21,7 @@ final class Filename implements HasRegexValueObjectInterface, LengthConstraintSt
         return 1;
     }
 
-    public static function maxStringLength(): ?int
+    public static function maxStringLength(): int
     {
         return 255;
     }

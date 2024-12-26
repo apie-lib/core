@@ -149,6 +149,9 @@ final class Utils
         if (is_object($input) && $input instanceof Stringable) {
             return (string) $input;
         }
+        if (is_bool($input)) {
+            return $input;
+        }
         if (is_string($input) || is_numeric($input)) {
             return $input;
         }

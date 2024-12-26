@@ -16,7 +16,7 @@ services:
     arguments:
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
       - '@?Apie\Serializer\DecoderHashmap'
-      - !tagged apie.core.context_builder
+      - !tagged_iterator apie.core.context_builder
 
   apie.bounded_context.hashmap:
     alias: Apie\Core\BoundedContext\BoundedContextHashmap

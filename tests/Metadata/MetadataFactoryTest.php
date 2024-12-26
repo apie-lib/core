@@ -40,15 +40,13 @@ use Stringable;
 
 class MetadataFactoryTest extends TestCase
 {
-    /**
-     * @dataProvider provideStrategy
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideStrategy')]
     public function testGetMetadataStrategy(string $expectedStrategyClass, string $input)
     {
         $this->assertInstanceOf($expectedStrategyClass, MetadataFactory::getMetadataStrategy(new ReflectionClass($input)));
     }
 
-    public function provideStrategy()
+    public static function provideStrategy()
     {
         yield [
             RegularObjectStrategy::class, __CLASS__
@@ -106,16 +104,14 @@ class MetadataFactoryTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getScalarForTypeProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getScalarForTypeProvider')]
     public function testGetScalarForType(ScalarType $expected, ?string $typehint)
     {
         $type = $typehint === null ? null : ReflectionTypeFactory::createReflectionType($typehint);
         $this->assertEquals($expected, MetadataFactory::getScalarForType($type));
     }
 
-    public function getScalarForTypeProvider(): Generator
+    public static function getScalarForTypeProvider(): Generator
     {
         yield 'string typehint' => [
             ScalarType::STRING,
@@ -135,8 +131,8 @@ class MetadataFactoryTest extends TestCase
      * @param array<int, string> $expectedFields
      * @param array<int, string> $expectedRequired
      * @param class-string<object> $className
-     * @dataProvider compositeMetadataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('compositeMetadataProvider')]
     public function testCompositeMetadata(
         array $expectedFields,
         array $expectedRequired,
@@ -162,7 +158,7 @@ class MetadataFactoryTest extends TestCase
         $this->assertEquals(['id', 'owned'], array_keys($filteredHashmap->toArray()));
     }
 
-    public function compositeMetadataProvider()
+    public static function compositeMetadataProvider()
     {
         $context = new ApieContext();
         yield 'Creation of entity' => [

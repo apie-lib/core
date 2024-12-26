@@ -16,7 +16,7 @@ class ArrayToDoctrineCollection implements ConverterInterface
      * @param array<int, T> $input
      * @return Collection<int, T>
      */
-    public function convert(array $input, ?ReflectionType $wantedType): Collection
+    public function convert(array $input): Collection
     {
         return new ArrayCollection($input);
     }

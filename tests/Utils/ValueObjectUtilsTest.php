@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ValueObjectUtilsTest extends TestCase
 {
-    /**
-     * @dataProvider nonCompositeValueObjectProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('nonCompositeValueObjectProvider')]
     public function testIsNonCompositeValueObject(bool $expected, mixed $input): void
     {
         $this->assertEquals(
@@ -20,7 +18,7 @@ class ValueObjectUtilsTest extends TestCase
         );
     }
 
-    public function nonCompositeValueObjectProvider(): Generator
+    public static function nonCompositeValueObjectProvider(): Generator
     {
         yield [
             true,

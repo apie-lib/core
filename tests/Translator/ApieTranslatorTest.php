@@ -8,9 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ApieTranslatorTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_translation_string_if_not_found()
     {
         $testItem = ApieTranslator::create();
@@ -21,9 +19,7 @@ class ApieTranslatorTest extends TestCase
         $this->assertEquals('does_not_exist', $actual);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_translation_if_found()
     {
         $testItem = ApieTranslator::create();

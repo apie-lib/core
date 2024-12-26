@@ -16,7 +16,7 @@ class ReflectionPropertyToReflectionClassConverter implements ConverterInterface
     /**
      * @return ReflectionClass<object>|null
      */
-    public function convert(ReflectionProperty $input, ?ReflectionType $wantedType = null, TypeConverter $converter = null): ?ReflectionClass
+    public function convert(ReflectionProperty $input, ?ReflectionType $wantedType = null, ?TypeConverter $converter = null): ?ReflectionClass
     {
         $wantedType ??= ReflectionTypeFactory::createReflectionType('ReflectionClass');
         return $converter->convertTo(

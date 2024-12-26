@@ -11,9 +11,7 @@ class ImageFileTest extends TestCase
 {
     use TestWithFaker;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_images()
     {
         $testItem = ImageFile::createFromString(
@@ -26,9 +24,7 @@ class ImageFileTest extends TestCase
         $this->assertEquals('image/svg+xml', $testItem->getServerMimeType());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_files_that_are_not_images()
     {
         if (!class_exists(ValidationException::class)) {
@@ -44,9 +40,7 @@ class ImageFileTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(ImageFile::class);

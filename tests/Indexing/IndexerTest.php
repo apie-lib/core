@@ -22,10 +22,8 @@ use PHPUnit\Framework\TestCase;
 
 class IndexerTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider provideIndexes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideIndexes')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_indexes_strings(array $expected, mixed $input)
     {
         $testItem = Indexer::create();
@@ -38,7 +36,7 @@ class IndexerTest extends TestCase
         );
     }
 
-    public function provideIndexes(): Generator
+    public static function provideIndexes(): Generator
     {
         yield 'empty string' => [
             [],

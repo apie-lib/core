@@ -11,7 +11,7 @@ final class ImageFile extends StoredFile
     protected function validateState(): void
     {
         $serverMime = $this->getServerMimeType();
-        if ($serverMime !== null && !str_starts_with($serverMime, 'image/')) {
+        if (!str_starts_with($serverMime, 'image/')) {
             throw new InvalidTypeException($serverMime, 'image mime type');
         }
     }

@@ -13,63 +13,53 @@ class PascalCaseSlugTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_many_names(string $expected, string $input)
     {
         $testItem = PascalCaseSlug::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_many_names(string $expected, string $input)
     {
         $testItem = new PascalCaseSlug($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield ['SlugExample', 'SlugExample'];
         yield ['Short', 'Short'];
         yield ['Example3Example3', 'Example3Example3'];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_pascal_case_strings(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         new PascalCaseSlug($input);
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_pascal_case_strings_with_fromNative(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         PascalCaseSlug::fromNative($input);
     }
 
-    public function invalidProvider()
+    public static function invalidProvider()
     {
         yield ['kebab-case-slug'];
         yield ['Capital_start'];
         yield ["capital_Start"];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(
@@ -83,18 +73,14 @@ class PascalCaseSlugTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(PascalCaseSlug::class);
     }
 
-    /**
-     * @test
-     * @dataProvider otherFormatsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('otherFormatsProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_be_converted_in_other_slug_formats(string $expected, string $input, string $methodCall)
     {
         $testItem = new PascalCaseSlug($input);
@@ -102,7 +88,7 @@ class PascalCaseSlugTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function otherFormatsProvider(): Generator
+    public static function otherFormatsProvider(): Generator
     {
         yield [
             'slug-example',

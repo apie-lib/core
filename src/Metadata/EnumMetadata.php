@@ -8,13 +8,20 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 use Apie\Core\Lists\ValueOptionList;
 use ReflectionEnum;
+use UnitEnum;
 
 class EnumMetadata implements MetadataInterface
 {
+    /**
+     * @param ReflectionEnum<UnitEnum> $enum
+     */
     public function __construct(private ReflectionEnum $enum)
     {
     }
 
+    /**
+     * @return ReflectionEnum<UnitEnum>
+     */
     public function toClass(): ReflectionEnum
     {
         return $this->enum;

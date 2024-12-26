@@ -17,7 +17,7 @@ class ReflectionMethodToReflectionClassConverter implements ConverterInterface
     /**
      * @return ReflectionClass<object>|null
      */
-    public function convert(ReflectionMethod $input, ?ReflectionType $wantedType = null, TypeConverter $converter = null): ?ReflectionClass
+    public function convert(ReflectionMethod $input, ?ReflectionType $wantedType = null, ?TypeConverter $converter = null): ?ReflectionClass
     {
         $wantedType ??= ReflectionTypeFactory::createReflectionType(ReflectionClass::class);
         if (str_starts_with($input->getName(), 'set') && $input->getNumberOfRequiredParameters() > 0) {

@@ -12,28 +12,22 @@ class UlidTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(Ulid::class);
     }
 
-    /**
-     * @test
-     * @dataProvider provideValidInput
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideValidInput')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_fromNative(string $input)
     {
         $testItem = Ulid::fromNative($input);
         $this->assertEquals($input, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider provideValidInput
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideValidInput')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_construct(string $input)
     {
         $testItem = new Ulid($input);
@@ -47,9 +41,7 @@ class UlidTest extends TestCase
 
 
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(

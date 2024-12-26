@@ -16,9 +16,7 @@ class ChainedFileStorageTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_save_resources()
     {
         $testItem = $this->createTestItem();
@@ -31,9 +29,7 @@ class ChainedFileStorageTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_restore_resources()
     {
         $testItem = $this->createTestItem();

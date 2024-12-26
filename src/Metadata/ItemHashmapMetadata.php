@@ -41,7 +41,7 @@ final class ItemHashmapMetadata implements MetadataInterface
     {
         return ScalarType::STDCLASS;
     }
-    public function getArrayItemType(): ?MetadataInterface
+    public function getArrayItemType(): MetadataInterface
     {
         $strategy = MetadataFactory::getMetadataStrategyForType(
             $this->class->getMethod('offsetGet')->getReturnType()

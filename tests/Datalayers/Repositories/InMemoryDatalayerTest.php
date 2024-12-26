@@ -16,9 +16,7 @@ use ReflectionClass;
 class InMemoryDatalayerTest extends TestCase
 {
     use TestWithInMemoryDatalayer;
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_remember_entities()
     {
         $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));
@@ -43,9 +41,7 @@ class InMemoryDatalayerTest extends TestCase
         $testItem->persistNew($user);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_error_if_an_entity_can_not_be_found()
     {
         $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));
@@ -53,9 +49,7 @@ class InMemoryDatalayerTest extends TestCase
         $testItem->find(new UserAutoincrementIdentifier(12));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_error_if_the_entity_can_not_be_found_that_requires_update()
     {
         $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));

@@ -9,7 +9,6 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\PropertyToFieldMetadataUtil;
-use Apie\Core\ValueObjects\CompositeValueObject;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -25,10 +24,8 @@ use ReflectionProperty;
 
 class PropertyToFieldMetadataUtilTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider typehintProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('typehintProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_find_typehints(bool $expected, string $input, string $searchType)
     {
         $this->assertEquals(
@@ -41,16 +38,14 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         );
     }
 
-    public function typehintProvider(): Generator
+    public static function typehintProvider(): Generator
     {
         yield [true, 'string', 'string'];
         yield [true, ImageFile::class, UploadedFileInterface::class];
         yield [true, Order::class, OrderLine::class];
     }
-    /**
-     * @test
-     * @dataProvider fieldMetadataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fieldMetadataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_gets_field_metadata(?FieldInterface $expected, string $className, string $property)
     {
         $apieContext = new ApieContext();
@@ -61,7 +56,7 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         );
     }
 
-    private function createConstructorParameter(string $className, string $parameterName): ConstructorParameter
+    private static function createConstructorParameter(string $className, string $parameterName): ConstructorParameter
     {
         $refl = new ReflectionClass($className);
         foreach ($refl->getConstructor()->getParameters() as $parameter) {
@@ -72,14 +67,14 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         throw new LogicException('Parameter ' . $parameterName . ' not found!');
     }
 
-    private function createSetter(string $className, string $method): SetterMethod
+    private static function createSetter(string $className, string $method): SetterMethod
     {
         return new SetterMethod(
             new ReflectionMethod($className, $method)
         );
     }
 
-    private function createProperty(string $className, string $property, bool $optional = false): PublicProperty
+    private static function createProperty(string $className, string $property, bool $optional = false): PublicProperty
     {
         return new PublicProperty(
             new ReflectionProperty($className, $property),
@@ -87,10 +82,10 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         );
     }
 
-    public function fieldMetadataProvider(): Generator
+    public static function fieldMetadataProvider(): Generator
     {
         yield 'simple property' => [
-            $this->createConstructorParameter(Order::class, 'id'),
+            self::createConstructorParameter(Order::class, 'id'),
             Order::class,
             'id'
         ];
@@ -100,7 +95,7 @@ class PropertyToFieldMetadataUtilTest extends TestCase
             'orderStatus'
         ];
         yield 'property on item list' => [
-            $this->createConstructorParameter(OrderLine::class, 'id'),
+            self::createConstructorParameter(OrderLine::class, 'id'),
             Order::class,
             'orderLines.0.id'
         ];
@@ -110,7 +105,7 @@ class PropertyToFieldMetadataUtilTest extends TestCase
             'orderLines.0'
         ];
         yield 'setter only' => [
-            $this->createSetter(UserWithAddress::class, 'setPassword'),
+            self::createSetter(UserWithAddress::class, 'setPassword'),
             UserWithAddress::class,
             'password'
         ];
@@ -124,18 +119,15 @@ class PropertyToFieldMetadataUtilTest extends TestCase
             ItemList::class,
             '0'
         ];
-
-        if (trait_exists(CompositeValueObject::class)) {
-            yield 'composite value object' => [
-                $this->createProperty(AddressWithZipcodeCheck::class, 'street', false),
-                AddressWithZipcodeCheck::class,
-                'street'
-            ];
-            yield 'composite value object, internal property' => [
-                null,
-                AddressWithZipcodeCheck::class,
-                'manual'
-            ];
-        }
+        yield 'composite value object' => [
+            self::createProperty(AddressWithZipcodeCheck::class, 'street', false),
+            AddressWithZipcodeCheck::class,
+            'street'
+        ];
+        yield 'composite value object, internal property' => [
+            null,
+            AddressWithZipcodeCheck::class,
+            'manual'
+        ];
     }
 }

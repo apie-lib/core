@@ -14,17 +14,15 @@ class JsonFileUploadTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_works_as_intended(array $input)
     {
         $testItem = JsonFileUpload::fromNative($input);
         $this->assertEquals($input, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield 'empty file' => [['contents' => '', 'originalFilename' => 'empty.txt']];
         yield 'empty file, mime null' => [['contents' => '', 'originalFilename' => 'empty.txt', 'mime' => null]];
@@ -32,10 +30,8 @@ class JsonFileUploadTest extends TestCase
         yield 'with mime type' => [['contents' => 'Hello', 'originalFilename' => 'hello.txt', 'mime' => 'text/plain']];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_invalid_input(string $expectedExceptionClass, string $expectedExceptionMessage, array $input)
     {
         // TODO move validationexception to apie/core
@@ -47,7 +43,7 @@ class JsonFileUploadTest extends TestCase
         JsonFileUpload::fromNative($input);
     }
 
-    public function invalidProvider()
+    public static function invalidProvider()
     {
         yield 'empty array' => [
             ValidationException::class,
@@ -76,9 +72,7 @@ class JsonFileUploadTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         if (!class_exists(Reference::class)) {
@@ -111,9 +105,7 @@ class JsonFileUploadTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(JsonFileUpload::class);

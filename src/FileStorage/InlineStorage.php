@@ -51,8 +51,8 @@ class InlineStorage implements PsrAwareStorageInterface, ResourceAwareStorageInt
     {
         return sprintf(
             '%s|%s|%s',
-            str_replace('|', '', $uploadedFile->getClientMediaType()),
-            str_replace('|', '', $uploadedFile->getClientFilename()),
+            str_replace('|', '', $uploadedFile->getClientMediaType() ?? ''),
+            str_replace('|', '', $uploadedFile->getClientFilename() ?? ''),
             base64_encode($uploadedFile->getStream()->__toString())
         );
     }
@@ -60,6 +60,6 @@ class InlineStorage implements PsrAwareStorageInterface, ResourceAwareStorageInt
     public function pathToPsr(string $path): UploadedFileInterface
     {
         list($mimeType, $originalName, $contents) = explode('|', $path, 3);
-        return StoredFile::createFromString(base64_decode($contents), $mimeType, $originalName);
+        return StoredFile::createFromString(base64_decode($contents), $mimeType ? : null, $originalName ? : null);
     }
 }

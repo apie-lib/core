@@ -13,63 +13,53 @@ class SnakeCaseSlugTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_many_names(string $expected, string $input)
     {
         $testItem = SnakeCaseSlug::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_many_names(string $expected, string $input)
     {
         $testItem = new SnakeCaseSlug($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield ['slug_example', 'slug_example'];
         yield ['short', 'short'];
         yield ['example_3_example3', 'example_3_example3'];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_snake_case_strings(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         new SnakeCaseSlug($input);
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_snake_case_strings_with_fromNative(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         SnakeCaseSlug::fromNative($input);
     }
 
-    public function invalidProvider()
+    public static function invalidProvider()
     {
         yield ['kebab-case-slug'];
         yield ['CapitalStart'];
         yield ["capitalStart"];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(
@@ -83,18 +73,14 @@ class SnakeCaseSlugTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(SnakeCaseSlug::class);
     }
 
-    /**
-     * @test
-     * @dataProvider otherFormatsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('otherFormatsProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_be_converted_in_other_slug_formats(string $expected, string $input, string $methodCall)
     {
         $testItem = new SnakeCaseSlug($input);
@@ -102,7 +88,7 @@ class SnakeCaseSlugTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function otherFormatsProvider(): Generator
+    public static function otherFormatsProvider(): Generator
     {
         yield [
             'slugExample',

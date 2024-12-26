@@ -97,7 +97,7 @@ final class TypeUtils
                 'int' => is_int($input),
                 'string' => is_string($input),
                 'null' => $input === null,
-                'true' => $input === true, // PHP 8.2
+                'true' => $input === true,
                 'false' => $input === false,
                 default => get_debug_type($input) === $type->getName()
                     || ((interface_exists($type->getName()) || class_exists($type->getName()))

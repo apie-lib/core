@@ -10,6 +10,7 @@ use UnitEnum;
 
 final class EnumStrategy implements StrategyInterface
 {
+    /** @var ReflectionEnum<UnitEnum> $enum */
     private ReflectionEnum $enum;
 
     public static function supports(ReflectionClass $class): bool

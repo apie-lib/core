@@ -10,9 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class StoredFileTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_work_from_a_string()
     {
         $testItem = StoredFile::createFromString('This is a test', 'incorrect/mime', 'dummy.txt');
@@ -38,9 +36,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_work_from_a_static_file()
     {
         $testItem = StoredFile::createFromLocalFile(__FILE__, clientMimeType: 'incorrect/mime', removeOnDestruct: false);
@@ -70,9 +66,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_copies_of_a_non_rewindable_stream()
     {
         $stream = @fopen('https://example.com/', 'r');
@@ -85,9 +79,7 @@ class StoredFileTest extends TestCase
         $this->assertSame($actual, $testItem->getStream()->__toString());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_removes_the_file_on_destruction_if_marked_temporary()
     {
         $tmpFile = tempnam(sys_get_temp_dir(), __FUNCTION__);
@@ -107,9 +99,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_work_from_a_file_from_storage()
     {
         $expectedContents = '<html></html>';
@@ -141,9 +131,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_will_not_wrap_uploaded_files_if_not_needed()
     {
         $internal = StoredFile::createFromString(
@@ -154,9 +142,7 @@ class StoredFileTest extends TestCase
         $this->assertSame($internal, StoredFile::createFromUploadedFile($internal));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_wrap_other_instances_of_uploaded_files()
     {
         $pngFilePath = __DIR__ . '/../../fixtures/apie-logo.png';
@@ -185,9 +171,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_on_resources()
     {
         $resource = fopen(__FILE__, 'r');
@@ -212,9 +196,7 @@ class StoredFileTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_partially_on_unavailable_file()
     {
         $notExisting = __DIR__ . '/not-existing.txt';

@@ -13,9 +13,7 @@ use ReflectionClass;
 
 class EntityUtilsTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_return_discriminator_mappings()
     {
         $this->assertEquals(['animalType' => 'cow'], EntityUtils::getDiscriminatorValues(new Cow()));
@@ -25,9 +23,7 @@ class EntityUtilsTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_find_the_actual_class_from_discriminator_mappings()
     {
         $this->assertEquals(

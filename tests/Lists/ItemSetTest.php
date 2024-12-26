@@ -18,9 +18,7 @@ class ItemSetTest extends TestCase
 {
     use TestWithFaker;
     use TestWithOpenapiSchema;
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_has_all_array_functionality()
     {
         $input = [1, 'a', $this];
@@ -52,9 +50,7 @@ class ItemSetTest extends TestCase
         $this->assertEquals($expected, $testItem->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_only_contain_items_once()
     {
         $someClass = new class {
@@ -64,9 +60,7 @@ class ItemSetTest extends TestCase
         $this->assertEquals([1, '1', $someClass, $clone], $testItem->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function if_class_is_extended_it_can_restrict_types()
     {
         $input = [1, 'a', '2'];
@@ -84,9 +78,7 @@ class ItemSetTest extends TestCase
         $testItem[8] = 10;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function incorrect_index_throws_error()
     {
         $testItem = new ItemSet();
@@ -94,9 +86,7 @@ class ItemSetTest extends TestCase
         $this->fail($testItem[0]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function i_can_iterate_with_foreach()
     {
         $count = 0;
@@ -108,18 +98,14 @@ class ItemSetTest extends TestCase
         $this->assertEquals(2, $count);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function if_extended_it_throws_errors_on_wrong_types()
     {
         $this->expectException(InvalidTypeException::class);
         new StringOrIntSet([$this]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_encodes_json_correctly()
     {
         $testItem = new ItemSet([]);
@@ -128,9 +114,7 @@ class ItemSetTest extends TestCase
         $this->assertEquals('[1,null,2]', json_encode($testItem));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_errors_if_list_is_immutable()
     {
         $testItem = new ImmutableStringOrIntList([1, 2, 3]);
@@ -138,9 +122,7 @@ class ItemSetTest extends TestCase
         $testItem[2] = 3;
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function an_immutable_list_can_not_unset_values()
     {
         $testItem = new ImmutableStringOrIntSet([1, 2, 3]);
@@ -148,18 +130,14 @@ class ItemSetTest extends TestCase
         unset($testItem[1]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(ItemSet::class);
         $this->runFakerTest(StringOrIntSet::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(

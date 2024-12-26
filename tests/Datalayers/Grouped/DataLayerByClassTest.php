@@ -16,9 +16,7 @@ class DataLayerByClassTest extends TestCase
 {
     use ProphecyTrait;
     use TestWithInMemoryDatalayer;
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_pick_a_datalayer_for_you()
     {
         $testItem = new DataLayerByClass(
@@ -32,9 +30,7 @@ class DataLayerByClassTest extends TestCase
         $this->assertSame($otherClass, $testItem->pickDataLayerFor(new ReflectionClass(OrderLine::class)));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_becomes_immutable_on_setting_default_datalayer()
     {
         $testItem = new DataLayerByClass([]);
@@ -43,9 +39,7 @@ class DataLayerByClassTest extends TestCase
         $testItem[Order::class] = $this->givenAnInMemoryDataLayer();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_not_set_default_datalayer_twice()
     {
         $testItem = new DataLayerByClass([]);

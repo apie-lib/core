@@ -14,9 +14,7 @@ use PHPUnit\Framework\TestCase;
 class CompositeValueObjectTest extends TestCase
 {
     use TestValidationError;
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_value_object_from_an_array()
     {
         $testItem = CompositeValueObjectExample::fromNative([
@@ -35,10 +33,8 @@ class CompositeValueObjectTest extends TestCase
         $this->assertEquals(ColorEnum::RED, $testItem->getColor());
     }
 
-    /**
-     * @test
-     * @dataProvider unionDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('unionDataProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_process_union_types(string|int $expectedStringFirst, string|int $expectedIntFirst, array $input)
     {
         $testItem = CompositeValueObjectWithUnionType::fromNative($input);
@@ -46,7 +42,7 @@ class CompositeValueObjectTest extends TestCase
         $this->assertSame($expectedIntFirst, $testItem->getIntFirst());
     }
 
-    public function unionDataProvider()
+    public static function unionDataProvider()
     {
         yield 'strings only' => [
             'text',
@@ -73,17 +69,15 @@ class CompositeValueObjectTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider optionalProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('optionalProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_process_optional_properties(array $expected, array $input)
     {
         $testItem = CompositeValueObjectWithOptionalFields::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function optionalProvider(): Generator
+    public static function optionalProvider(): Generator
     {
         yield 'empty input' => [
             ['withDefaultValue' => 'default value'],
@@ -104,10 +98,8 @@ class CompositeValueObjectTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider incorrectObjectsProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('incorrectObjectsProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_error_if_object_has_incorrect_properties(
         array $expectedErrorMessages,
         string $className,
@@ -121,7 +113,7 @@ class CompositeValueObjectTest extends TestCase
         );
     }
 
-    public function incorrectObjectsProvider(): iterable
+    public static function incorrectObjectsProvider(): iterable
     {
         yield 'no typehint, property provided' => [
             ['noTypehint' => 'Type (null) is not expected, expected ReflectionUnionType|ReflectionNamedType'],

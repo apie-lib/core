@@ -6,6 +6,7 @@ use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
+use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\OptionalField;
 use Apie\Core\Metadata\StrategyInterface;
 use Apie\Core\Other\DiscriminatorConfig;
@@ -52,6 +53,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
 
     public function getCreationMetadata(ApieContext $context): CompositeMetadata
     {
+        /** @var array<string, FieldInterface> $list */
         $list = [];
         
         $class = $this->class;
@@ -76,6 +78,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
 
     public function getResultMetadata(ApieContext $context): CompositeMetadata
     {
+        /** @var array<string, FieldInterface> $list */
         $list = [];
         
         $class = $this->class;
@@ -99,7 +102,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
     }
 
     /**
-     * @param array<string, mixed> $list
+     * @param array<string, FieldInterface> $list
      */
     private function mergeChildClass(
         ApieContext $context,
@@ -111,6 +114,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
         $tmp = new RegularObjectStrategy($refl);
         $mapping = $tmp->$method($context);
         foreach ($mapping->getHashmap() as $propertyName => $declaration) {
+            /** @var string $propertyName */
             if (isset($list[$propertyName])) {
                 $list[$propertyName] = new OptionalField($declaration, $list[$propertyName]);
             } else {

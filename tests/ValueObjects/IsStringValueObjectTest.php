@@ -41,17 +41,15 @@ class IsStringValueObjectTest extends TestCase implements Stringable
         );
     }
 
-    /**
-     * @test
-     * @dataProvider invalidInputProvider
-     * */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidInputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_provide_a_validation_check(mixed $invalidValue): void
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         IsStringValueObjectExample::fromNative($invalidValue);
     }
 
-    public function invalidInputProvider()
+    public static function invalidInputProvider()
     {
         yield [''];
         yield [' '];

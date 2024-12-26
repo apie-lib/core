@@ -11,27 +11,23 @@ class Base64StreamTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_all_strings(string $expected, string $input)
     {
         $testItem = Base64Stream::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_all_strings(string $expected, string $input)
     {
         $testItem = new Base64Stream($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield 'empty string' => ['', ''];
         yield 'space' => ['', ' '];
@@ -39,9 +35,7 @@ class Base64StreamTest extends TestCase
         yield 'base 64 with spaces' => ['AAaa', ' A A a a'];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(
@@ -55,9 +49,7 @@ class Base64StreamTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(Base64Stream::class);

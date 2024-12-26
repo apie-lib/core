@@ -10,9 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class PermissionListTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_make_a_string_list()
     {
         $item = new PermissionList([
@@ -31,17 +29,15 @@ class PermissionListTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider provideHasOverlap
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideHasOverlap')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_check_for_overlap(bool $expected, array $input, array $compareInput)
     {
         $testItem = new PermissionList($input);
         $this->assertEquals($expected, $testItem->hasOverlap(new PermissionList($compareInput)));
     }
 
-    public function provideHasOverlap(): Generator
+    public static function provideHasOverlap(): Generator
     {
         $emptyList = [];
         $publicOnly = [''];

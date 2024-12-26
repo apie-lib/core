@@ -30,7 +30,10 @@ final class StoredFileMetadata implements MetadataInterface
         return null;
     }
 
-    public function toClass(): ?ReflectionClass
+    /**
+     * @return ReflectionClass<StoredFile>
+     */
+    public function toClass(): ReflectionClass
     {
         return $this->class;
     }

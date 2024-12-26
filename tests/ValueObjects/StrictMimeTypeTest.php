@@ -13,62 +13,52 @@ class StrictMimeTypeTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_only_mimetypes(string $expected, string $input)
     {
         $testItem = StrictMimeType::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_only_mimetypes(string $expected, string $input)
     {
         $testItem = new StrictMimeType($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield 'plain text mime type' => ['text/plain', 'text/plain'];
         yield 'binary stream mime type' => ['application/octet-stream', 'application/octet-stream'];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_invalid_file_names(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         new StrictMimeType($input);
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_invalid_file_names_with_fromNative(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         StrictMimeType::fromNative($input);
     }
 
-    public function invalidProvider()
+    public static function invalidProvider()
     {
         yield 'wild card mime type' => ['image/*'];
         yield 'no slash' => ['applicationjson'];
         yield 'empty string' => [''];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(
@@ -82,9 +72,7 @@ class StrictMimeTypeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(StrictMimeType::class);

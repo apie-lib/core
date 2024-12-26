@@ -41,7 +41,7 @@ final class ItemListMetadata implements MetadataInterface
     {
         return ScalarType::ARRAY;
     }
-    public function getArrayItemType(): ?MetadataInterface
+    public function getArrayItemType(): MetadataInterface
     {
         $strategy = MetadataFactory::getMetadataStrategyForType(
             $this->class->getMethod('offsetGet')->getReturnType()

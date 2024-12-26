@@ -6,6 +6,7 @@ use ReflectionEnum;
 use ReflectionMethod;
 use ReflectionProperty;
 use ReflectionType;
+use UnitEnum;
 
 final class EnumUtils
 {
@@ -17,6 +18,7 @@ final class EnumUtils
     }
 
     /**
+     * @param ReflectionEnum<UnitEnum> $enumClass
      * @return array<int, string>
      */
     public static function getValues(ReflectionEnum $enumClass): array

@@ -27,9 +27,7 @@ class LocalFileStorageTest extends TestCase
         return new LocalFileStorage(['path' => $path]);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_and_find_uploaded_file_with_psr_uploaded_file()
     {
         $testItem = $this->givenALocalFileStorage();

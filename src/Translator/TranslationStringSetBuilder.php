@@ -107,6 +107,7 @@ final class TranslationStringSetBuilder
             $this->translationStringType->value,
             $this->property ? ('.' . SnakeCaseSlug::fromClass($this->property)) : '',
         ];
+        // @phpstan-ignore argument.type
         return $this->build($segments);
     }
 
@@ -132,6 +133,7 @@ final class TranslationStringSetBuilder
             },
             $operationTypes
         );
+        // @phpstan-ignore argument.type
         return $this->build(...$allSegments);
     }
 

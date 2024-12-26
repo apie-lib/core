@@ -15,7 +15,7 @@ class ReflectionClassToReflectionTypeConverter implements ConverterInterface
     /**
      * @param ReflectionClass<object> $input
      */
-    public function convert(ReflectionClass $input, ?ReflectionType $wantedType = null, TypeConverter $converter = null): ReflectionType
+    public function convert(ReflectionClass $input): ReflectionType
     {
         return ReflectionTypeFactory::createReflectionType($input->name);
     }

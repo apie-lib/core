@@ -18,9 +18,7 @@ class DataLayerByBoundedContextTest extends TestCase
     use ProphecyTrait;
     use TestWithInMemoryDatalayer;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_pick_a_datalayer_for_you()
     {
         $datalayerByClass = new DataLayerByClass(
