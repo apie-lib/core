@@ -3,7 +3,6 @@ namespace Apie\Core\TypeConverters;
 
 use Apie\TypeConverter\ConverterInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
-use Apie\TypeConverter\TypeConverter;
 use ReflectionClass;
 use ReflectionType;
 
