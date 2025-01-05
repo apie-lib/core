@@ -57,7 +57,11 @@ final class RegularObjectStrategy implements StrategyInterface
             if ($property->isReadOnly() && !$property->isPromoted()) {
                 continue;
             }
-            $list[$property->getName()] = new PublicProperty($property, true, true);
+            $optional = false;
+            if (PHP_VERSION_ID >= 80400) {
+                $optional = !empty($property->getHooks());
+            }
+            $list[$property->getName()] = new PublicProperty($property, $optional, true);
         }
         foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (preg_match('/^(set).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract()) {

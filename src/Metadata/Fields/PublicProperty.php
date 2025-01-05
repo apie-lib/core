@@ -59,7 +59,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     public function allowsNull(): bool
     {
-        $type = $this->property->getType();
+        $type = $this->getTypehint();
         return $type === null || $type->allowsNull();
     }
 
@@ -96,8 +96,10 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     public function setValue(object $object, mixed $value, ApieContext $apieContext): void
     {
-        if ($value !== DoNotChangeUploadedFile::DoNotChange) {
-            $this->property->setValue($object, $value);
+        if ($value !== DoNotChangeUploadedFile::DoNotChange && $this->field) {
+            if (!$this->property->isInitialized($object) || !$this->property->isReadOnly()) {
+                $this->property->setValue($object, $value);
+            }
         }
     }
 
