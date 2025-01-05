@@ -24,25 +24,29 @@ final class CompositeValueObjectStrategy implements StrategyInterface
     {
     }
 
-    public function getCreationMetadata(ApieContext $context): CompositeMetadata
+    private function getMetadata(ApieContext $context, bool $setterHooks): CompositeMetadata
     {
         $method = $this->class->getMethod('getFields');
         $map = [];
         foreach ($method->invoke(null) as $name => $field) {
             $prop = $this->class->getProperty($name);
-            $prop->setAccessible(true);
-            $map[$name] = new PublicProperty($prop, $field->isOptional());
+            $map[$name] = new PublicProperty($prop, $field->isOptional(), $setterHooks);
         }
         return new CompositeMetadata(new MetadataFieldHashmap($map), $this->class);
     }
 
+    public function getCreationMetadata(ApieContext $context): CompositeMetadata
+    {
+        return $this->getMetadata($context, true);
+    }
+
     public function getModificationMetadata(ApieContext $context): CompositeMetadata
     {
-        return $this->getCreationMetadata($context);
+        return $this->getMetadata($context, true);
     }
 
     public function getResultMetadata(ApieContext $context): CompositeMetadata
     {
-        return $this->getCreationMetadata($context);
+        return $this->getMetadata($context, false);
     }
 }

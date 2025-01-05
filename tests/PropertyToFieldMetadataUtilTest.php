@@ -74,11 +74,16 @@ class PropertyToFieldMetadataUtilTest extends TestCase
         );
     }
 
-    private static function createProperty(string $className, string $property, bool $optional = false): PublicProperty
-    {
+    private static function createProperty(
+        string $className,
+        string $property,
+        bool $optional = false,
+        bool $setterHooks = false
+    ): PublicProperty {
         return new PublicProperty(
             new ReflectionProperty($className, $property),
-            $optional
+            $optional,
+            $setterHooks
         );
     }
 
@@ -120,7 +125,7 @@ class PropertyToFieldMetadataUtilTest extends TestCase
             '0'
         ];
         yield 'composite value object' => [
-            self::createProperty(AddressWithZipcodeCheck::class, 'street', false),
+            self::createProperty(AddressWithZipcodeCheck::class, 'street', false, true),
             AddressWithZipcodeCheck::class,
             'street'
         ];

@@ -26,20 +26,30 @@ use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\Polymorphic\Cow;
 use Apie\Fixtures\Enums\EmptyEnum;
+use Apie\Fixtures\FuturePhpVersion;
 use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
 use Apie\Fixtures\Lists\ImmutableStringOrIntHashmap;
 use Apie\Fixtures\Lists\ImmutableStringOrIntList;
+use Apie\Fixtures\Php84\AsyncVisibility;
+use Apie\Fixtures\Php84\PropertyHooks;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectExample;
 use Apie\Fixtures\ValueObjects\CompositeValueObjectWithOptionalFields;
 use Apie\Fixtures\ValueObjects\Password;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stringable;
 
 class MetadataFactoryTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        if (PHP_VERSION_ID >= 80400) {
+            FuturePhpVersion::loadPhp84Classes();
+        }
+    }
     #[\PHPUnit\Framework\Attributes\DataProvider('provideStrategy')]
     public function testGetMetadataStrategy(string $expectedStrategyClass, string $input)
     {
@@ -48,58 +58,65 @@ class MetadataFactoryTest extends TestCase
 
     public static function provideStrategy()
     {
-        yield [
+        yield 'Non value object, non entity' => [
             RegularObjectStrategy::class, __CLASS__
         ];
-        yield [
+        yield 'Entity' => [
             RegularObjectStrategy::class, Order::class,
         ];
-        yield [
+        yield 'Polymorphic entity, base class' => [
             PolymorphicEntityStrategy::class, Animal::class,
         ];
-        yield [
+        yield 'Polymorphic entity, child class' => [
             PolymorphicEntityStrategy::class, Cow::class,
         ];
-        yield [
+        yield 'Regular DTO' => [
             DtoStrategy::class, DefaultExampleDto::class,
         ];
-        yield [
+        yield 'Empty DTO' => [
             DtoStrategy::class, EmptyDto::class,
         ];
-        yield [
+        yield 'Empty Enum' => [
             EnumStrategy::class, EmptyEnum::class,
         ];
-        yield [
+        yield 'Item Hashmap' => [
             ItemHashmapStrategy::class, ItemHashmap::class,
         ];
-        yield [
+        yield 'Immutable Item Hashmap' => [
             ItemHashmapStrategy::class, ImmutableStringOrIntHashmap::class,
         ];
-        yield [
+        yield 'Item List' => [
             ItemListObjectStrategy::class, ItemList::class,
         ];
-        yield [
+        yield 'Immutable Item List' => [
             ItemListObjectStrategy::class, ImmutableStringOrIntList::class,
         ];
-        yield [
+        yield 'Password value object' => [
             ValueObjectStrategy::class, Password::class,
         ];
-        yield [
+        yield 'Built in PHP Interface' => [
             BuiltInPhpClassStrategy::class, Stringable::class,
         ];
-        yield [
+        yield 'Built in PHP Class' => [
             BuiltInPhpClassStrategy::class, ReflectionClass::class,
         ];
     
-        yield [
+        yield 'Composite value object' => [
             CompositeValueObjectStrategy::class,
             CompositeValueObjectExample::class,
         ];
 
         if (class_exists(DutchPhoneNumber::class)) {
-            yield [
+            yield 'Dutch phone number' => [
                 ValueObjectStrategy::class,
                 DutchPhoneNumber::class
+            ];
+        }
+
+        if (PHP_VERSION_ID >= 80400) {
+            yield 'Object with property hooks' => [
+                RegularObjectStrategy::class,
+                PropertyHooks::class,
             ];
         }
     }
@@ -156,6 +173,18 @@ class MetadataFactoryTest extends TestCase
         $hashmap = $actual->getHashmap();
         $filteredHashmap = $hashmap->filterOnContext($context, true);
         $this->assertEquals(['id', 'owned'], array_keys($filteredHashmap->toArray()));
+    }
+
+    #[RequiresPhp('>=8.4')]
+    public function testCompositeMetadataWithPropertyHooks()
+    {
+        $context = new ApieContext([]);
+        /** @var CompositeMetadata $actual */
+        $actual = MetadataFactory::getResultMetadata(new ReflectionClass(PropertyHooks::class), $context);
+        $this->assertInstanceOf(CompositeMetadata::class, $actual);
+        $hashmap = $actual->getHashmap();
+        $filteredHashmap = $hashmap->filterOnContext($context, true);
+        $this->assertEquals(['name', 'virtual'], array_keys($filteredHashmap->toArray()));
     }
 
     public static function compositeMetadataProvider()
@@ -404,5 +433,49 @@ class MetadataFactoryTest extends TestCase
             CompositeValueObjectWithOptionalFields::class,
             $context
         ];
+        if (PHP_VERSION_ID >= 80400) {
+            yield 'Object with property hooks creation' => [
+                ['name', 'virtualSetter', 'virtual'],
+                ['name'],
+                'getCreationMetadata',
+                PropertyHooks::class,
+                $context
+            ];
+            yield 'Object with property hooks modification' => [
+                ['name', 'virtualSetter', 'virtual'],
+                [],
+                'getModificationMetadata',
+                PropertyHooks::class,
+                $context
+            ];
+            yield 'Object with property hooks retrieval' => [
+                ['name', 'virtualSetter', 'virtual'],
+                ['name', 'virtual'],
+                'getResultMetadata',
+                PropertyHooks::class,
+                $context
+            ];
+            yield 'Object with async visibility creation' => [
+                ['name', 'option'],
+                ['name', 'option'],
+                'getCreationMetadata',
+                AsyncVisibility::class,
+                $context
+            ];
+            yield 'Object with async visibility modification' => [
+                [],
+                [],
+                'getModificationMetadata',
+                AsyncVisibility::class,
+                $context
+            ];
+            yield 'Object with async visibility retrieval' => [
+                ['name', 'option'],
+                ['name', 'option'],
+                'getResultMetadata',
+                AsyncVisibility::class,
+                $context
+            ];
+        }
     }
 }

@@ -8,6 +8,9 @@ final class ActualFileWriter implements FileWriterInterface, FileReaderInterface
     public function writeFile(string $filename, string $fileContents): void
     {
         @mkdir(dirname($filename), recursive: true);
+        if ($fileContents === @file_get_contents($filename)) {
+            return;
+        }
         if (false === @file_put_contents($filename, $fileContents)) {
             throw new RuntimeException('I can not write to file: ' . $filename);
         }

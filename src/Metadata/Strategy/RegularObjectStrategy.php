@@ -39,7 +39,7 @@ final class RegularObjectStrategy implements StrategyInterface
             if ($property->isReadOnly()) {
                 continue;
             }
-            $list[$property->getName()] = new PublicProperty($property, true);
+            $list[$property->getName()] = new PublicProperty($property, true, true);
         }
         foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (preg_match('/^(set).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract()) {
@@ -57,7 +57,7 @@ final class RegularObjectStrategy implements StrategyInterface
             if ($property->isReadOnly() && !$property->isPromoted()) {
                 continue;
             }
-            $list[$property->getName()] = new PublicProperty($property);
+            $list[$property->getName()] = new PublicProperty($property, true, true);
         }
         foreach ($this->class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if (preg_match('/^(set).+$/i', $method->name) && !$method->isStatic() && !$method->isAbstract()) {
@@ -82,7 +82,8 @@ final class RegularObjectStrategy implements StrategyInterface
             if (!$property->getAttributes(Internal::class)) {
                 $list[$property->getName()] = new PublicProperty(
                     $property,
-                    !empty($property->getAttributes(Optional::class))
+                    !empty($property->getAttributes(Optional::class)),
+                    false
                 );
             }
         }

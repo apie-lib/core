@@ -7,6 +7,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\SetterInterface;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionProperty;
 use ReflectionType;
 
@@ -14,13 +15,32 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 {
     private bool $required;
 
-    public function __construct(private readonly ReflectionProperty $property, bool $optional = false)
-    {
+    private bool $field;
+
+    public function __construct(
+        private readonly ReflectionProperty $property,
+        bool $optional = false,
+        private bool $setterHooks = false,
+    ) {
         $hasDefaultValue = $this->hasDefaultValue();
+        $this->field = 'never' !== (string) $this->property->getType();
+        if (PHP_VERSION_ID >= 80400) {
+            if ($this->setterHooks) {
+                $settableType = $this->property->getSettableType();
+                if ('never' === (string) $settableType) {
+                    $this->field = false;
+                }
+            } elseif (null === $this->property->getHook(\PropertyHookType::Get)
+                && null !== $this->property->getHook(\PropertyHookType::Set)
+                && $this->property->isVirtual()) {
+                $this->field = false;
+            }
+        }
 
         $this->required = !$optional
             && empty($property->getAttributes(Optional::class))
-            && !$hasDefaultValue;
+            && !$hasDefaultValue
+            && $this->field;
     }
 
     public function hasDefaultValue(): bool
@@ -50,7 +70,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     public function isField(): bool
     {
-        return true;
+        return $this->field;
     }
 
     public function appliesToContext(ApieContext $apieContext): bool
@@ -87,6 +107,9 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     public function getTypehint(): ?ReflectionType
     {
+        if (!$this->field) {
+            return ReflectionTypeFactory::createReflectionType('never');
+        }
         return $this->property->getType();
     }
 }

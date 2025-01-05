@@ -21,11 +21,18 @@ final class MetadataFieldHashmap extends ItemHashmap
         $list = array_filter(
             $this->internalArray,
             function (FieldInterface $field) use ($apieContext, $getters, $setters) {
-                if ($getters !== null && ($getters xor ($field instanceof GetterInterface))) {
-                    return false;
+                if ($getters !== null) {
+                    $fieldIsGetter = $field instanceof GetterInterface && 'never' !== (string) $field->getTypehint();
+                    if ($getters xor $fieldIsGetter) {
+                        return false;
+                    }
+
                 }
-                if ($setters !== null && ($setters xor ($field instanceof SetterInterface))) {
-                    return false;
+                if ($setters !== null) {
+                    $fieldIsSetter = $field instanceof SetterInterface && 'never' !== (string) $field->getTypehint();
+                    if ($setters xor $fieldIsSetter) {
+                        return false;
+                    }
                 }
                 return $field->appliesToContext($apieContext);
             }
