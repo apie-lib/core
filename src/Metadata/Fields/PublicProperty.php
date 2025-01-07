@@ -7,6 +7,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\SetterInterface;
+use Apie\Core\Utils\ConverterUtils;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionProperty;
 use ReflectionType;
@@ -113,5 +114,22 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
             return ReflectionTypeFactory::createReflectionType('never');
         }
         return $this->property->getType();
+    }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        $list = [];
+        if ($propertyDocblock) {
+            foreach ($this->property->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        $class = ConverterUtils::toReflectionClass($this->property);
+        if ($class && $classDocBlock) {
+            foreach ($class->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        return $list;
     }
 }

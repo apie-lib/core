@@ -5,6 +5,7 @@ use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\GetterInterface;
+use Apie\Core\Utils\ConverterUtils;
 use ReflectionMethod;
 use ReflectionType;
 
@@ -81,5 +82,23 @@ final class GetterMethod implements FieldInterface, GetterInterface
     public function getTypehint(): ?ReflectionType
     {
         return $this->method->getReturnType();
+    }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        $list = [];
+        if ($propertyDocblock) {
+            foreach ($this->method->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        $class = ConverterUtils::toReflectionClass($this->method);
+        if ($class && $classDocBlock) {
+            foreach ($class->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+
+        return $list;
     }
 }

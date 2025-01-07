@@ -102,4 +102,13 @@ class OptionalField implements FieldWithPossibleDefaultValue, GetterInterface, S
         // TODO: merge with $this->field2
         return $this->field1->getTypehint();
     }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        $attributes = $this->field1->getAttributes($attributeClass, $classDocBlock, $propertyDocblock, $argumentDocBlock);
+        if (!empty($attributes)) {
+            return $attributes;
+        }
+        return$this->field2->getAttributes($attributeClass, $classDocBlock, $propertyDocblock, $argumentDocBlock);
+    }
 }

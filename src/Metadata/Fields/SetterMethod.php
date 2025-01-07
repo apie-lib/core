@@ -6,6 +6,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\SetterInterface;
+use Apie\Core\Utils\ConverterUtils;
 use ReflectionMethod;
 use ReflectionType;
 
@@ -100,5 +101,32 @@ final class SetterMethod implements FieldInterface, SetterInterface
         // last argument is value set, so also the typehint
         $parameter = array_pop($parameters);
         return $parameter->getType();
+    }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        $list = [];
+        if ($argumentDocBlock) {
+            $arguments = $this->method->getParameters();
+            $argument = end($arguments);
+            if ($argument) {
+                foreach ($argument->getAttributes($attributeClass) as $attribute) {
+                    $list[] = $attribute->newInstance();
+                }
+            }
+        }
+        if ($propertyDocblock) {
+            foreach ($this->method->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        $class = ConverterUtils::toReflectionClass($this->method);
+        if ($class && $classDocBlock) {
+            foreach ($class->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+
+        return $list;
     }
 }

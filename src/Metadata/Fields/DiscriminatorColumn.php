@@ -73,4 +73,9 @@ class DiscriminatorColumn implements FieldInterface, GetterInterface
     {
         return -280;
     }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        return [];
+    }
 }

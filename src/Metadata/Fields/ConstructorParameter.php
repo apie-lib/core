@@ -99,4 +99,21 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
         $attribute = reset($attributes);
         return $attribute->newInstance()->priority;
     }
+
+    public function getAttributes(string $attributeClass, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true): array
+    {
+        $list = [];
+        if ($argumentDocBlock || ($propertyDocblock && $this->parameter->isPromoted())) {
+            foreach ($this->parameter->getAttributes($attributeClass) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        $class = ConverterUtils::toReflectionClass($this->parameter->getType());
+        if ($class && $classDocBlock) {
+            foreach ($this->parameter->getAttributes($class) as $attribute) {
+                $list[] = $attribute->newInstance();
+            }
+        }
+        return $list;
+    }
 }
