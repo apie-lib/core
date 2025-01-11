@@ -67,4 +67,10 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
         $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
             ->removeExisting($entity, $boundedContextId);
     }
+
+    public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface
+    {
+        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
+            ->upsert($entity, $boundedContextId);
+    }
 }

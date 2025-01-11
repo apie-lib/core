@@ -66,7 +66,6 @@ class InMemoryDatalayer implements ApieDatalayer
         }
         $className = $id::getReferenceFor()->name;
         $id = $entity->getId()->toNative();
-        $className = $entity->getId()::getReferenceFor()->name;
         foreach ($this->stored[$className] ?? [] as $entityInList) {
             if ($entityInList->getId()->toNative() === $id) {
                 throw new EntityAlreadyPersisted($entity);
@@ -83,7 +82,6 @@ class InMemoryDatalayer implements ApieDatalayer
      */
     public function persistExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
-        $className = get_class($entity);
         $id = $entity->getId()->toNative();
         $className = $entity->getId()::getReferenceFor()->name;
         foreach ($this->stored[$className] ?? [] as $key => $entityInList) {
@@ -119,5 +117,14 @@ class InMemoryDatalayer implements ApieDatalayer
             }
         }
         $this->stored[$className] = $newList;
+    }
+
+    public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface
+    {
+        try {
+            return $this->persistExisting($entity, $boundedContextId);
+        } catch (UnknownExistingEntityError) {
+            return $this->persistNew($entity, $boundedContextId);
+        }
     }
 }

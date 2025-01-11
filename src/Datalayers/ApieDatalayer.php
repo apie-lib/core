@@ -38,4 +38,11 @@ interface ApieDatalayer
     public function persistExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface;
 
     public function removeExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): void;
+
+    /**
+     * @template T of EntityInterface
+     * @param T $entity
+     * @return T
+     */
+    public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface;
 }
