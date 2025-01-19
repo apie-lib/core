@@ -18,6 +18,9 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
     private bool $field;
 
+    private bool $defaultValueAvailable;
+    private mixed $defaultValue;
+
     public function __construct(
         private readonly ReflectionProperty $property,
         bool $optional = false,
@@ -44,18 +47,56 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
             && $this->field;
     }
 
+    /**
+     * ReflectionProperty::hasDefaultValue() returns false for promoted public properties,
+     * so we look up the constructors to find ReflectionParameter and return this.
+     * @param \ReflectionClass<object> $class
+     */
+    private function findPromotedProperty(\ReflectionClass $class): ?\ReflectionParameter
+    {
+        foreach ($class->getConstructor()->getParameters() as $parameter) {
+            if ($parameter->isPromoted()
+                && $parameter->isDefaultValueAvailable()
+                && $parameter->name === $this->property->name
+            ) {
+                return $parameter;
+            }
+        }
+        if (!$this->property->isPrivate()) {
+            $parentClass = $class->getConstructor()->getDeclaringClass()->getParentClass();
+            if ($parentClass && $parentClass->name !== $class->name) {
+                return $this->findPromotedProperty($parentClass);
+            }
+        }
+        return null;
+    }
+
     public function hasDefaultValue(): bool
     {
-        if (null === $this->property->getType()) {
-            return $this->property->getDefaultValue() !== null;
-        }
+        if (!isset($this->defaultValueAvailable)) {
+            $this->defaultValueAvailable = $this->property->hasDefaultValue();
+            // if there is no typehint hasDefaultValue() always returns true
+            if (null === $this->property->getType()) {
+                $this->defaultValueAvailable = $this->property->getDefaultValue() !== null;
+            }
+            if ($this->defaultValueAvailable) {
+                $this->defaultValue = $this->property->getDefaultValue();
+            } elseif ($this->setterHooks && $this->property->isPromoted()) {
+                $argument = $this->findPromotedProperty($this->property->getDeclaringClass());
+                if ($argument && $argument->isDefaultValueAvailable()) {
+                    $this->defaultValueAvailable = true;
+                    $this->defaultValue = $argument->getDefaultValue();
+                }
+            }
 
-        return $this->property->hasDefaultValue();
+        }
+        return $this->defaultValueAvailable;
     }
 
     public function getDefaultValue(): mixed
     {
-        return $this->property->getDefaultValue();
+        $this->hasDefaultValue();
+        return $this->defaultValue;
     }
 
     public function allowsNull(): bool

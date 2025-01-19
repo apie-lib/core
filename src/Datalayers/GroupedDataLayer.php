@@ -38,6 +38,15 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
         return null;
     }
 
+    public function getOrderByColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList
+    {
+        $datalayer = $this->hashmap->pickDataLayerFor($class, $boundedContextId);
+        if ($datalayer instanceof ApieDatalayerWithFilters) {
+            return $datalayer->getOrderByColumns($class, $boundedContextId);
+        }
+        return null;
+    }
+
     public function all(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): EntityListInterface
     {
         return $this->hashmap->pickDataLayerFor($class, $boundedContextId)

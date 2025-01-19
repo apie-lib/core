@@ -28,4 +28,11 @@ trait FiltersOnAllFields
 
         return new StringList($list);
     }
+
+    public function getOrderByColumns(
+        ReflectionClass $class,
+        BoundedContextId $boundedContextId
+    ): ?StringList {
+        return null;
+    }
 }

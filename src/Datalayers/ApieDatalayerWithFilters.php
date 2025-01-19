@@ -14,4 +14,9 @@ interface ApieDatalayerWithFilters extends ApieDatalayer
      * @param ReflectionClass<object> $class
      */
     public function getFilterColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList;
+
+    /**
+     * @param ReflectionClass<object> $class
+     */
+    public function getOrderByColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList;
 }
