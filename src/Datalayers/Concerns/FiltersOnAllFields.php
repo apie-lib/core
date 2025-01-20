@@ -4,7 +4,7 @@ namespace Apie\Core\Datalayers\Concerns;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\ApieDatalayerWithFilters;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\StringSet;
 use Apie\Core\Metadata\MetadataFactory;
 use ReflectionClass;
 
@@ -16,7 +16,7 @@ trait FiltersOnAllFields
     public function getFilterColumns(
         ReflectionClass $class,
         BoundedContextId $boundedContextId
-    ): StringList {
+    ): StringSet {
         $metadata = MetadataFactory::getResultMetadata($class, new ApieContext());
         $list = [];
         $hashmap = $metadata->getHashmap()->toArray();
@@ -26,13 +26,13 @@ trait FiltersOnAllFields
             }
         }
 
-        return new StringList($list);
+        return new StringSet($list);
     }
 
     public function getOrderByColumns(
         ReflectionClass $class,
         BoundedContextId $boundedContextId
-    ): ?StringList {
+    ): ?StringSet {
         return null;
     }
 }

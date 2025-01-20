@@ -6,7 +6,7 @@ use Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext;
 use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\StringSet;
 use ReflectionClass;
 
 final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer, ApieDatalayerWithSupport
@@ -29,7 +29,7 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
         return true;
     }
 
-    public function getFilterColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList
+    public function getFilterColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringSet
     {
         $datalayer = $this->hashmap->pickDataLayerFor($class, $boundedContextId);
         if ($datalayer instanceof ApieDatalayerWithFilters) {
@@ -38,7 +38,7 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
         return null;
     }
 
-    public function getOrderByColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringList
+    public function getOrderByColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringSet
     {
         $datalayer = $this->hashmap->pickDataLayerFor($class, $boundedContextId);
         if ($datalayer instanceof ApieDatalayerWithFilters) {
