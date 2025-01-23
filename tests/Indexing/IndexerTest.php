@@ -4,6 +4,9 @@ namespace Apie\Tests\Core\Indexing;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
 use Apie\Core\Indexing\Indexer;
+use Apie\Core\Lists\ItemHashmap;
+use Apie\Core\Lists\ItemList;
+use Apie\Core\Lists\ItemSet;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
@@ -94,6 +97,29 @@ class IndexerTest extends TestCase
                 'test' => 1,
             ],
             new IsStringValueObjectExample('test'),
+        ];
+        yield 'list' => [
+            [
+                '1' => 2,
+                '2' => 1,
+            ],
+            new ItemList(['1', 1, 2])
+        ];
+        yield 'set' => [
+            [
+                '1' => 2,
+                '2' => 1,
+            ],
+            new ItemSet(['1', 1, 2])
+        ];
+        yield 'hash map' => [
+            [
+                '0' => 1,
+                'test' => 1,
+                '1' => 3,
+                '2' => 1,
+            ],
+            new ItemHashmap(['0' => '1', '1' => 1, 'test' => 2])
         ];
         yield [
             [
