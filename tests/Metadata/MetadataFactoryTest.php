@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Tests\Core\Metadata;
 
+use Apie\Core\ApieLib;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\Strategy\AliasStrategy;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
@@ -16,6 +18,7 @@ use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
 use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
+use Apie\Core\Permissions\PermissionInterface;
 use Apie\CountryAndPhoneNumber\DutchPhoneNumber;
 use Apie\Fixtures\Dto\DefaultExampleDto;
 use Apie\Fixtures\Dto\EmptyDto;
@@ -46,6 +49,7 @@ class MetadataFactoryTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
+        ApieLib::resetAliases();
         if (PHP_VERSION_ID >= 80400) {
             FuturePhpVersion::loadPhp84Classes();
         }
@@ -100,6 +104,10 @@ class MetadataFactoryTest extends TestCase
         yield 'Built in PHP Class' => [
             BuiltInPhpClassStrategy::class, ReflectionClass::class,
         ];
+        yield 'Apie lib alias' => [
+            AliasStrategy::class,
+            PermissionInterface::class
+        ];
     
         yield 'Composite value object' => [
             CompositeValueObjectStrategy::class,
@@ -141,6 +149,10 @@ class MetadataFactoryTest extends TestCase
         yield 'value object' => [
             ScalarType::INTEGER,
             UserAutoincrementIdentifier::class
+        ];
+        yield 'Apie lib alias' => [
+            ScalarType::STRING,
+            PermissionInterface::class
         ];
     }
 

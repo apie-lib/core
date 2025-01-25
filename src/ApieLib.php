@@ -1,18 +1,71 @@
 <?php
 namespace Apie\Core;
 
+use Apie\Console\Helpers\UploadedFileInteractor;
+use Apie\Core\Exceptions\IndexNotFoundException;
+use Apie\Core\FileStorage\StoredFile;
+use Apie\Core\Lists\ItemHashmap;
+use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
+use BackedEnum;
 use Beste\Clock\SystemClock;
 use League\OpenAPIValidation\Schema\TypeFormats\FormatsContainer;
 use Psr\Clock\ClockInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 final class ApieLib
 {
+    /**
+     * @var array<class-string<object>, string|class-string<object>> $aliases
+     */
+    private static $aliases = [
+        UploadedFileInterface::class => StoredFile::class,
+        PermissionInterface::class => 'string',
+        ValueObjectInterface::class => 'array|string|int|float|bool|UnitEnum|null',
+        BackedEnum::class => 'string|int',
+    ];
+
+    public static function resetAliases(): void
+    {
+        $prop = new \ReflectionProperty(__CLASS__, 'aliases');
+        $prop->setValue(null, $prop->getDefaultValue());
+    }
+
+    /**
+     * @param class-string<object> $alias
+     * @param string|class-string<object> $target
+     * @return void
+     */
+    public static function registerAlias(string $alias, string $target): void
+    {
+        self::$aliases[$alias] = $target;
+    }
+
+    /**
+     * @param class-string<object> $alias
+     */
+    public static function hasAlias(string $alias): bool
+    {
+        return isset(self::$aliases[$alias]);
+    }
+
+    /**
+     * @param class-string<object> $alias
+     * @return string|class-string<object>
+     */
+    public static function getAlias(string $alias): string
+    {
+        if (!isset(self::$aliases[$alias])) {
+            throw new IndexNotFoundException($alias);
+        }
+        return self::$aliases[$alias];
+    }
+
     /**
      * @codeCoverageIgnore
      */

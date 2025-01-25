@@ -1,11 +1,13 @@
 <?php
 namespace Apie\Core\Metadata;
 
+use Apie\Core\ApieLib;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\Fields\ConstructorParameter;
+use Apie\Core\Metadata\Strategy\AliasStrategy;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
@@ -19,6 +21,7 @@ use Apie\Core\Metadata\Strategy\ScalarStrategy;
 use Apie\Core\Metadata\Strategy\UnionTypeStrategy;
 use Apie\Core\Metadata\Strategy\UploadedFileStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use LogicException;
 use ReflectionClass;
 use ReflectionIntersectionType;
@@ -38,6 +41,9 @@ final class MetadataFactory
      */
     public static function getMetadataStrategy(ReflectionClass $class): StrategyInterface
     {
+        if (AliasStrategy::supports($class)) {
+            return new AliasStrategy($class->name);
+        }
         if (BuiltInPhpClassStrategy::supports($class)) {
             return new BuiltInPhpClassStrategy($class);
         }
@@ -101,6 +107,16 @@ final class MetadataFactory
             throw new LogicException('Intersection typehints are not supported yet');
         }
         assert($typehint instanceof ReflectionNamedType);
+        if (ApieLib::hasAlias($typehint->getName())) {
+            $strategy = self::getMetadataStrategyForType(
+                ReflectionTypeFactory::createReflectionType(
+                    ApieLib::getAlias($typehint->getName())
+                )
+            );
+            return $typehint->allowsNull()
+                ? new UnionTypeStrategy($strategy, new ScalarMetadata(ScalarType::NULLVALUE))
+                : $strategy;
+        }
         if ($typehint->isBuiltin()) {
             if ($typehint->getName() === 'null') {
                 return new ScalarStrategy(ScalarType::NULLVALUE);
