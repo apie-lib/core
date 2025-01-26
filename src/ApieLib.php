@@ -1,10 +1,8 @@
 <?php
 namespace Apie\Core;
 
-use Apie\Console\Helpers\UploadedFileInteractor;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\FileStorage\StoredFile;
-use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
