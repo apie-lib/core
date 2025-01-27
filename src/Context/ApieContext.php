@@ -41,8 +41,8 @@ final class ApieContext
     public function __construct(private array $context = [])
     {
         $this->predefined = [
-            ApieContext::class => function () {
-                return $this;
+            ApieContext::class => function (ApieContext $context) {
+                return $context;
             }
         ];
     }
@@ -62,7 +62,7 @@ final class ApieContext
     public function getContext(string $key, bool $throwError = true): mixed
     {
         if (isset($this->predefined[$key])) {
-            return $this->predefined[$key]();
+            return $this->predefined[$key]($this);
         }
         if (!array_key_exists($key, $this->context)) {
             if (!$throwError) {
