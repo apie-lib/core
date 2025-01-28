@@ -4,6 +4,7 @@ namespace Apie\Core;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\FileStorage\StoredFile;
 use Apie\Core\Permissions\PermissionInterface;
+use Apie\Core\Permissions\SerializedPermission;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
@@ -23,9 +24,7 @@ final class ApieLib
      */
     private static $aliases = [
         UploadedFileInterface::class => StoredFile::class,
-        PermissionInterface::class => 'string',
-        ValueObjectInterface::class => 'array|string|int|float|bool|UnitEnum|null',
-        BackedEnum::class => 'string|int',
+        PermissionInterface::class => SerializedPermission::class,
     ];
 
     public static function resetAliases(): void
