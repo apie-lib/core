@@ -4,7 +4,6 @@ namespace Apie\Core\Permissions;
 
 use Apie\Core\Lists\PermissionList;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
-use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 
 final class SerializedPermission implements PermissionInterface, HasRegexValueObjectInterface

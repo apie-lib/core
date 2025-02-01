@@ -8,7 +8,6 @@ use Apie\Core\Permissions\SerializedPermission;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
-use BackedEnum;
 use Beste\Clock\SystemClock;
 use League\OpenAPIValidation\Schema\TypeFormats\FormatsContainer;
 use Psr\Clock\ClockInterface;
