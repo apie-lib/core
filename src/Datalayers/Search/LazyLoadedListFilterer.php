@@ -27,6 +27,9 @@ final class LazyLoadedListFilterer
 
     public function appliesPermissions(EntityInterface $object, QuerySearch $querySearch): bool
     {
+        if ($querySearch->getApieContext()->getContext(ContextConstants::DISABLE_CONTEXT_FILTER, false)) {
+            return true;
+        }
         if (!$querySearch->getApieContext()->withContext(ContextConstants::RESOURCE, $object)->isAuthorized(true)) {
             return false;
         }

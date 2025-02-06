@@ -14,17 +14,20 @@ final class QuerySearch
 
     private StringHashmap $orderBy;
 
+    private ApieContext $apieContext;
+
     public function __construct(
         private int $pageIndex,
         private int $itemsPerPage = 20,
         ?string $textSearch = null,
         ?StringHashmap $searches = null,
         ?StringHashmap $orderBy = null,
-        private ?ApieContext $apieContext = new ApieContext(),
+        ?ApieContext $apieContext = null,
     ) {
         $this->textSearch = $textSearch;
         $this->searches = $searches ?? new StringHashmap();
         $this->orderBy = $orderBy ?? new StringHashmap();
+        $this->apieContext = $apieContext ?? new ApieContext();
     }
 
     public function getApieContext(): ApieContext

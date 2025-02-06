@@ -5,6 +5,7 @@ use Apie\Common\Actions\RunAction;
 use Apie\Common\Actions\RunItemMethodAction;
 use Apie\Core\Actions\HasRouteDefinition;
 use Apie\Core\Indexing\FromDateObject;
+use Apie\DoctrineEntityDatalayer\Query\RequiresPermissionFilter;
 
 /**
  * Contains a list of context key constants as used for ApieContext and in route definitions (which are copied to
@@ -115,6 +116,13 @@ final class ContextConstants
     public const RESOURCE_METHOD = 'resource-call';
 
     public const GLOBAL_METHOD = 'method-call';
+
+    /**
+     * Disable context filter when using toPaginatedResult
+     *
+     * @see RequiresPermissionFilter
+     */
+    public const DISABLE_CONTEXT_FILTER = 'disable-context-filter';
 
     /**
      * @see FromDateObject
