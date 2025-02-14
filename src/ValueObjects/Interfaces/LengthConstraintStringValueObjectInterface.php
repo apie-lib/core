@@ -7,9 +7,11 @@ namespace Apie\Core\ValueObjects\Interfaces;
  * is valid data. It's not needed if HasRegexValueObjectInterface is implemented and it can be determined
  * from the regular expression.
  */
-interface LengthConstraintStringValueObjectInterface extends StringValueObjectInterface
+interface LengthConstraintStringValueObjectInterface extends ValueObjectInterface
 {
     public static function minStringLength(): int;
 
     public static function maxStringLength(): ?int;
+
+    public function toNative(): string;
 }
