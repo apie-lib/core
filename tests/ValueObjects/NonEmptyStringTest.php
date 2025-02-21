@@ -31,6 +31,7 @@ class NonEmptyStringTest extends TestCase
     {
         yield ['test', 'test'];
         yield ['trimmed', '   trimmed   '];
+        yield ['test' . PHP_EOL . 'test', 'test' . PHP_EOL . 'test'];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]

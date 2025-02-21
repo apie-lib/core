@@ -16,7 +16,7 @@ class NonEmptyString implements HasRegexValueObjectInterface
 
     public static function getRegularExpression(): string
     {
-        return '/^.+$/';
+        return '/^.+$/s';
     }
 
     protected function convert(string $input): string
