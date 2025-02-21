@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Datalayers\Concerns;
 
+use Apie\Core\Attributes\SearchFilterOption;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\ApieDatalayerWithFilters;
@@ -21,7 +22,11 @@ trait FiltersOnAllFields
         $list = [];
         $hashmap = $metadata->getHashmap()->toArray();
         foreach ($class->getProperties() as $property) {
-            if (isset($hashmap[$property->name])) {
+            $enabled = true;
+            foreach ($property->getAttributes(SearchFilterOption::class) as $attr) {
+                $enabled = $enabled & $attr->newInstance()->enabled;
+            }
+            if (isset($hashmap[$property->name]) && $enabled) {
                 $list[] = $property->name;
             }
         }

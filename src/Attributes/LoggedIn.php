@@ -20,6 +20,11 @@ final class LoggedIn implements ApieContextAttribute
     public function applies(ApieContext $context): bool
     {
         if (!$context->hasContext(ContextConstants::AUTHENTICATED_USER)) {
+            if ($this->className !== null && $context->hasContext($this->className)) {
+                $value = $context->getContext($this->className);
+                $refl = new ReflectionClass($value);
+                return $refl->getShortName() === 'UserInterface';
+            }
             return false;
         }
         if ($this->className === null) {
