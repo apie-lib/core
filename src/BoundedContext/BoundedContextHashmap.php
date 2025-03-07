@@ -34,17 +34,13 @@ final class BoundedContextHashmap extends ItemHashmap
         }
         if ($prio && isset($this[$prio->toNative()])) {
             $boundedContext = $this[$prio->toNative()];
-            foreach ($boundedContext->resources as $resource) {
-                if ($resource->name === $class->name) {
-                    return $boundedContext;
-                }
+            if ($boundedContext->contains($class)) {
+                return $boundedContext;
             }
         }
         foreach ($this as $boundedContext) {
-            foreach ($boundedContext->resources as $resource) {
-                if ($resource->name === $class->name) {
-                    return $boundedContext;
-                }
+            if ($boundedContext->contains($class)) {
+                return $boundedContext;
             }
         }
         return null;
