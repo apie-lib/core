@@ -36,7 +36,7 @@ final class EnumUtils
     public static function isEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return $class->isInstantiable() && $class->isEnum();
+        return $class->isEnum();
     }
 
     /**
@@ -45,7 +45,11 @@ final class EnumUtils
     public static function isStringEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return self::isEnum($class) && $class instanceof ReflectionEnum && (!$class->getBackingType() || $class->getBackingType()->getName() === 'string');
+        if (!$class->isEnum()) {
+            return false;
+        }
+        $enum = new ReflectionEnum($class->name);
+        return (!$enum->getBackingType() || $enum->getBackingType()->getName() === 'string');
     }
 
     /**
@@ -54,6 +58,10 @@ final class EnumUtils
     public static function isIntEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return self::isEnum($class) && $class instanceof ReflectionEnum && ($class->getBackingType() && $class->getBackingType()->getName() === 'int');
+        if (!$class->isEnum()) {
+            return false;
+        }
+        $enum = new ReflectionEnum($class->name);
+        return $enum->getBackingType()?->getName() === 'int';
     }
 }
