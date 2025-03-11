@@ -110,7 +110,7 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
         }
         $class = ConverterUtils::toReflectionClass($this->parameter->getType());
         if ($class && $classDocBlock) {
-            foreach ($this->parameter->getAttributes($class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+            foreach ($class->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }
