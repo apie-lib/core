@@ -161,13 +161,13 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
     {
         $list = [];
         if ($propertyDocblock) {
-            foreach ($this->property->getAttributes($attributeClass) as $attribute) {
+            foreach ($this->property->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }
         $class = ConverterUtils::toReflectionClass($this->property);
         if ($class && $classDocBlock) {
-            foreach ($class->getAttributes($attributeClass) as $attribute) {
+            foreach ($class->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }

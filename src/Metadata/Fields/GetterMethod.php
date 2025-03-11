@@ -88,13 +88,13 @@ final class GetterMethod implements FieldInterface, GetterInterface
     {
         $list = [];
         if ($propertyDocblock) {
-            foreach ($this->method->getAttributes($attributeClass) as $attribute) {
+            foreach ($this->method->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }
         $class = ConverterUtils::toReflectionClass($this->method);
         if ($class && $classDocBlock) {
-            foreach ($class->getAttributes($attributeClass) as $attribute) {
+            foreach ($class->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }

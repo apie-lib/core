@@ -104,13 +104,13 @@ class ConstructorParameter implements FieldWithPossibleDefaultValue, SetterInter
     {
         $list = [];
         if ($argumentDocBlock || ($propertyDocblock && $this->parameter->isPromoted())) {
-            foreach ($this->parameter->getAttributes($attributeClass) as $attribute) {
+            foreach ($this->parameter->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }
         $class = ConverterUtils::toReflectionClass($this->parameter->getType());
         if ($class && $classDocBlock) {
-            foreach ($this->parameter->getAttributes($class) as $attribute) {
+            foreach ($this->parameter->getAttributes($class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();
             }
         }
