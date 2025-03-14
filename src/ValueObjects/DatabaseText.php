@@ -18,7 +18,7 @@ final class DatabaseText implements HasRegexValueObjectInterface
 
     public static function getRegularExpression(): string
     {
-        return '/^.{0,65535}$/';
+        return '/^.{0,65535}$/s';
     }
 
     protected function convert(string $input): string
