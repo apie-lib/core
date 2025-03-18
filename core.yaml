@@ -1,0 +1,62 @@
+services:
+  apie.csrf_token_provider:
+    alias: Apie\Core\Session\CsrfTokenProvider
+    public: true
+
+  Apie\Core\BoundedContext\BoundedContextHashmap:
+    factory: ["@apie.bounded_context.hashmap_factory", "create"]
+
+  Apie\Core\Translator\ApieTranslatorInterface:
+    factory: ['Apie\Core\Translator\ApieTranslator', 'create']
+    tags:
+      - apie.context
+
+  Apie\Core\ContextBuilders\ContextBuilderFactory:
+    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
+    arguments:
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
+      - '@?Apie\Serializer\DecoderHashmap'
+      - !tagged_iterator apie.core.context_builder
+
+  apie.bounded_context.hashmap:
+    alias: Apie\Core\BoundedContext\BoundedContextHashmap
+    public: true
+
+  apie.context.factory:
+    alias: Apie\Core\ContextBuilders\ContextBuilderFactory
+    public: true
+
+  Apie\Core\Datalayers\ApieDatalayer:
+    alias: Apie\Core\Datalayers\GroupedDataLayer
+
+  Apie\Core\Datalayers\GroupedDataLayer:
+    arguments:
+      - '@Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext'
+    tags:
+      - apie.context
+
+  apie.datalayer:
+    alias: Apie\Core\Datalayers\ApieDatalayer
+
+  Apie\Core\Indexing\Indexer:
+    factory: ['Apie\Core\Indexing\Indexer', 'create']
+
+  Apie\Core\Datalayers\Search\LazyLoadedListFilterer:
+    arguments:
+      - '@Apie\Core\Indexing\Indexer'
+
+  Apie\Core\Other\FileWriterInterface:
+    class: Apie\Core\Other\ActualFileWriter
+
+  Apie\Core\FileStorage\ChainedFileStorage:
+    factory: ['Apie\Core\FileStorage\FileStorageFactory', 'create']
+    arguments:
+      - '%apie.storage%'
+    tags:
+      - apie.context
+
+  Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext:
+    factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createDataLayerMap']
+    arguments:
+      - '%apie.datalayers%'
+      - !tagged_locator apie.datalayer

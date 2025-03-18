@@ -11,9 +11,7 @@ class AutoIncrementIntegerTest extends TestCase
 {
     use TestWithFaker;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_uses_integers(): void
     {
         $testItem = AutoIncrementInteger::fromNative(null);
@@ -26,9 +24,7 @@ class AutoIncrementIntegerTest extends TestCase
         $this->assertEquals(13, $testItem->toNative());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function createRandom_autoincrements_by_one_per_class_per_generator(): void
     {
         $generator1 = Factory::create();
@@ -43,9 +39,7 @@ class AutoIncrementIntegerTest extends TestCase
         $this->assertEquals(1, AutoIncrementInteger::createRandom($generator1)->toNative());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_fake_library()
     {
         $this->runFakerTest(AutoIncrementInteger::class);

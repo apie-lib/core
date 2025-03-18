@@ -1,31 +1,29 @@
 <?php
 namespace Apie\Tests\Core\Repositories;
 
-use Apie\CompositeValueObjects\CompositeValueObject;
 use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\Exceptions\UnknownExistingEntityError;
+use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
+use Apie\Fixtures\TestHelpers\TestWithInMemoryDatalayer;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
-use Apie\TextValueObjects\DatabaseText;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 class InMemoryDatalayerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function it_can_remember_entitites()
+    use TestWithInMemoryDatalayer;
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_remember_entities()
     {
-        if (!trait_exists(CompositeValueObject::class)) {
-            $this->markTestSkipped('requires apie/composite-value-objects');
-        }
-        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
-        $this->assertEquals([], $testItem->all(new ReflectionClass(UserWithAutoincrementKey::class))->take(0, 100));
+        $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));
+        $this->assertEquals(
+            [],
+            iterator_to_array($testItem->all(new ReflectionClass(UserWithAutoincrementKey::class)))
+        );
         $user = new UserWithAutoincrementKey(
             new AddressWithZipcodeCheck(
                 new DatabaseText('street'),
@@ -35,33 +33,26 @@ class InMemoryDatalayerTest extends TestCase
             )
         );
         $testItem->persistNew($user);
-        $this->assertEquals([$user], $testItem->all(new ReflectionClass(UserWithAutoincrementKey::class))->take(0, 100));
+        $this->assertEquals(
+            [$user],
+            iterator_to_array($testItem->all(new ReflectionClass(UserWithAutoincrementKey::class)))
+        );
         $this->expectException(EntityAlreadyPersisted::class);
         $testItem->persistNew($user);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_error_if_an_entity_can_not_be_found()
     {
-        if (!trait_exists(CompositeValueObject::class)) {
-            $this->markTestSkipped('requires apie/composite-value-objects');
-        }
-        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
+        $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));
         $this->expectException(EntityNotFoundException::class);
         $testItem->find(new UserAutoincrementIdentifier(12));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_error_if_the_entity_can_not_be_found_that_requires_update()
     {
-        if (!trait_exists(CompositeValueObject::class)) {
-            $this->markTestSkipped('requires apie/composite-value-objects');
-        }
-        $testItem = new InMemoryDatalayer(new BoundedContextId('default'));
+        $testItem = $this->givenAnInMemoryDataLayer(new BoundedContextId('default'));
         $user = new UserWithAutoincrementKey(
             new AddressWithZipcodeCheck(
                 new DatabaseText('street'),

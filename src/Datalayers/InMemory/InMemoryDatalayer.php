@@ -3,8 +3,9 @@ namespace Apie\Core\Datalayers\InMemory;
 
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
-use Apie\Core\Datalayers\ValueObjects\LazyLoadedListIdentifier;
+use Apie\Core\Datalayers\Lists\EntityListInterface;
+use Apie\Core\Datalayers\Lists\InMemoryEntityList;
+use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
@@ -24,29 +25,27 @@ class InMemoryDatalayer implements ApieDatalayer
     private array $stored = [];
 
     /**
-     * @var array<class-string<EntityInterface>, LazyLoadedList<EntityInterface>>
+     * @var array<class-string<EntityInterface>, EntityListInterface<EntityInterface>>
      */
     private array $alreadyLoadedLists = [];
 
     private Generator $generator;
 
-    public function __construct(private BoundedContextId $boundedContextId)
+    public function __construct(private BoundedContextId $boundedContextId, private LazyLoadedListFilterer $filterer)
     {
         $this->generator = Factory::create();
     }
 
-    public function all(ReflectionClass $class): LazyLoadedList
+    public function all(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): EntityListInterface
     {
         $className = $class->name;
+        $this->stored[$className] ??= [];
         if (!isset($this->alreadyLoadedLists[$className])) {
-            $callable = function () use ($className) {
-                return $this->stored[$className] ?? [];
-            };
-            $this->alreadyLoadedLists[$className] = new LazyLoadedList(
-                LazyLoadedListIdentifier::createFrom($this->boundedContextId, $class),
-                new GetFromArray($callable),
-                new TakeFromArray($callable),
-                new CountArray($callable)
+            $this->alreadyLoadedLists[$className] = new InMemoryEntityList(
+                $class,
+                $this->boundedContextId,
+                $this->filterer,
+                $this->stored[$className]
             );
         }
         return $this->alreadyLoadedLists[$className];
@@ -57,19 +56,17 @@ class InMemoryDatalayer implements ApieDatalayer
      * @param T $entity
      * @return T
      */
-    public function persistNew(EntityInterface $entity): EntityInterface
+    public function persistNew(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $id = $entity->getId();
         if ($id instanceof AutoIncrementInteger) {
             $id = $id::createRandom($this->generator);
+            $reflProperty = new ReflectionProperty($entity, 'id');
+            $reflProperty->setValue($entity, $id);
         }
-        $reflProperty = new ReflectionProperty($entity, 'id');
-        $reflProperty->setAccessible(true);
-        $reflProperty->setValue($entity, $id);
         $className = $id::getReferenceFor()->name;
         $id = $entity->getId()->toNative();
-        $className = $entity->getId()::getReferenceFor()->name;
-        foreach ($this->stored[$className] ?? [] as $key => $entityInList) {
+        foreach ($this->stored[$className] ?? [] as $entityInList) {
             if ($entityInList->getId()->toNative() === $id) {
                 throw new EntityAlreadyPersisted($entity);
             }
@@ -83,9 +80,8 @@ class InMemoryDatalayer implements ApieDatalayer
      * @param T $entity
      * @return T
      */
-    public function persistExisting(EntityInterface $entity): EntityInterface
+    public function persistExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
-        $className = get_class($entity);
         $id = $entity->getId()->toNative();
         $className = $entity->getId()::getReferenceFor()->name;
         foreach ($this->stored[$className] ?? [] as $key => $entityInList) {
@@ -97,7 +93,7 @@ class InMemoryDatalayer implements ApieDatalayer
         throw new UnknownExistingEntityError($entity);
     }
 
-    public function find(IdentifierInterface $identifier): EntityInterface
+    public function find(IdentifierInterface $identifier, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $className = $identifier::getReferenceFor()->name;
         $id = $identifier->toNative();
@@ -107,5 +103,28 @@ class InMemoryDatalayer implements ApieDatalayer
             }
         }
         throw new EntityNotFoundException($identifier);
+    }
+
+    public function removeExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): void
+    {
+        $identifier = $entity->getId();
+        $className = $identifier::getReferenceFor()->name;
+        $id = $identifier->toNative();
+        $newList = [];
+        foreach ($this->stored[$className] ?? [] as $entityInList) {
+            if ($entityInList->getId()->toNative() !== $id) {
+                $newList[] = $entityInList;
+            }
+        }
+        $this->stored[$className] = $newList;
+    }
+
+    public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface
+    {
+        try {
+            return $this->persistExisting($entity, $boundedContextId);
+        } catch (UnknownExistingEntityError) {
+            return $this->persistNew($entity, $boundedContextId);
+        }
     }
 }

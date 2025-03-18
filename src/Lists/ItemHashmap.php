@@ -3,6 +3,7 @@ namespace Apie\Core\Lists;
 
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Exceptions\ObjectIsEmpty;
 use Apie\Core\Exceptions\ObjectIsImmutable;
 use Apie\Core\TypeUtils;
 use Apie\Core\ValueObjects\Utils;
@@ -41,6 +42,17 @@ class ItemHashmap implements HashmapInterface
             $this->offsetSet($key, $item);
         }
         $this->mutable = $oldMutable;
+    }
+
+    /**
+     * @return T
+     */
+    public function first(): mixed
+    {
+        if (empty($this->internalArray)) {
+            throw ObjectIsEmpty::createForHashmap();
+        }
+        return reset($this->internalArray);
     }
 
     public function count(): int

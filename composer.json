@@ -20,15 +20,60 @@
     }
   },
   "require": {
-    "php": ">=8.1",
-    "fakerphp/faker": "^1.19",
-    "psr/http-message": "^1.0",
-    "ramsey/uuid": "^4.3.1"
+    "php": ">=8.3",
+    "apie/count-words": "self.version",
+    "apie/regex-tools": "self.version",
+    "apie/type-converter": "^1.5.0",
+    "beste/clock": "^3.0",
+    "composer/semver": "^3.4",
+    "fakerphp/faker": "^1.23.1",
+    "nyholm/psr7": "^1.8.2",
+    "psr/http-message": "^1.1",
+    "ramsey/uuid": "^4.7.6",
+    "symfony/http-foundation": "^7.2",
+    "symfony/mime": "^7.2",
+    "symfony/uid": "^7.2"
   },
   "require-dev": {
     "apie/fixtures": "self.version",
-    "cebe/php-openapi": "^1.7",
-    "phpunit/phpunit": "^9.5"
+    "apie/service-provider-generator": "0.11.3",
+    "devizzent/cebe-php-openapi": "^1.1.2",
+    "illuminate/support": "*",
+    "phpspec/prophecy-phpunit": "^2.2",
+    "phpunit/phpunit": "^11.5.2"
+  },
+  "extra": {
+    "apie-objects": [
+      "Apie\\Core\\Enums\\ConsoleCommand",
+      "Apie\\Core\\Enums\\RequestMethod",
+      "Apie\\Core\\Enums\\ScalarType",
+      "Apie\\Core\\Identifiers\\AutoIncrementInteger",
+      "Apie\\Core\\Identifiers\\CamelCaseSlug",
+      "Apie\\Core\\Identifiers\\Identifier",
+      "Apie\\Core\\Identifiers\\KebabCaseSlug",
+      "Apie\\Core\\Identifiers\\PascalCaseSlug",
+      "Apie\\Core\\Identifiers\\SnakeCaseSlug",
+      "Apie\\Core\\Identifiers\\Ulid",
+      "Apie\\Core\\Identifiers\\Uuid",
+      "Apie\\Core\\Identifiers\\UuidV1",
+      "Apie\\Core\\Identifiers\\UuidV2",
+      "Apie\\Core\\Identifiers\\UuidV3",
+      "Apie\\Core\\Identifiers\\UuidV4",
+      "Apie\\Core\\Identifiers\\UuidV5",
+      "Apie\\Core\\Identifiers\\UuidV6",
+      "Apie\\Core\\Lists\\IntegerHashmap",
+      "Apie\\Core\\Lists\\IntegerList",
+      "Apie\\Core\\Lists\\ItemHashmap",
+      "Apie\\Core\\Lists\\ItemList",
+      "Apie\\Core\\Lists\\ItemSet",
+      "Apie\\Core\\Lists\\StringHashmap",
+      "Apie\\Core\\Lists\\StringList",
+      "Apie\\Core\\Translator\\Enums\\FromFileLanguage",
+      "Apie\\Core\\Translator\\ValueObjects\\TranslationString",
+      "Apie\\Core\\ValueObjects\\DatabaseText",
+      "Apie\\Core\\ValueObjects\\NonEmptyString",
+      "Apie\\Core\\ValueObjects\\UrlRouteDefinition"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true

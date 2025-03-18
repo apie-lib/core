@@ -1,11 +1,13 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\ResourceName;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\ValueObjects\Interfaces\TimeRelatedValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use BackedEnum;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -44,6 +46,21 @@ final class Utils
 
     public static function toString(mixed $input): string
     {
+        if ($input instanceof ValueObjectInterface) {
+            $input = $input instanceof Stringable ? $input->__toString() : $input->toNative();
+        }
+        if (is_array($input)) {
+            throw new InvalidTypeException($input, 'string');
+        }
+        if (! $input instanceof Stringable && $input instanceof BackedEnum) {
+            return (string) $input->value;
+        }
+        if (! $input instanceof Stringable && $input instanceof UnitEnum) {
+            return (string) $input->name;
+        }
+        if ($input instanceof DateTimeInterface) {
+            return $input->format(DateTimeInterface::ATOM);
+        }
         return (string) $input;
     }
 
@@ -51,6 +68,9 @@ final class Utils
     {
         if ($input instanceof ValueObjectInterface) {
             $input = $input->toNative();
+        }
+        if (is_array($input)) {
+            throw new InvalidTypeException($input, 'int');
         }
         $iInput = (int) $input;
         $sInput = (string) $input;
@@ -67,6 +87,13 @@ final class Utils
     {
         if ($input instanceof ValueObjectInterface) {
             $input = $input->toNative();
+        }
+        $inputString = trim(self::toString($input));
+        if (!preg_match('/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/', $inputString)) {
+            throw new InvalidTypeException(
+                $inputString,
+                'float'
+            );
         }
         return (float) $input;
     }
@@ -121,6 +148,9 @@ final class Utils
         }
         if (is_object($input) && $input instanceof Stringable) {
             return (string) $input;
+        }
+        if (is_bool($input)) {
+            return $input;
         }
         if (is_string($input) || is_numeric($input)) {
             return $input;
@@ -250,7 +280,7 @@ final class Utils
         }
 
         if (is_string($input) || is_numeric($input)) {
-            return (string) $input;
+            return (string) '"' . $input . '"';
         }
 
         return gettype($input);
@@ -263,8 +293,13 @@ final class Utils
     {
         if ($class instanceof ReflectionClass) {
             $className = $class->getShortName();
+            $refl = $class;
         } else {
-            $className = (new ReflectionClass($class))->getShortName();
+            $refl = new ReflectionClass($class);
+            $className = $refl->getShortName();
+        }
+        foreach ($refl->getAttributes(ResourceName::class) as $attribute) {
+            return $attribute->newInstance()->name;
         }
         if (strcasecmp($className, 'Abstract') === 0 || strcasecmp($className, 'AbstractInterface') === 0) {
             return 'Abstract';

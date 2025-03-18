@@ -2,19 +2,17 @@
 namespace Apie\Core\Datalayers\ValueObjects;
 
 use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\Datalayers\Lists\LazyLoadedList;
 use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Identifiers\IdentifierInterface;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use ReflectionClass;
 use Throwable;
 
 /**
  * @template T of EntityInterface
- * @implements IdentifierInterface<LazyLoadedList<T>>
  */
-final class LazyLoadedListIdentifier implements IdentifierInterface
+final class LazyLoadedListIdentifier implements ValueObjectInterface
 {
     private BoundedContextId $boundedContextId;
 
@@ -76,13 +74,5 @@ final class LazyLoadedListIdentifier implements IdentifierInterface
     public function asUrl(): string
     {
         return '/' . $this->boundedContextId . '/' . $this->class->getShortName();
-    }
-
-    /**
-     * @return ReflectionClass<LazyLoadedList<T>>
-     */
-    public static function getReferenceFor(): ReflectionClass
-    {
-        return new ReflectionClass(LazyLoadedList::class);
     }
 }

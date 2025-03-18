@@ -21,6 +21,7 @@ final class PaginatedResult implements IteratorAggregate
     public function __construct(
         public LazyLoadedListIdentifier $id,
         public readonly int $totalCount,
+        public readonly int $filteredCount,
         public readonly ItemList $list,
         public readonly int $pageNumber,
         public readonly int $pageSize,

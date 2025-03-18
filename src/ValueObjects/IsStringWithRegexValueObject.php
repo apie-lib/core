@@ -1,9 +1,11 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\CmsValidationCheck;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use ReflectionClass;
 
+#[CmsValidationCheck(patternMethod: 'getRegularExpression')]
 trait IsStringWithRegexValueObject
 {
     use IsStringValueObject;

@@ -1,20 +1,24 @@
 <?php
 namespace Apie\Core\Context;
 
-use Apie\Core\Attributes\AllApplies;
-use Apie\Core\Attributes\AnyApplies;
 use Apie\Core\Attributes\ApieContextAttribute;
-use Apie\Core\Attributes\CustomContextCheck;
-use Apie\Core\Attributes\Equals;
 use Apie\Core\Attributes\Internal;
-use Apie\Core\Attributes\Not;
-use Apie\Core\Attributes\Requires;
+use Apie\Core\Attributes\RuntimeCheck;
+use Apie\Core\Attributes\StaticCheck;
+use Apie\Core\ContextConstants;
+use Apie\Core\Entities\EntityWithStatesInterface;
+use Apie\Core\Exceptions\ActionNotAllowedException;
 use Apie\Core\Exceptions\IndexNotFoundException;
+use Apie\Core\Metadata\Concerns\UseContextKey;
+use Apie\Core\Utils\EntityUtils;
+use LogicException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
 use ReflectionEnumUnitCase;
 use ReflectionMethod;
 use ReflectionProperty;
 use ReflectionType;
+use Throwable;
 
 /**
  * ApieContext is used as builder/mediator and passed though many Apie functions. It can be used to filter (for example
@@ -22,21 +26,25 @@ use ReflectionType;
  */
 final class ApieContext
 {
+    use UseContextKey;
+
     /** @var array<int, class-string<ApieContextAttribute>> */
     private const ATTRIBUTES = [
-        Requires::class,
-        CustomContextCheck::class,
-        AllApplies::class,
-        AnyApplies::class,
-        Equals::class,
-        Not::class
+        StaticCheck::class
     ];
+    /** @var array<string, \Closure> */
+    private array $predefined;
 
     /**
      * @param array<string, mixed> $context
      */
     public function __construct(private array $context = [])
     {
+        $this->predefined = [
+            ApieContext::class => function (ApieContext $context) {
+                return $context;
+            }
+        ];
     }
 
     public function withContext(string $key, mixed $value): self
@@ -48,12 +56,18 @@ final class ApieContext
 
     public function hasContext(string $key): bool
     {
-        return array_key_exists($key, $this->context);
+        return array_key_exists($key, $this->context) || isset($this->predefined[$key]);
     }
 
-    public function getContext(string $key): mixed
+    public function getContext(string $key, bool $throwError = true): mixed
     {
+        if (isset($this->predefined[$key])) {
+            return $this->predefined[$key]($this);
+        }
         if (!array_key_exists($key, $this->context)) {
+            if (!$throwError) {
+                return null;
+            }
             throw new IndexNotFoundException($key);
         }
 
@@ -93,16 +107,16 @@ final class ApieContext
     /**
      * @param ReflectionClass<object> $class
      */
-    public function getApplicableGetters(ReflectionClass $class): ReflectionHashmap
+    public function getApplicableGetters(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
         $list = [];
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            if ($this->appliesToContext($property)) {
+            if ($this->appliesToContext($property, $runtimeChecks)) {
                 $list[$property->getName()] = $property;
             }
         }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method) && !$method->isStatic() && !$method->isAbstract()) {
+            if (preg_match('/^(get|has|is).+$/i', $method->name) && $this->appliesToContext($method, $runtimeChecks) && !$method->isStatic() && !$method->isAbstract()) {
                 if (strpos($method->name, 'is') === 0) {
                     $list[lcfirst(substr($method->name, 2))] = $method;
                 } else {
@@ -116,19 +130,19 @@ final class ApieContext
     /**
      * @param ReflectionClass<object> $class
      */
-    public function getApplicableSetters(ReflectionClass $class): ReflectionHashmap
+    public function getApplicableSetters(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
         $list = [];
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if ($property->isReadOnly()) {
                 continue;
             }
-            if ($this->appliesToContext($property)) {
+            if ($this->appliesToContext($property, $runtimeChecks)) {
                 $list[$property->getName()] = $property;
             }
         }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (preg_match('/^(set).+$/i', $method->name) && $this->appliesToContext($method) && !$method->isStatic() && !$method->isAbstract()) {
+            if (preg_match('/^(set).+$/i', $method->name) && $this->appliesToContext($method, $runtimeChecks) && !$method->isStatic() && !$method->isAbstract()) {
                 $list[lcfirst(substr($method->name, 3))] = $method;
             }
         }
@@ -138,11 +152,24 @@ final class ApieContext
     /**
      * @param ReflectionClass<object> $class
      */
-    public function getApplicableMethods(ReflectionClass $class): ReflectionHashmap
+    public function getApplicableMethods(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
         $list = [];
+        $filter = function (ReflectionMethod $method) {
+            return !preg_match('/^(__|create|set|get|has|is).+$/i', $method->name);
+        };
+        if ($runtimeChecks && $this->hasContext(ContextConstants::RESOURCE)) {
+            $resource = $this->getContext(ContextConstants::RESOURCE);
+            if ($resource instanceof EntityWithStatesInterface) {
+                $allowedMethods = $resource->provideAllowedMethods()->toArray();
+                $allowedMethodsMap = array_combine($allowedMethods, $allowedMethods);
+                $filter = function (ReflectionMethod $method) use (&$allowedMethodsMap) {
+                    return isset($allowedMethodsMap[$method->name]);
+                };
+            }
+        }
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (!preg_match('/^(__|create|set|get|has|is).+$/i', $method->name) && $this->appliesToContext($method)) {
+            if ($this->appliesToContext($method, $runtimeChecks) && $filter($method)) {
                 $list[$method->name] = $method;
             }
         }
@@ -152,18 +179,77 @@ final class ApieContext
     /**
      * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
      */
-    public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method): bool
+    public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method, bool $runtimeChecks = true, ?Throwable $errorToThrow = null): bool
     {
         if ($method->getAttributes(Internal::class)) {
             return false;
         }
-        foreach (self::ATTRIBUTES as $attribute) {
-            foreach ($method->getAttributes($attribute) as $attribute) {
-                if (!$attribute->newInstance()->applies($this)) {
+        $attributesToCheck = $runtimeChecks ? [RuntimeCheck::class, ...self::ATTRIBUTES] : self::ATTRIBUTES;
+        foreach ($attributesToCheck as $attribute) {
+            foreach ($method->getAttributes($attribute) as $reflAttribute) {
+                if (!$reflAttribute->newInstance()->applies($this)) {
+                    if ($errorToThrow) {
+                        throw $errorToThrow;
+                    }
+                    return false;
+                }
+            }
+        }
+        if ($method instanceof ReflectionMethod && $runtimeChecks) {
+            foreach (EntityUtils::getContextParameters($method) as $parameter) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    continue;
+                }
+                $key = $this->getContextKey($this, $parameter);
+                if ($key === null) {
+                    if ($errorToThrow) {
+                        throw new LogicException(
+                            'Parameter ' . $parameter->name . ' has an invalid context key',
+                            0,
+                            $errorToThrow
+                        );
+                    }
+                    return false;
+                }
+                if (!isset($this->context[$key]) && !isset($this->predefined[$key])) {
+                    if ($errorToThrow) {
+                        throw new IndexNotFoundException($key);
+                    }
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public function checkAuthorization(): void
+    {
+        try {
+            if (!$this->isAuthorized(runtimeChecks: true, throwError: true)) {
+                throw new ActionNotAllowedException();
+            }
+        } catch (ActionNotAllowedException) {
+            throw new ActionNotAllowedException();
+        } catch (Throwable $error) {
+            throw new ActionNotAllowedException($error);
+        }
+    }
+
+    public function isAuthorized(bool $runtimeChecks, bool $throwError = false): bool
+    {
+        $actionClass = $this->getContext(ContextConstants::APIE_ACTION, $throwError);
+        if (!$actionClass) {
+            return true;
+        }
+        return $actionClass::isAuthorized($this, $runtimeChecks, $throwError);
+    }
+
+    public function dispatchEvent(object $event): object
+    {
+        $dispatcher = $this->context[EventDispatcherInterface::class] ?? null;
+        if ($dispatcher instanceof EventDispatcherInterface) {
+            return $dispatcher->dispatch($event);
+        }
+        return $event;
     }
 }

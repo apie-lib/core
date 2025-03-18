@@ -11,13 +11,13 @@ final class ReflectionMethodList extends ItemList
         return parent::offsetGet($offset);
     }
 
-    public function filterOnApieContext(ApieContext $apieContext): self
+    public function filterOnApieContext(ApieContext $apieContext, bool $runtimeChecks = true): self
     {
         $clone = new ReflectionMethodList();
         $clone->internal = array_values(array_filter(
             $this->internal,
-            function (ReflectionMethod $item) use ($apieContext) {
-                return $apieContext->appliesToContext($item);
+            function (ReflectionMethod $item) use ($apieContext, $runtimeChecks) {
+                return $apieContext->appliesToContext($item, $runtimeChecks);
             }
         ));
         return $clone;

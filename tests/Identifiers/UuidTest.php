@@ -12,69 +12,57 @@ class UuidTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_many_names(string $expected, string $input)
     {
         $testItem = Uuid::fromNative($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    /**
-     * @test
-     * @dataProvider inputProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_many_names(string $expected, string $input)
     {
         $testItem = new Uuid($input);
         $this->assertEquals($expected, $testItem->toNative());
     }
 
-    public function inputProvider()
+    public static function inputProvider()
     {
         yield ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174000'];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_uuid_strings(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         new Uuid($input);
     }
 
-    /**
-     * @test
-     * @dataProvider invalidProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_refuses_non_uuid_strings_with_fromNative(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
         Uuid::fromNative($input);
     }
 
-    public function invalidProvider()
+    public static function invalidProvider()
     {
         yield ['pascal_case_slug'];
         yield ['123e4567-g89b-12d3-a456-426614179000'];
         yield ['123e4567-e89b-12d3-a456-4266141740001'];
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_apie_faker()
     {
         $this->runFakerTest(Uuid::class);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_works_with_schema_generator()
     {
         $this->runOpenapiSchemaTestForCreation(

@@ -18,6 +18,11 @@ enum ActionResponseStatus: string
     case DELETED = 'deleted';
 
     /**
+     * Permission denied or authorization required error
+     */
+    case AUTHORIZATION_ERROR = 'authorization_error';
+
+    /**
      * There is something wrong with the input.
      * For example if it is an API CALL the request body has invalid data.
      */
