@@ -69,7 +69,7 @@ final class ApieLib
     {
     }
 
-    public const VERSION = '1.0.0.x-dev';
+    public const VERSION = '1.0.0-RC1';
 
     public const APIE_FORM_ELEMENTS = '0.7.0';
 
