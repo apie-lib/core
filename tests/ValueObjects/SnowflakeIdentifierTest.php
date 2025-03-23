@@ -59,4 +59,11 @@ class SnowflakeIdentifierTest extends TestCase
         $this->expectException(InvalidStringForValueObjectException::class);
         new SnowflakeExample(new DatabaseText('|'), new Password('a!A1AA'));
     }
+
+    #[Test]
+    public function it_can_generate_a_regular_expression_for_a_snowflake_id()
+    {
+        $expected = '^(.{0,65535})\|[^\|]+$';
+        $this->assertEquals($expected, SnowflakeExample::getRegularExpression());
+    }
 }

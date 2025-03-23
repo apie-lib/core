@@ -43,11 +43,11 @@ class CamelCaseSlug implements HasRegexValueObjectInterface
     public static function createRandom(Generator $faker): static
     {
         if ($faker->boolean()) {
-            return new static($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS));
+            return static::fromNative($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS));
         }
         $words = $faker->words($faker->numberBetween(2, 3));
         $firstWord = array_shift($words);
         $words = array_map('ucfirst', $words);
-        return new static($firstWord . implode('', $words));
+        return static::fromNative($firstWord . implode('', $words));
     }
 }

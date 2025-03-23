@@ -9,6 +9,6 @@ class UuidV1 extends Uuid
 {
     public static function createRandom(): self
     {
-        return new static(RamseyUuid::uuid1()->toString());
+        return static::fromNative(RamseyUuid::uuid1()->toString());
     }
 }

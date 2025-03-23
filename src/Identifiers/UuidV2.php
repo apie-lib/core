@@ -17,6 +17,6 @@ class UuidV2 extends Uuid
             ])
         );
 
-        return new static($uuid2->toString());
+        return static::fromNative($uuid2->toString());
     }
 }

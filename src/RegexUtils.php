@@ -19,8 +19,20 @@ final class RegexUtils
         $delimiter = preg_quote(substr($regularExpressionWithDelimiter, 0, 1), '#');
         $removeStartDelimiterRegex = '#^' . $delimiter . '#u';
         $regex = preg_replace($removeStartDelimiterRegex, '', $regularExpressionWithDelimiter);
+        $caseSensitive = true;
+        $regexModifiers = preg_match('#' . $delimiter . '[imsxADSUJXu]*$#u', $regularExpressionWithDelimiter, $matches);
+        if ($regexModifiers) {
+            $caseSensitive = strpos($matches[0], 'i') === false;
+        }
         $removeEndDelimiterRegex = '#' . $delimiter . '[imsxADSUJXu]*$#u';
-        return  preg_replace($removeEndDelimiterRegex, '', $regex);
+        $result = preg_replace($removeEndDelimiterRegex, '', $regex);
+        if ($caseSensitive) {
+            return $result;
+        }
+
+        return CompiledRegularExpression::createFromRegexWithoutDelimiters($result)
+            ->toCaseInsensitive()
+            ->__toString();
     }
 
     public static function getMaximumAcceptedStringLengthOfRegularExpression(

@@ -26,6 +26,6 @@ class NonEmptyString implements HasRegexValueObjectInterface
 
     public static function createRandom(Generator $generator): self
     {
-        return new static($generator->realText(1024));
+        return static::fromNative($generator->realText(1024));
     }
 }

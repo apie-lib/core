@@ -21,9 +21,9 @@ class Identifier implements HasRegexValueObjectInterface
     public static function createRandom(Generator $faker): static
     {
         if ($faker->boolean()) {
-            return new static(strtolower($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS)));
+            return static::fromNative(strtolower($faker->randomElement(IdentifierConstants::RANDOM_IDENTIFIERS)));
         }
-        return new static(implode('', $faker->words($faker->numberBetween(1, 3))));
+        return static::fromNative(implode('', $faker->words($faker->numberBetween(1, 3))));
     }
 
     public function humanize(): string

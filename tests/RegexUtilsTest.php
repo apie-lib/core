@@ -24,4 +24,18 @@ class RegexUtilsTest extends TestCase
         yield 'escaped character' => [5, '/^aa\\\\bb$/'];
         yield 'character limits' => [11, '/^a{5,8}b{2,3}$/'];
     }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('delimiterProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_remove_delimiters(string $expected, string $input)
+    {
+        $this->assertEquals($expected, RegexUtils::removeDelimiters($input));
+    }
+
+    public static function delimiterProvider(): \Generator
+    {
+        yield 'no start and end delimiter' => ['aaa', '/aaa/'];
+        yield 'different delimiter' => ['aaa', 'baaab'];
+        yield 'case insensitive' => ['(a|A)(a|A)(a|A)', '/aaa/i'];
+    }
 }
