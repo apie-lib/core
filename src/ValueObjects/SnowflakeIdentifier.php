@@ -92,6 +92,15 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
                 if (strpos($foundRegex, '?=') === false) {
                     $regex = $foundRegex;
                 }
+            } else {
+                switch ($parameterType->getName()) {
+                    case 'int':
+                        $regex = '-?(0|[1-9]\d*)';
+                        break;
+                    case 'float':
+                        $regex = '-?(0|[1-9]\d*)(\.\d+)?';
+                        break;
+                }
             }
             $expressions[] = $regex;
             $expressions[] = $separator;

@@ -3,6 +3,7 @@ namespace Apie\Tests\Core\ValueObjects;
 
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Core\ValueObjects\SnowflakeIdentifier;
 use Apie\Fixtures\ValueObjects\Password;
 use Apie\Fixtures\ValueObjects\SnowflakeExample;
 use Generator;
@@ -65,5 +66,43 @@ class SnowflakeIdentifierTest extends TestCase
     {
         $expected = '^(.{0,65535})\|[^\|]+$';
         $this->assertEquals($expected, SnowflakeExample::getRegularExpression());
+    }
+
+    #[Test]
+    #[DataProvider('regularExpressionProvider')]
+    public function it_provides_regular_expression_for_specific_typehints(string $expected, string $separator, array $typehints) {
+        $className = 'A' . md5(json_encode($typehints) . $separator);
+        if (class_exists($className)) {
+            $this->markTestSkipped($className . ' already exists, that should not be possible');
+        }
+        $arguments = [];
+        foreach ($typehints as $name => $type) {
+            $arguments[] = 'private ' . $type . ' $' . $name;
+        }
+
+        $code = "class " . $className . ' extends \\' . SnowflakeIdentifier::class . "
+{
+    protected static function getSeparator(): string
+    {
+        return " . var_export($separator, true) . ";
+    }
+
+    public function __construct(" . implode(', ', $arguments) . ")
+    {
+        \$this->toNative();
+    }
+}";
+        eval($code);
+        $actual = $className::getRegularExpression();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public static function regularExpressionProvider(): \Generator
+    {
+        yield 'no arguments' => ['^$', '|', []];
+        yield 'string' => ['^[^\|]+$', '|', ['name' => 'string']];
+        yield 'nullable string' => ['^[^\|]+$', '|', ['name' => '?string']];
+        yield 'integer' => ['^-?(0|[1-9]\d*)$', ',', ['name' => 'int']];
+        yield 'nullable integer' => ['^-?(0|[1-9]\d*)$', ',', ['name' => '?int']];
     }
 }
