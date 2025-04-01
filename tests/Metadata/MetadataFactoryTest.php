@@ -2,11 +2,20 @@
 namespace Apie\Tests\Core\Metadata;
 
 use Apie\Core\ApieLib;
+use Apie\Core\Attributes\Context;
+use Apie\Core\Attributes\Optional;
+use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\CompositeMetadata;
+use Apie\Core\Metadata\Fields\ConstructorParameter;
+use Apie\Core\Metadata\Fields\DiscriminatorColumn;
+use Apie\Core\Metadata\Fields\FieldInterface;
+use Apie\Core\Metadata\Fields\OptionalField;
+use Apie\Core\Metadata\Fields\PublicProperty;
+use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\AliasStrategy;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
@@ -20,6 +29,7 @@ use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use Apie\Core\Permissions\PermissionInterface;
 use Apie\CountryAndPhoneNumber\DutchPhoneNumber;
+use Apie\Fixtures\Context\IsActivatedUser;
 use Apie\Fixtures\Dto\DefaultExampleDto;
 use Apie\Fixtures\Dto\EmptyDto;
 use Apie\Fixtures\Dto\ExampleDto;
@@ -40,9 +50,12 @@ use Apie\Fixtures\ValueObjects\CompositeValueObjectWithOptionalFields;
 use Apie\Fixtures\ValueObjects\Password;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionParameter;
+use ReflectionProperty;
 use Stringable;
 
 class MetadataFactoryTest extends TestCase
@@ -489,5 +502,88 @@ class MetadataFactoryTest extends TestCase
                 $context
             ];
         }
+    }
+
+    #[Test]
+    #[DataProvider('php8attributeProvider')]
+    public function it_can_show_php8_attributes(array $expected, string $attributeClass, FieldInterface $field,  bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true)
+    {
+        $this->assertEquals(
+            $expected,
+            $field->getAttributes($attributeClass, $classDocBlock, $propertyDocblock, $argumentDocBlock)
+        );
+    }
+
+    public static function php8attributeProvider(): \Generator
+    {
+        yield 'constructor parameter' => [
+            [
+                new Context('authenticated')
+            ],
+            Context::class,
+            new ConstructorParameter(
+                (new ReflectionClass(CollectionItemOwned::class))->getConstructor()->getParameters()[1]
+            ),
+        ];
+        yield 'setter method' => [
+            [
+                new Context('authenticated')
+            ],
+            Context::class,
+            new SetterMethod(
+                (new ReflectionClass(CollectionItemOwned::class))->getMethod('setOwned')
+            ),
+        ];
+        $setterField = new SetterMethod(
+            (new ReflectionClass(CollectionItemOwned::class))->getMethod('setOwned')
+        );
+        yield 'setter method, no argument docblock' => [
+            [],
+            Context::class,
+            $setterField,
+            true,
+            true,
+            false
+        ];
+        $getterField = new GetterMethod(
+            (new ReflectionClass(CollectionItemOwned::class))->getMethod('getCreatedBy')
+        );
+        yield 'getter method' => [
+            [
+                new RuntimeCheck(new IsActivatedUser()),
+            ],
+            RuntimeCheck::class,
+            $getterField,
+        ];
+        yield 'optional field 1' => [
+            [
+                new RuntimeCheck(new IsActivatedUser()),
+            ],
+            RuntimeCheck::class,
+            new OptionalField(
+                $setterField,
+                $getterField
+            )
+        ];
+        yield 'optional field 2' => [
+            [
+                new Context('autheticated')
+            ],
+            Context::class,
+            new OptionalField(
+                $setterField,
+                $getterField
+            )
+        ];
+        yield 'discriminator column' => [
+            [],
+            Context::class,
+            new DiscriminatorColumn(Animal::getDiscriminatorMapping())
+        ];
+        yield 'public property' => [
+            [new Optional()],
+            Optional::class,
+            new PublicProperty(new ReflectionProperty(OptionalExampleDto::class, 'optionalString'))
+        ];
     }
 }
