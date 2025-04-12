@@ -146,4 +146,6 @@ final class ContextConstants
      * @internal
      */
     public const ALREADY_CALCULATED = 'already_calculated';
+
+    public const BACKGROUND_PROCESS = 'background_process';
 }

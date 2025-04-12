@@ -70,7 +70,8 @@ class SnowflakeIdentifierTest extends TestCase
 
     #[Test]
     #[DataProvider('regularExpressionProvider')]
-    public function it_provides_regular_expression_for_specific_typehints(string $expected, string $separator, array $typehints) {
+    public function it_provides_regular_expression_for_specific_typehints(string $expected, string $separator, array $typehints)
+    {
         $className = 'A' . md5(json_encode($typehints) . $separator);
         if (class_exists($className)) {
             $this->markTestSkipped($className . ' already exists, that should not be possible');

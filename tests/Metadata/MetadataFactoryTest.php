@@ -54,7 +54,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionParameter;
 use ReflectionProperty;
 use Stringable;
 
@@ -506,7 +505,7 @@ class MetadataFactoryTest extends TestCase
 
     #[Test]
     #[DataProvider('php8attributeProvider')]
-    public function it_can_show_php8_attributes(array $expected, string $attributeClass, FieldInterface $field,  bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true)
+    public function it_can_show_php8_attributes(array $expected, string $attributeClass, FieldInterface $field, bool $classDocBlock = true, bool $propertyDocblock = true, bool $argumentDocBlock = true)
     {
         $this->assertEquals(
             $expected,

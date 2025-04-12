@@ -49,11 +49,14 @@ final class ConverterUtils
 
     /**
      * @template T of object
-     * @param string|ReflectionClass<T>|ReflectionProperty|ReflectionType|ReflectionMethod $input
-     * @return ReflectionClass<T>
+     * @param string|ReflectionClass<T>|ReflectionProperty|ReflectionType|ReflectionMethod|null $input
+     * @return ReflectionClass<T>|null
      */
-    public static function toReflectionClass(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input, bool $strict = false): ?ReflectionClass
+    public static function toReflectionClass(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod|null $input, bool $strict = false): ?ReflectionClass
     {
+        if ($input === null) {
+            return null;
+        }
         if ($input instanceof ReflectionClass) {
             return $input;
         }
