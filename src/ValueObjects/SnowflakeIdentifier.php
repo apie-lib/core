@@ -2,12 +2,16 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\RegexUtils;
+use Apie\Core\Utils\ConverterUtils;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use Apie\RegexTools\CompiledRegularExpression;
 use ReflectionClass;
 use ReflectionNamedType;
 
-abstract class SnowflakeIdentifier implements ValueObjectInterface
+abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValueObjectInterface
 {
     private string $calculated;
 
@@ -67,5 +71,54 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface
             }
         }
         return $refl->newInstanceArgs($constructorArguments);
+    }
+
+    final public static function getRegularExpression(): string
+    {
+        $refl = new ReflectionClass(static::class);
+        $parameters = $refl->getConstructor()->getParameters();
+        $separator = preg_quote(static::getSeparator());
+
+        $expressions = [];
+        foreach ($parameters as $parameter) {
+            $parameterType = $parameter->getType();
+            if (!($parameterType instanceof ReflectionNamedType)) {
+                throw new InvalidTypeException($parameterType, 'ReflectionNamedType');
+            }
+            $regex = '[^' . $separator . ']+';
+            $class = ConverterUtils::toReflectionClass($parameterType);
+            if (in_array(HasRegexValueObjectInterface::class, $class?->getInterfaceNames() ?? [])) {
+                $foundRegex = '(' . RegexUtils::removeDelimiters($class->getMethod('getRegularExpression')->invoke(null)) . ')';
+                if (strpos($foundRegex, '?=') === false) {
+                    $regex = $foundRegex;
+                }
+            } else {
+                switch ($parameterType->getName()) {
+                    case 'int':
+                        $regex = '-?(0|[1-9]\d*)';
+                        break;
+                    case 'float':
+                        $regex = '-?(0|[1-9]\d*)(\.\d+)?';
+                        break;
+                }
+            }
+            $expressions[] = $regex;
+            $expressions[] = $separator;
+        }
+        array_pop($expressions);
+
+        $expressions = array_map(
+            function (string $expression) {
+                return CompiledRegularExpression::createFromRegexWithoutDelimiters($expression)
+                            ->removeStartAndEndMarkers();
+            },
+            $expressions
+        );
+        array_unshift($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('^'));
+        array_push($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('$'));
+
+        $tmp = CompiledRegularExpression::createFromRegexWithoutDelimiters('');
+
+        return $tmp->merge(...$expressions)->__toString();
     }
 }

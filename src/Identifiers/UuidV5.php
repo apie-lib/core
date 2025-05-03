@@ -10,7 +10,7 @@ class UuidV5 extends Uuid
 {
     public static function createRandom(Generator $generator): self
     {
-        return new static(RamseyUuid::uuid5(
+        return static::fromNative(RamseyUuid::uuid5(
             RamseyUuid::NAMESPACE_URL,
             $generator->url()
         )->toString());

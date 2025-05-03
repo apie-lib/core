@@ -20,6 +20,6 @@ class Ulid implements HasRegexValueObjectInterface
     public static function createRandom(): static
     {
         $ulid = new SymfonyUlid();
-        return new static($ulid->toBase58());
+        return static::fromNative($ulid->toBase58());
     }
 }

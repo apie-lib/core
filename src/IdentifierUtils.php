@@ -1,9 +1,11 @@
 <?php
 namespace Apie\Core;
 
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Identifiers\IdentifierInterface;
+use Apie\Serializer\Serializer;
 use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -26,6 +28,20 @@ final class IdentifierUtils
             $identifier = new ReflectionClass($identifier);
         }
         return $identifier->getMethod('getReferenceFor')->invoke(null);
+    }
+
+    /**
+     * @return IdentifierInterface<EntityInterface>
+     */
+    public static function idStringToIdentifier(string $id, ApieContext $context): IdentifierInterface
+    {
+        $resourceClass = new ReflectionClass($context->getContext(ContextConstants::RESOURCE_NAME));
+        $idClass = self::entityClassToIdentifier($resourceClass);
+        /** @var IdentifierInterface<EntityInterface> $idObject */
+        $idObject = $context->hasContext(Serializer::class)
+            ? $context->getContext(Serializer::class)->denormalizeNewObject($id, $idClass->name, $context)
+            : $idClass->newInstance($id);
+        return $idObject;
     }
 
     /**

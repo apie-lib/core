@@ -59,6 +59,6 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
 
     public static function createRandom(Generator $faker): static
     {
-        return new static(CamelCaseSlug::createRandom($faker)->toKebabCaseSlug()->toNative());
+        return static::fromNative(CamelCaseSlug::createRandom($faker)->toKebabCaseSlug()->toNative());
     }
 }

@@ -43,10 +43,10 @@ class PascalCaseSlug implements HasRegexValueObjectInterface
     public static function createRandom(Generator $faker): static
     {
         if ($faker->boolean()) {
-            return new static(ucfirst($faker->randomElement(IdentifierConstants::RANDOM_DOMAIN_OBJECT_NAMES)));
+            return static::fromNative(ucfirst($faker->randomElement(IdentifierConstants::RANDOM_DOMAIN_OBJECT_NAMES)));
         }
         $words = $faker->words($faker->numberBetween(1, 3));
         $words = array_map('ucfirst', $words);
-        return new static(implode('', $words));
+        return static::fromNative(implode('', $words));
     }
 }
