@@ -32,6 +32,7 @@ services:
   Apie\Core\Datalayers\GroupedDataLayer:
     arguments:
       - '@Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext'
+      - '@Psr\EventDispatcher\EventDispatcherInterface'
     tags:
       - apie.context
 

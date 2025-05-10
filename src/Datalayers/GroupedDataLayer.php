@@ -2,17 +2,21 @@
 namespace Apie\Core\Datalayers;
 
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Datalayers\Events\EntityPersisted;
 use Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext;
 use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
 use Apie\Core\Lists\StringSet;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
 
 final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer, ApieDatalayerWithSupport
 {
-    public function __construct(private readonly DataLayerByBoundedContext $hashmap)
-    {
+    public function __construct(
+        private readonly DataLayerByBoundedContext $hashmap,
+        private readonly EventDispatcherInterface $dispatcher
+    ) {
     }
 
     public function isSupported(EntityInterface|ReflectionClass|IdentifierInterface $instance, BoundedContextId $boundedContextId): bool
@@ -59,16 +63,33 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
             ->find($identifier, $boundedContextId);
     }
 
+    private function dispatch(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
+    {
+        $this->dispatcher->dispatch(
+            new EntityPersisted(
+                $entity,
+                $boundedContextId
+            )
+        );
+        return $entity;
+    }
+
     public function persistNew(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
-            ->persistNew($entity, $boundedContextId);
+        return $this->dispatch(
+            $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
+                ->persistNew($entity, $boundedContextId),
+            $boundedContextId
+        );
     }
 
     public function persistExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
-            ->persistExisting($entity, $boundedContextId);
+        return $this->dispatch(
+            $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
+                ->persistExisting($entity, $boundedContextId),
+            $boundedContextId
+        );
     }
     
     public function removeExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): void
@@ -79,7 +100,10 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
 
     public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface
     {
-        return $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
-            ->upsert($entity, $boundedContextId);
+        return $this->dispatch(
+            $this->hashmap->pickDataLayerFor($entity->getId()::getReferenceFor(), $boundedContextId)
+                ->upsert($entity, $boundedContextId),
+            $boundedContextId
+        );
     }
 }

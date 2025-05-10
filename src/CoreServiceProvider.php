@@ -63,7 +63,8 @@ class CoreServiceProvider extends ServiceProvider
             \Apie\Core\Datalayers\GroupedDataLayer::class,
             function ($app) {
                 return new \Apie\Core\Datalayers\GroupedDataLayer(
-                    $app->make(\Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class)
+                    $app->make(\Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class),
+                    $app->make(\Psr\EventDispatcher\EventDispatcherInterface::class)
                 );
             }
         );
