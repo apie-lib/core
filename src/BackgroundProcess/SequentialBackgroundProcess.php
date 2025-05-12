@@ -10,18 +10,20 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
 use Apie\Core\Dto\MessageAndTimestamp;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Entities\EntityWithStatesInterface;
 use Apie\Core\Identifiers\PascalCaseSlug;
 use Apie\Core\Identifiers\Ulid;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Lists\MessageAndTimestampList;
+use Apie\Core\Lists\StringList;
 use Apie\Core\ValueObjects\DatabaseText;
 use DateTimeInterface;
 use ReflectionClass;
 use Throwable;
 
 #[FakeCount(0)]
-class SequentialBackgroundProcess implements EntityInterface
+class SequentialBackgroundProcess implements EntityWithStatesInterface
 {
     private int $version;
     private int $step;
@@ -98,6 +100,15 @@ class SequentialBackgroundProcess implements EntityInterface
     public function getResult(): mixed
     {
         return $this->result;
+    }
+
+    public function provideAllowedMethods(): StringList
+    {
+        if ($this->status === BackgroundProcessStatus::Active) {
+            return new StringList(['cancel', 'runstep']);
+        }
+
+        return new StringList([]);
     }
 
     public function cancel(): void
