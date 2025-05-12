@@ -105,7 +105,7 @@ class SequentialBackgroundProcess implements EntityWithStatesInterface
     public function provideAllowedMethods(): StringList
     {
         if ($this->status === BackgroundProcessStatus::Active) {
-            return new StringList(['cancel', 'runstep']);
+            return new StringList(['cancel', 'runStep']);
         }
 
         return new StringList([]);
