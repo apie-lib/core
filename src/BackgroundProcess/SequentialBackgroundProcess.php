@@ -9,7 +9,6 @@ use Apie\Core\Attributes\StaticCheck;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
 use Apie\Core\Dto\MessageAndTimestamp;
-use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Entities\EntityWithStatesInterface;
 use Apie\Core\Identifiers\PascalCaseSlug;
 use Apie\Core\Identifiers\Ulid;
