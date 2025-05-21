@@ -21,6 +21,11 @@ final class ContextConstants
     }
 
     /**
+     * Get the underlying framework in lowercase: 'symfony', 'laravel'
+     */
+    public const FRAMEWORK = 'framework';
+
+    /**
      * ID of the selected bounded context.
      */
     public const BOUNDED_CONTEXT_ID = 'boundedContextId';
