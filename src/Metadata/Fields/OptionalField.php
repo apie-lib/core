@@ -62,6 +62,9 @@ class OptionalField implements FieldWithPossibleDefaultValue, GetterInterface, S
 
     public function getFieldPriority(): ?int
     {
+        if ($this->field2 === null) {
+            return $this->field1->getFieldPriority();
+        }
         return min($this->field1->getFieldPriority(), $this->field2->getFieldPriority());
     }
 
@@ -109,6 +112,6 @@ class OptionalField implements FieldWithPossibleDefaultValue, GetterInterface, S
         if (!empty($attributes)) {
             return $attributes;
         }
-        return$this->field2->getAttributes($attributeClass, $classDocBlock, $propertyDocblock, $argumentDocBlock);
+        return $this->field2?->getAttributes($attributeClass, $classDocBlock, $propertyDocblock, $argumentDocBlock) ?? [];
     }
 }

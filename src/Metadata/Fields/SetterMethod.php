@@ -7,6 +7,7 @@ use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\SetterInterface;
 use Apie\Core\Utils\ConverterUtils;
+use Apie\TypeConverter\Exceptions\CanNotConvertObjectException;
 use ReflectionMethod;
 use ReflectionType;
 
@@ -120,7 +121,11 @@ final class SetterMethod implements FieldInterface, SetterInterface
                 $list[] = $attribute->newInstance();
             }
         }
-        $class = ConverterUtils::toReflectionClass($this->method);
+        try {
+            $class = ConverterUtils::toReflectionClass($this->method);
+        } catch (CanNotConvertObjectException) {
+            $class = null;
+        }
         if ($class && $classDocBlock) {
             foreach ($class->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $list[] = $attribute->newInstance();

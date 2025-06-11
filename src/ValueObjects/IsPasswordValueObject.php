@@ -3,11 +3,13 @@ namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\Attributes\CmsValidationCheck;
+use Apie\Core\Attributes\Description;
 use Apie\Core\Randomizer\RandomizerInterface;
 use Apie\Core\Randomizer\SecureRandomizer;
 use SensitiveParameter;
 use Stringable;
 
+#[Description('Represents a password. The password has certain restrictions like a minimum amount of alpha-numeric, digits and special characters')]
 #[CmsSingleInput(['password'])]
 #[CmsValidationCheck(message: 'apie.validation_errors.length', minLengthMethod: 'getMinLength', maxLengthMethod: 'getMaxLength')]
 #[CmsValidationCheck(message: 'apie.validation_errors.password.lower_case', patternMethod: 'getLowercaseRegularExpression')]
