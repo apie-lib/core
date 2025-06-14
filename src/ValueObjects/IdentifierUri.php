@@ -3,6 +3,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\ApieLib;
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Identifiers\IdentifierInterface;
@@ -15,6 +16,7 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use Faker\Generator;
 
 #[FakeMethod('createRandom')]
+#[Description('URI to a different resource without bounded context, for example "Resource/123"')]
 class IdentifierUri implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

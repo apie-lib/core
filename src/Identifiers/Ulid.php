@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 use Symfony\Component\Uid\Ulid as SymfonyUlid;
 
 #[FakeMethod('createRandom')]
+#[Description('Ulid in base58 format')]
 class Ulid implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

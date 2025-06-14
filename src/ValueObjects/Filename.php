@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\LengthConstraintStringValueObjectInterface;
 use Faker\Generator;
 
 #[FakeMethod('createRandom')]
+#[Description('A file name with extension, but without path')]
 final class Filename implements HasRegexValueObjectInterface, LengthConstraintStringValueObjectInterface
 {
     use IsStringWithRegexValueObject;

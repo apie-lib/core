@@ -2,6 +2,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\Dto\CmsInputOption;
@@ -12,6 +13,7 @@ use Faker\Generator;
 
 #[SchemaMethod("getSchema")]
 #[FakeMethod('createRandom')]
+#[Description('A binary file stream, stored in base64 encoding')]
 #[CmsSingleInput(['stream', 'file'], new CmsInputOption(streamType: FileStreamType::Base64String))]
 final class Base64Stream implements HasRegexValueObjectInterface
 {

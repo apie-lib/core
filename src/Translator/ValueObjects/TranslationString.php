@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Core\Translator\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 use ReflectionClass;
 
+#[Description('Represents a translation string/identifier')]
 final class TranslationString implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

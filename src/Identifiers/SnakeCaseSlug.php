@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
@@ -13,6 +14,7 @@ use ReflectionProperty;
  * Indicate an identifier written with underscores and lowercase only(pascal_case).
  */
 #[FakeMethod('createRandom')]
+#[Description('Lowercase text written with underscores for separate words, for example "example_object"')]
 class SnakeCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

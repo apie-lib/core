@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Utils\IdentifierConstants;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
@@ -11,6 +12,7 @@ use Faker\Generator;
  * Indicate camel case string for id's starting with a lower case
  */
 #[FakeMethod('createRandom')]
+#[Description('Any string in camel case with first letter being lower case, for example "exampleObject"')]
 class CamelCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

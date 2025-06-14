@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
@@ -13,6 +14,7 @@ use ReflectionProperty;
  * Indicate an identifier written with dashes (kebab-case).
  */
 #[FakeMethod('createRandom')]
+#[Description('lowercase text written in kebab case, for example "example-object"')]
 class KebabCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

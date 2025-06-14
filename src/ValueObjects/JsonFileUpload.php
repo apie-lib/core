@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\FileStorage\StoredFile;
@@ -8,6 +9,7 @@ use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\Enums\SchemaUsages;
 
 #[SchemaMethod('createSchema')]
+#[Description('Uploads a file with JSON.')]
 final class JsonFileUpload implements CompositeWithOwnValidation
 {
     use CompositeValueObject;

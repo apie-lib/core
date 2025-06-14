@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Utils\IdentifierConstants;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
@@ -11,6 +12,7 @@ use Faker\Generator;
  * Indicate camel case string starting with a capital (for example PascalCase)
  */
 #[FakeMethod('createRandom')]
+#[Description('String in PascalCase, for example "ExampleObject"')]
 class PascalCaseSlug implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

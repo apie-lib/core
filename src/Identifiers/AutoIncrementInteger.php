@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
@@ -13,6 +14,7 @@ use Stringable;
  */
 #[FakeMethod("createRandom")]
 #[SchemaMethod("getSchema")]
+#[Description('An auto-increment integer often found in a database. null means not stored (yet)')]
 class AutoIncrementInteger implements ValueObjectInterface, Stringable
 {
     /**

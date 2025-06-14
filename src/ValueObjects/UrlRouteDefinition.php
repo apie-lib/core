@@ -1,8 +1,10 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\ValueObjects\Interfaces\StringValueObjectInterface;
 
+#[Description('Represents a url route definition with placeholders, for example "/test/{id}"')]
 class UrlRouteDefinition implements StringValueObjectInterface
 {
     use IsStringValueObject;

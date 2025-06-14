@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\ProvideIndex;
 use Apie\Core\Attributes\SchemaMethod;
@@ -11,6 +12,7 @@ use Faker\Generator;
 #[FakeMethod('createRandom')]
 #[SchemaMethod('createSchema')]
 #[ProvideIndex('getIndexes')]
+#[Description('Any text with a maximum length of 65535 characters that fit in a TEXT field in a database')]
 final class DatabaseText implements HasRegexValueObjectInterface
 {
     use IndexesWords;

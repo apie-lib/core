@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Identifiers;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Utils\IdentifierConstants;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
@@ -9,6 +10,7 @@ use Faker\Generator;
 /**
  * Indicate an identifier as id.
  */
+#[Description('Simple identifier/slug all in lower case for example "example"')]
 class Identifier implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

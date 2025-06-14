@@ -2,10 +2,12 @@
 
 namespace Apie\Core\Permissions;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Lists\PermissionList;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 
+#[Description('A serialized permission identifier, for example "user:read"')]
 final class SerializedPermission implements PermissionInterface, HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;
