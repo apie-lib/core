@@ -23,6 +23,9 @@ use UnitEnum;
  */
 final class Utils
 {
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }
@@ -122,7 +125,11 @@ final class Utils
         if ($input instanceof TimeRelatedValueObjectInterface) {
             return $input->toDate();
         }
-        return $class::createFromFormat(DateTime::ATOM, self::toString($input));
+        $result = $class::createFromFormat(DateTime::ATOM, self::toString($input));
+        if (!$result) {
+            throw new InvalidTypeException($input, $class);
+        }
+        return $result;
     }
 
     /**
