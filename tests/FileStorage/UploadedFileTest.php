@@ -9,7 +9,6 @@ use Nyholm\Psr7\UploadedFile;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\UploadedFileInterface;
 
 class UploadedFileTest extends TestCase
 {
@@ -60,11 +59,11 @@ class UploadedFileTest extends TestCase
     {
         $fixturePath =  __DIR__ . '/../../fixtures/LocalFileStorage/example.txt';
         $uploadedFile = new UploadedFile(
-           $fixturePath,
-           filesize($fixturePath),
-           UPLOAD_ERR_OK,
-           'example.txt',
-           'plain/text'
+            $fixturePath,
+            filesize($fixturePath),
+            UPLOAD_ERR_OK,
+            'example.txt',
+            'plain/text'
         );
         $fileStorage = new ChainedFileStorage([new InlineStorage()], [new InlineStorage()]);
         $storagePath = $fileStorage->psrToPath($uploadedFile);

@@ -38,6 +38,7 @@ use Apie\Fixtures\Entities\CollectionItemOwned;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\Polymorphic\Cow;
+use Apie\Fixtures\Entities\Polymorphic\MixedTypes;
 use Apie\Fixtures\Enums\EmptyEnum;
 use Apie\Fixtures\FuturePhpVersion;
 use Apie\Fixtures\Identifiers\UserAutoincrementIdentifier;
@@ -240,6 +241,13 @@ class MetadataFactoryTest extends TestCase
             ['animalType'],
             'getCreationMetadata',
             Animal::class,
+            $context
+        ];
+        yield 'Creation of polymorphic entity, mixed fields' => [
+            ['type', 'id', 'name', 'value', 'step', 'nullableValue', 'uniqueToInteger', 'uniqueToString'],
+            ['type', 'id', 'name', 'value', 'step', 'nullableValue', 'uniqueToInteger', 'uniqueToString'],
+            'getCreationMetadata',
+            MixedTypes::class,
             $context
         ];
         yield 'Modification of polymorphic entity, base class' => [

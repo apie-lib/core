@@ -54,7 +54,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
      */
     private function findPromotedProperty(\ReflectionClass $class): ?\ReflectionParameter
     {
-        foreach ($class->getConstructor()->getParameters() as $parameter) {
+        foreach ($class->getConstructor()?->getParameters() ?? [] as $parameter) {
             if ($parameter->isPromoted()
                 && $parameter->isDefaultValueAvailable()
                 && $parameter->name === $this->property->name
@@ -63,7 +63,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
             }
         }
         if (!$this->property->isPrivate()) {
-            $parentClass = $class->getConstructor()->getDeclaringClass()->getParentClass();
+            $parentClass = $class->getConstructor()?->getDeclaringClass()->getParentClass();
             if ($parentClass && $parentClass->name !== $class->name) {
                 return $this->findPromotedProperty($parentClass);
             }

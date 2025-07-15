@@ -102,10 +102,12 @@ class UtilsTest extends TestCase
         $input = [
             'foo' => [
                 'bar' => new class implements ValueObjectInterface {
-                    public function toNative(): string {
+                    public function toNative(): string
+                    {
                         return 'baz';
                     }
-                    public static function fromNative(mixed $input): self {
+                    public static function fromNative(mixed $input): self
+                    {
                         throw new \LogicException('not implemented');
                     }
                 }
