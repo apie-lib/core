@@ -36,7 +36,7 @@
   },
   "require-dev": {
     "apie/fixtures": "self.version",
-    "apie/service-provider-generator": "0.11.3",
+    "apie/service-provider-generator": "0.12.1",
     "devizzent/cebe-php-openapi": "^1.1.2",
     "illuminate/support": "*",
     "phpspec/prophecy-phpunit": "^2.2",
