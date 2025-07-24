@@ -41,6 +41,21 @@ class UnionTypeMetadata implements NullableMetadataInterface
         return null;
     }
 
+    public function toSkipNull(): MetadataInterface
+    {
+        $metadata = [];
+        foreach ($this->metadata as $submetadata) {
+            if ($submetadata instanceof ScalarMetadata && $submetadata->toScalarType() === ScalarType::NULLVALUE) {
+                continue;
+            }
+            $metadata[] = $submetadata;
+        }
+        if (count($metadata) === 1) {
+            return $metadata[0];
+        }
+        return new UnionTypeMetadata(...$metadata);
+    }
+
     /**
      * @return MetadataInterface[]
      */
