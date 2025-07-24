@@ -13,6 +13,7 @@ use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\ConstructorParameter;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\FieldInterface;
+use Apie\Core\Metadata\Fields\GetterMethod;
 use Apie\Core\Metadata\Fields\OptionalField;
 use Apie\Core\Metadata\Fields\PublicProperty;
 use Apie\Core\Metadata\Fields\SetterMethod;
@@ -53,6 +54,7 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
@@ -216,21 +218,21 @@ class MetadataFactoryTest extends TestCase
     {
         $context = new ApieContext();
         yield 'Creation of entity' => [
-            ['id', 'orderLines'],
+            ['id', 'optionalTags', 'orderLines'],
             ['id', 'orderLines'],
             'getCreationMetadata',
             Order::class,
             $context
         ];
         yield 'Modification of entity' => [
-            [],
+            ['optionalTags'],
             [],
             'getModificationMetadata',
             Order::class,
             $context
         ];
         yield 'Retrieve an entity' => [
-            ['id', 'orderStatus', 'orderLines'],
+            ['id', 'orderStatus', 'optionalTags', 'orderLines'],
             ['id', 'orderStatus', 'orderLines'],
             'getResultMetadata',
             Order::class,
@@ -533,9 +535,7 @@ class MetadataFactoryTest extends TestCase
             ),
         ];
         yield 'setter method' => [
-            [
-                new Context('authenticated')
-            ],
+            [],
             Context::class,
             new SetterMethod(
                 (new ReflectionClass(CollectionItemOwned::class))->getMethod('setOwned')
@@ -574,9 +574,9 @@ class MetadataFactoryTest extends TestCase
         ];
         yield 'optional field 2' => [
             [
-                new Context('autheticated')
+                new RuntimeCheck(new IsActivatedUser()),
             ],
-            Context::class,
+            RuntimeCheck::class,
             new OptionalField(
                 $setterField,
                 $getterField
