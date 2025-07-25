@@ -6,6 +6,7 @@ use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\SnowflakeIdentifier;
 use Apie\Fixtures\ValueObjects\Password;
 use Apie\Fixtures\ValueObjects\SnowflakeExample;
+use Apie\Fixtures\ValueObjects\SnowflakeWithPrefixExample;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -66,6 +67,20 @@ class SnowflakeIdentifierTest extends TestCase
     {
         $expected = '^(.{0,65535})\|[^\|]+$';
         $this->assertEquals($expected, SnowflakeExample::getRegularExpression());
+    }
+
+    #[Test]
+    public function it_support_snowflake_identifiers_with_a_prefix()
+    {
+        $testItem = new SnowflakeWithPrefixExample(
+            new DatabaseText("test\ntest"),
+            new Password('a!A1AA'),
+        );
+        $this->assertEquals("snowflake-test\ntest-a!A1AA", $testItem->toNative());
+        $expected = '^snowflake\-(.{0,65535})\-[^\-]+$';
+        $this->assertEquals($expected, SnowflakeWithPrefixExample::getRegularExpression());
+        $this->expectException(InvalidStringForValueObjectException::class);
+        SnowflakeWithPrefixExample::fromNative('test-a!A1AA');
     }
 
     #[Test]

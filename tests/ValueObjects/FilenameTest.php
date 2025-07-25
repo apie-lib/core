@@ -71,6 +71,7 @@ class FilenameTest extends TestCase
                 'type' => 'string',
                 'format' => 'filename',
                 'pattern' => RegexUtils::removeDelimiters(Filename::getRegularExpression()),
+                'description' => true,
             ]
         );
     }

@@ -72,6 +72,7 @@ class UuidTest extends TestCase
                 'type' => 'string',
                 'format' => 'uuid',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

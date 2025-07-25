@@ -20,6 +20,10 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
     final public function toNative(): string
     {
         if (!isset($this->calculated)) {
+            $prefix = '';
+            if (is_callable([static::class, 'getPrefix'])) {
+                $prefix = static::getPrefix() . '-';
+            }
             $refl = new ReflectionClass($this);
             $separator = static::getSeparator();
             $result = [];
@@ -33,7 +37,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
                 $result[] = $stringPropertyValue;
             }
 
-            $this->calculated = implode($separator, $result);
+            $this->calculated = $prefix . implode($separator, $result);
         }
         return $this->calculated;
     }
@@ -51,6 +55,15 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
     public static function fromNative(mixed $input): self
     {
         $input = Utils::toString($input);
+        $prefix = '';
+        if (is_callable([static::class, 'getPrefix'])) {
+            $prefix = static::getPrefix() . '-';
+        }
+        if (strpos($input, $prefix) === 0) {
+            $input = substr($input, strlen($prefix));
+        } else {
+            throw new InvalidStringForValueObjectException($input, new ReflectionClass(static::class));
+        }
         $refl = new ReflectionClass(static::class);
         $parameters = $refl->getConstructor()->getParameters();
         $separator = static::getSeparator();
@@ -80,6 +93,13 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         $separator = preg_quote(static::getSeparator());
 
         $expressions = [];
+        $prefix = '';
+        if (is_callable([static::class, 'getPrefix'])) {
+            $prefix = static::getPrefix() . '-';
+        }
+        if ($prefix !== '') {
+            $expressions[] = preg_quote($prefix, static::getSeparator());
+        }
         foreach ($parameters as $parameter) {
             $parameterType = $parameter->getType();
             if (!($parameterType instanceof ReflectionNamedType)) {

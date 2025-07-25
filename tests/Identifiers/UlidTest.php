@@ -51,6 +51,7 @@ class UlidTest extends TestCase
                 'type' => 'string',
                 'format' => 'ulid',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

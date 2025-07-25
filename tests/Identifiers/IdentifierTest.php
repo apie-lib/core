@@ -74,6 +74,7 @@ class IdentifierTest extends TestCase
                 'type' => 'string',
                 'format' => 'identifier',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

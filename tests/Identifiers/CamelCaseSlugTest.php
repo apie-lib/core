@@ -69,6 +69,7 @@ class CamelCaseSlugTest extends TestCase
                 'type' => 'string',
                 'format' => 'camelcaseslug',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

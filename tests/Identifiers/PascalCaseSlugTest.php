@@ -69,6 +69,7 @@ class PascalCaseSlugTest extends TestCase
                 'type' => 'string',
                 'format' => 'pascalcaseslug',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

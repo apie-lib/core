@@ -66,6 +66,7 @@ class NonEmptyStringTest extends TestCase
             [
                 'type' => 'string',
                 'format' => 'nonemptystring',
+                'description' => true,
                 'pattern' => true,
             ]
         );

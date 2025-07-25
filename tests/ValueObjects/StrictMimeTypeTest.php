@@ -68,6 +68,7 @@ class StrictMimeTypeTest extends TestCase
                 'type' => 'string',
                 'format' => 'strictmimetype',
                 'pattern' => RegexUtils::removeDelimiters(StrictMimeType::getRegularExpression()),
+                'description' => true,
             ]
         );
     }

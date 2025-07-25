@@ -38,7 +38,8 @@ class IdentifierUriTest extends TestCase
             [
                 'type' => 'string',
                 'pattern' => true,
-                'format' => 'identifieruri'
+                'format' => 'identifieruri',
+                'description' => true,
             ]
         );
     }

@@ -74,6 +74,7 @@ class KebabCaseSlugTest extends TestCase
                 'type' => 'string',
                 'format' => 'kebabcaseslug',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }

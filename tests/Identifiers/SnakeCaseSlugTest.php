@@ -69,6 +69,7 @@ class SnakeCaseSlugTest extends TestCase
                 'type' => 'string',
                 'format' => 'snakecaseslug',
                 'pattern' => true,
+                'description' => true,
             ]
         );
     }
