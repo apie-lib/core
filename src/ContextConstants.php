@@ -92,6 +92,11 @@ final class ContextConstants
     public const OPENAPI = 'openapi';
 
     /**
+     * Added if MCP Server list is being created.
+     */
+    public const MCP_SERVER = 'mcp-server';
+
+    /**
      * Added if a REST API call is done.
      */
     public const REST_API='rest';
