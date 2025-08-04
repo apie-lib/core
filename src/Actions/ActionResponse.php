@@ -25,7 +25,7 @@ final class ActionResponse
 
     public static function createClientError(ApieFacadeInterface $apieFacade, ApieContext $apieContext, Throwable $error): self
     {
-        $res = new self($apieFacade, $apieContext, ActionResponseStatus::CLIENT_ERROR);
+        $res = new self($apieFacade, $apieContext, ActionResponseStatus::createFromError($error));
         $statusCode = ($error instanceof HttpStatusCodeException) ? $error->getStatusCode() : 500;
         if ($statusCode < 400 || $statusCode >= 500) {
             $error = new ClientRequestException($error);

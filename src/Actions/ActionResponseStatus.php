@@ -1,6 +1,11 @@
 <?php
 namespace Apie\Core\Actions;
 
+use Apie\Core\Exceptions\ActionNotAllowedException;
+use Apie\Core\Exceptions\EntityNotFoundException;
+use Doctrine\ORM\Exception\ORMException;
+use Exception;
+
 enum ActionResponseStatus: string
 {
     /**
@@ -49,4 +54,21 @@ enum ActionResponseStatus: string
      * Any other error is considered a server error.
      */
     case SERVER_ERROR = 'server_error';
+
+    public static function createFromError(\Throwable $error): self
+    {
+        if ($error instanceof ActionNotAllowedException) {
+            return self::AUTHORIZATION_ERROR;
+        }
+        if (!($error instanceof Exception)) {
+            return self::SERVER_ERROR;
+        }
+        if ($error instanceof EntityNotFoundException) {
+            return self::NOT_FOUND;
+        }
+        if ($error instanceof ORMException) {
+            return self::PERISTENCE_ERROR;
+        }
+        return self::CLIENT_ERROR;
+    }
 }
