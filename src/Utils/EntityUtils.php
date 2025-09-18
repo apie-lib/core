@@ -70,13 +70,15 @@ final class EntityUtils
     }
 
     /**
+     * @param PolymorphicEntityInterface|ReflectionClass<PolymorphicEntityInterface> $entity
      * @param ReflectionClass<PolymorphicEntityInterface>|null $base
      * @return array<string, string>
      */
-    public static function getDiscriminatorValues(PolymorphicEntityInterface $entity, ?ReflectionClass $base = null): array
+    public static function getDiscriminatorValues(PolymorphicEntityInterface|ReflectionClass $entity, ?ReflectionClass $base = null): array
     {
+        $currentRefl = $entity instanceof ReflectionClass ? $entity : new ReflectionClass($entity);
         if (!$base) {
-            $refl = new ReflectionClass($entity);
+            $refl = $currentRefl;
             while ($refl) {
                 if ($refl->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name === $refl->name) {
                     $base = $refl;
@@ -85,7 +87,7 @@ final class EntityUtils
             }
         }
         assert($base !== null);
-        $entityClass = get_class($entity);
+        $entityClass = $currentRefl->name;
         $result = [];
         $current = $base;
         $last = null;

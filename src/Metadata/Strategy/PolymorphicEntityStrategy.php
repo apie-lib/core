@@ -8,6 +8,7 @@ use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\OptionalField;
+use Apie\Core\Metadata\Fields\StaticDiscriminatorColumn;
 use Apie\Core\Metadata\StrategyInterface;
 use Apie\Core\Other\DiscriminatorConfig;
 use Apie\Core\Other\DiscriminatorMapping;
@@ -72,6 +73,9 @@ final class PolymorphicEntityStrategy implements StrategyInterface
             }
             $class = $class->getParentClass();
         }
+        foreach (EntityUtils::getDiscriminatorValues($this->class) as $propertyName => $discriminatorValue) {
+            $list[$propertyName] = new StaticDiscriminatorColumn($discriminatorValue);
+        }
 
         return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
     }
@@ -96,6 +100,9 @@ final class PolymorphicEntityStrategy implements StrategyInterface
                 }
             }
             $class = $class->getParentClass();
+        }
+        foreach (EntityUtils::getDiscriminatorValues($this->class) as $propertyName => $discriminatorValue) {
+            $list[$propertyName] = new StaticDiscriminatorColumn($discriminatorValue);
         }
 
         return new CompositeMetadata(new MetadataFieldHashmap($list), $this->class);
