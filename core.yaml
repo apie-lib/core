@@ -11,6 +11,10 @@ services:
     tags:
       - apie.context
 
+  Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder:
+    tags:
+      - apie.core.context_builder
+
   Apie\Core\ContextBuilders\ContextBuilderFactory:
     factory: ['Apie\Common\Wrappers\GeneralServiceFactory', 'createContextBuilderFactory']
     arguments:

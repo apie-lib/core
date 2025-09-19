@@ -43,6 +43,22 @@ class CoreServiceProvider extends ServiceProvider
         );
         $this->app->tag([\Apie\Core\Translator\ApieTranslatorInterface::class], 'apie.context');
         $this->app->singleton(
+            \Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder::class,
+            function ($app) {
+                return new \Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder(
+                
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder::class,
+            array(
+              0 => 'apie.core.context_builder',
+            )
+        );
+        $this->app->tag([\Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder::class], 'apie.core.context_builder');
+        $this->app->singleton(
             \Apie\Core\ContextBuilders\ContextBuilderFactory::class,
             function ($app) {
                 return \Apie\Common\Wrappers\GeneralServiceFactory::createContextBuilderFactory(
