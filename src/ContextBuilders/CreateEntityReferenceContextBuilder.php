@@ -12,22 +12,14 @@ class CreateEntityReferenceContextBuilder implements ContextBuilderInterface
 {
     public function process(ApieContext $context): ApieContext
     {
-        if (!$context->hasContext(ContextConstants::BOUNDED_CONTEXT_ID)
-            || !$context->hasContext(ContextConstants::RESOURCE_NAME)
-            || !$context->hasContext(ContextConstants::RESOURCE_ID)
-        ) {
+        $ref = EntityReference::createFromContext($context);
+        if ($ref === null) {
             return $context;
         }
         return $context
             ->withContext(
                 EntityReference::class,
-                new EntityReference(
-                    new BoundedContextId($context->getContext(ContextConstants::BOUNDED_CONTEXT_ID)),
-                    NonEmptyString::fromNative(
-                        (new ReflectionClass($context->getContext(ContextConstants::RESOURCE_NAME)))->getShortName()
-                    ),
-                    NonEmptyString::fromNative($context->getContext(ContextConstants::RESOURCE_ID))
-                )
+                $ref
             );
         ;
     }
