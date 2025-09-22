@@ -1,12 +1,8 @@
 <?php
 namespace Apie\Core\ContextBuilders;
 
-use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\ContextConstants;
 use Apie\Core\ValueObjects\EntityReference;
-use Apie\Core\ValueObjects\NonEmptyString;
-use ReflectionClass;
 
 class CreateEntityReferenceContextBuilder implements ContextBuilderInterface
 {
