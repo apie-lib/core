@@ -45,7 +45,7 @@ abstract class Decimal implements ValueObjectInterface, HasRegexValueObjectInter
             return new static((int)$matches['int'], str_pad($matches['part'], $decimals, '0', STR_PAD_RIGHT));
         }
 
-        throw new InvalidStringForValueObjectException($input, new \ReflectionClass(static::class));
+        throw new InvalidStringForValueObjectException($string, new \ReflectionClass(static::class));
     }
 
     final public function toNative(): string
