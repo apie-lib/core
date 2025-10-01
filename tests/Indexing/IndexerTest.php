@@ -8,6 +8,7 @@ use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Lists\ItemSet;
 use Apie\Core\ValueObjects\DatabaseText;
+use Apie\Core\ValueObjects\Price;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -144,8 +145,14 @@ class IndexerTest extends TestCase
             new Order(
                 OrderIdentifier::fromNative('6679805d-2059-4e2e-b3ef-45b6a752cc65'),
                 new OrderLineList([
-                    new OrderLine(OrderLineIdentifier::fromNative('da5c403e-3eb9-4f3d-affc-f634e095e45f')),
-                    new OrderLine(OrderLineIdentifier::fromNative('9ebebe8a-bb37-4466-8154-5fad0cc08312'))
+                    new OrderLine(
+                        OrderLineIdentifier::fromNative('da5c403e-3eb9-4f3d-affc-f634e095e45f'),
+                        Price::fromNative('20.0')
+                    ),
+                    new OrderLine(
+                        OrderLineIdentifier::fromNative('9ebebe8a-bb37-4466-8154-5fad0cc08312'),
+                        Price::fromNative('42.0')
+                    )
                 ])
             )
         ];

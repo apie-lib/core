@@ -5,6 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\PropertyAccess;
 use Apie\Core\ValueObjects\DatabaseText;
+use Apie\Core\ValueObjects\Price;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\OrderLine;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -34,7 +35,7 @@ class PropertyAccessTest extends TestCase
     {
         $orderId = OrderIdentifier::createRandom();
         $orderLineId = OrderLineIdentifier::createRandom();
-        $orderLine = new OrderLine($orderLineId);
+        $orderLine = new OrderLine($orderLineId, Price::fromNative('10.0'));
         $orderLines = new OrderLineList([$orderLine]);
         $order = new Order($orderId, $orderLines);
 
