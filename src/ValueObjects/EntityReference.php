@@ -30,7 +30,7 @@ class EntityReference extends SnowflakeIdentifier
 
         $hashmap = $context->getContext(BoundedContextHashmap::class);
         $boundedContext = $hashmap[$boundedContextId->toNative()] ?? null;
-        foreach ($boundedContext->resources as $resource) {
+        foreach ($boundedContext->resources ?? [] as $resource) {
             if ($resource->getShortName() === $resourceName || $resource->name === $resourceName) {
                 $id = IdentifierUtils::entityClassToIdentifier($resource)
                     ->getMethod('fromNative')
