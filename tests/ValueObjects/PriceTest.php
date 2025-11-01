@@ -24,6 +24,10 @@ class PriceTest extends TestCase
     {
         $price = Price::fromNative('42.5');
         $this->assertSame('42.50', (string) $price);
+        $price = Price::fromNative('42');
+        $this->assertSame('42.00', (string) $price);
+        $price = Price::fromNative('42.345');
+        $this->assertSame('42.34', (string) $price);
     }
 
     #[Test]
