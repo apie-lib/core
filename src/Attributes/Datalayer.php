@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Core\Attributes;
 
-use Attribute;
 use Apie\Core\Datalayers\ApieDatalayer;
+use Attribute;
 
 /**
  * Attribute to specify which datalayer to use for this entity.

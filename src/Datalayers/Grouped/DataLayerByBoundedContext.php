@@ -56,7 +56,7 @@ final class DataLayerByBoundedContext extends ItemHashmap
             $datalayerClass = $datalayerAttribute->datalayerClass;
 
             return $this->findDatalayerClass($datalayerClass);
-        }  
+        }
         if ($boundedContextId && isset($this[$boundedContextId->toNative()])) {
             return $this[$boundedContextId->toNative()]->pickDataLayerFor($class);
         }
