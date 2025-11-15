@@ -34,6 +34,22 @@ class InMemoryDatalayer implements ApieDatalayer
     public function __construct(private BoundedContextId $boundedContextId, private LazyLoadedListFilterer $filterer)
     {
         $this->generator = Factory::create();
+        $this->stored = $this->restore();
+    }
+
+    /**
+     * @return array<string, array<int, EntityInterface>>
+     */
+    protected function restore(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param array<string, array<int, EntityInterface>> $list
+     */
+    protected function store(array $list): void
+    {
     }
 
     public function all(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): EntityListInterface

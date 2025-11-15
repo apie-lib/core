@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Datalayers\Grouped;
 
+use Apie\Core\Attributes\Datalayer;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Entities\EntityInterface;
@@ -27,11 +28,35 @@ final class DataLayerByBoundedContext extends ItemHashmap
         return $this;
     }
 
+    private function findDatalayerClass(string $datalayerClass): ApieDatalayer
+    {
+        if (is_a($this->defaultDataLayer, $datalayerClass, true)) {
+            return $this->defaultDataLayer;
+        }
+        foreach ($this as $dataLayerByClass) {
+            foreach ($dataLayerByClass as $dataLayer) {
+                if (is_a($dataLayer, $datalayerClass, true)) {
+                    return $dataLayer;
+                }
+            }
+        }
+        /** @var ApieDatalayer $datalayerInstance */
+        $datalayerInstance = new $datalayerClass();
+        return $datalayerInstance;
+    }
+
     /**
      * @param ReflectionClass<EntityInterface> $class
      */
     public function pickDataLayerFor(ReflectionClass $class, ?BoundedContextId $boundedContextId): ApieDatalayer
     {
+        foreach ($class->getAttributes(Datalayer::class) as $attribute) {
+            /** @var Datalayer $datalayerAttribute */
+            $datalayerAttribute = $attribute->newInstance();
+            $datalayerClass = $datalayerAttribute->datalayerClass;
+
+            return $this->findDatalayerClass($datalayerClass);
+        }  
         if ($boundedContextId && isset($this[$boundedContextId->toNative()])) {
             return $this[$boundedContextId->toNative()]->pickDataLayerFor($class);
         }
