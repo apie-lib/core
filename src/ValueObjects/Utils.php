@@ -64,6 +64,14 @@ final class Utils
         if ($input instanceof DateTimeInterface) {
             return $input->format(DateTimeInterface::ATOM);
         }
+        if (is_resource($input)) {
+            $offset = ftell($input);
+            $result = stream_get_contents($input);
+            @fseek($input, $offset);
+            if ($result !== false) {
+                return $result;
+            }
+        }
         return (string) $input;
     }
 
