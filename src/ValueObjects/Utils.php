@@ -66,6 +66,7 @@ final class Utils
         }
         if (is_resource($input)) {
             $offset = ftell($input);
+            @rewind($input);
             $result = stream_get_contents($input);
             @fseek($input, $offset);
             if ($result !== false) {
