@@ -11,7 +11,6 @@ use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
 use Beste\Clock\SystemClock;
 use League\OpenAPIValidation\Schema\TypeFormats\FormatsContainer;
 use Psr\Clock\ClockInterface;
-use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
@@ -22,7 +21,6 @@ final class ApieLib
      * @var array<class-string<object>, string|class-string<object>> $aliases
      */
     private static $aliases = [
-        UploadedFileInterface::class => StoredFile::class,
         PermissionInterface::class => SerializedPermission::class,
     ];
 
