@@ -21,7 +21,6 @@ final class FromProperty implements FieldInterface
     public function __construct(ReflectionProperty $property)
     {
         $this->property = $property;
-        $property->setAccessible(true);
     }
 
     public function getTypehint(): string

@@ -92,7 +92,6 @@ final class IdentifierUtils
         while ($refl) {
             if ($refl->hasProperty('id')) {
                 $prop = $refl->getProperty('id');
-                $prop->setAccessible(true);
                 $prop->setValue($entity, $identifier);
                 return;
             }
