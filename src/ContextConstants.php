@@ -97,6 +97,11 @@ final class ContextConstants
     public const MCP_SERVER = 'mcp-server';
 
     /**
+     * Added if a GraphQL request is done.
+     */
+    public const GRAPHQL = 'graphql';
+
+    /**
      * Added if a REST API call is done.
      */
     public const REST_API='rest';

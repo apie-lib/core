@@ -1,5 +1,5 @@
 <?php
-namespace Apie\Tests\Core\DataLayers\Grouped;
+namespace Apie\Tests\Core\Datalayers\Grouped;
 
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;

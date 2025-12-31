@@ -1,5 +1,5 @@
 <?php
-namespace Apie\Tests\Core\Repositories;
+namespace Apie\Tests\Core\Datalayers\Repositories;
 
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
