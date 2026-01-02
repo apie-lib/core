@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Datalayers\Search;
 
+use Apie\Core\Attributes\Internal;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Lists\StringHashmap;
 use Apie\Core\ValueObjects\Utils;
@@ -8,6 +9,13 @@ use Apie\DoctrineEntityDatalayer\Enums\SortingOrder;
 
 final class QuerySearch
 {
+    private const MAPPING = [
+        'pageIndex' => 'page_index',
+        'itemsPerPage' => 'items_per_page',
+        'textSearch' => 'search',
+        'searches' => 'query',
+        'orderBy' => 'order_by',
+    ];
     private ?string $textSearch;
 
     private StringHashmap $searches;
@@ -17,11 +25,12 @@ final class QuerySearch
     private ApieContext $apieContext;
 
     public function __construct(
-        private int $pageIndex,
+        private int $pageIndex = 0,
         private int $itemsPerPage = 20,
         ?string $textSearch = null,
         ?StringHashmap $searches = null,
         ?StringHashmap $orderBy = null,
+        #[Internal]
         ?ApieContext $apieContext = null,
     ) {
         $this->textSearch = $textSearch;
@@ -33,6 +42,21 @@ final class QuerySearch
     public function getApieContext(): ApieContext
     {
         return $this->apieContext;
+    }
+
+    /**
+     * @param array<string, string|int|array<string, mixed>> $input
+     */
+    public static function fromCamelCaseArray(array $input, ?ApieContext $apieContext = new ApieContext()): self
+    {
+        foreach (self::MAPPING as $keyName => $translatedKey) {
+            if (isset($input[$keyName])) {
+                $input[$translatedKey] = $input[$keyName];
+                unset($input[$keyName]);
+            }
+        }
+
+        return self::fromArray($input, $apieContext);
     }
 
     /**
