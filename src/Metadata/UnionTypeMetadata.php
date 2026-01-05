@@ -88,6 +88,16 @@ class UnionTypeMetadata implements NullableMetadataInterface
         return new StringList($requiredFields ? array_intersect_key(...$requiredFields) : []);
     }
 
+    public function allowsNull(): bool
+    {
+        foreach ($this->metadata as $objectData) {
+            if ($objectData->toScalarType() === ScalarType::NULLVALUE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function toScalarType(bool $ignoreNull = false): ScalarType
     {
         $current = null;

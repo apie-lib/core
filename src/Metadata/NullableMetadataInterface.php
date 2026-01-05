@@ -11,4 +11,5 @@ interface NullableMetadataInterface extends MetadataInterface
     public function getRequiredFields(): StringList;
     public function toScalarType(bool $ignoreNull = false): ScalarType;
     public function getArrayItemType(): ?MetadataInterface;
+    public function allowsNull(): bool;
 }

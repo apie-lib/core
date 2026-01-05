@@ -67,4 +67,13 @@ class ValueObjectMetadata implements NullableMetadataInterface
     {
         return $this->getNativeType()->getArrayItemType();
     }
+
+    public function allowsNull(): bool
+    {
+        $nativeType = $this->getNativeType();
+        if ($nativeType instanceof NullableMetadataInterface) {
+            return $nativeType->allowsNull();
+        }
+        return $nativeType->toScalarType() === ScalarType::NULLVALUE;
+    }
 }
