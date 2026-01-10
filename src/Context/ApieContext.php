@@ -54,6 +54,18 @@ final class ApieContext
         return $instance;
     }
 
+    /**
+     * @param array<string, mixed> $keyValuePairs
+     */
+    public function withMultipleContext(array $keyValuePairs): self
+    {
+        $instance = clone $this;
+        foreach ($keyValuePairs as $key => $value) {
+            $instance->context[$key] = $value;
+        }
+        return $instance;
+    }
+
     public function hasContext(string $key): bool
     {
         return array_key_exists($key, $this->context) || isset($this->predefined[$key]);
