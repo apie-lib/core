@@ -20,6 +20,11 @@ final class ItemListMetadata implements MetadataInterface
     {
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->class->getShortName();
+    }
+
     /**
      * @return ReflectionClass<ItemList>
      */

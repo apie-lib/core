@@ -19,6 +19,11 @@ class EnumMetadata implements MetadataInterface
     {
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->enum->getShortName();
+    }
+
     /**
      * @return ReflectionEnum<UnitEnum>
      */

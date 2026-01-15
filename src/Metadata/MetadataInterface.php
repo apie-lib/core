@@ -10,6 +10,7 @@ use ReflectionClass;
 
 interface MetadataInterface
 {
+    public function getDisplayName(): string;
     public function getHashmap(): MetadataFieldHashmap;
     public function getRequiredFields(): StringList;
     public function toScalarType(): ScalarType;

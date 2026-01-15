@@ -27,6 +27,11 @@ final class CompositeMetadata implements MetadataInterface
     {
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->class?->getShortName() ?? 'stdClass';
+    }
+
     /**
      * @return ReflectionClass<ValueObjectInterface>
      */

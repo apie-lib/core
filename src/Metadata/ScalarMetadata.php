@@ -15,6 +15,11 @@ final class ScalarMetadata implements MetadataInterface
     {
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->type->name;
+    }
+
     public function getValueOptions(ApieContext $context, bool $runtimeFilter = false): ?ValueOptionList
     {
         if ($this->type === ScalarType::BOOLEAN) {

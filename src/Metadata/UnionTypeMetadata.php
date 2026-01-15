@@ -21,6 +21,17 @@ class UnionTypeMetadata implements NullableMetadataInterface
         $this->metadata = $metadata;
     }
 
+    public function getDisplayName(): string
+    {
+        return implode(
+            '|',
+            array_map(
+                fn(MetadataInterface $meta) => $meta->getDisplayName(),
+                $this->metadata
+            )
+        );
+    }
+
     public function toClass(): ?ReflectionClass
     {
         $first = true;

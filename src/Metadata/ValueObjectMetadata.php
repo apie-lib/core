@@ -34,6 +34,11 @@ class ValueObjectMetadata implements NullableMetadataInterface
     {
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->class->getShortName();
+    }
+
     /**
      * @return ReflectionClass<ValueObjectInterface>
      */

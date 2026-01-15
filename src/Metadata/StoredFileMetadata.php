@@ -30,6 +30,11 @@ final class StoredFileMetadata implements MetadataInterface
         return null;
     }
 
+    public function getDisplayName(): string
+    {
+        return $this->class->getShortName();
+    }
+
     /**
      * @return ReflectionClass<StoredFile>
      */
