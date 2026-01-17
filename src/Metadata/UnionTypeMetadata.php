@@ -26,7 +26,7 @@ class UnionTypeMetadata implements NullableMetadataInterface
         return implode(
             '|',
             array_map(
-                fn(MetadataInterface $meta) => $meta->getDisplayName(),
+                fn (MetadataInterface $meta) => $meta->getDisplayName(),
                 $this->metadata
             )
         );

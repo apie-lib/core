@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Metadata;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Dto\ValueOption;
@@ -71,9 +72,15 @@ class EnumMetadata implements MetadataInterface
         $result = [];
         foreach ($cases as $case) {
             if ($context->appliesToContext($case, $runtimeFilter)) {
+                $description = null;
+                foreach ($case->getAttributes(Description::class) as $descriptionAttribute) {
+                    $descriptionInstance = $descriptionAttribute->newInstance();
+                    $description = $descriptionInstance->description;
+                }
                 $result[] = new ValueOption(
                     $this->enum->isBacked() ? $case->getBackingValue() : $case->getName(),
-                    $case->getValue()
+                    $case->getValue(),
+                    $description
                 );
             }
         }
