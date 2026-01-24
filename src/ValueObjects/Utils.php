@@ -298,6 +298,9 @@ final class Utils
         if (is_string($input) || is_numeric($input)) {
             return (string) '"' . $input . '"';
         }
+        if (is_resource($input)) {
+            return get_debug_type($input);
+        }
 
         return gettype($input);
     }

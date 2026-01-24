@@ -33,7 +33,11 @@ final class TranslationString implements HasRegexValueObjectInterface
 
     public function getLastTranslationSegment(bool $trimUnderscoreAtStart = true): string
     {
-        $fn = $trimUnderscoreAtStart ? function ($v) { return ltrim($v, '_'); } : function ($v) { return $v; };
+        $fn = $trimUnderscoreAtStart ? function ($v) {
+            return ltrim($v, '_');
+        } : function ($v) {
+            return $v;
+        };
         $pos = strrpos($this->internal, '.');
         if ($pos === false || $pos === 0) {
             return $fn($this->internal);

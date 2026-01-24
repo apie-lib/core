@@ -130,7 +130,7 @@ class StoredFile implements UploadedFileInterface
             );
         }
         return new static(
-            UploadedFileStatus::FromRequest,
+            $storagePath === null ? UploadedFileStatus::FromRequest : UploadedFileStatus::StoredInStorage,
             storagePath: $storagePath,
             internalFile: $uploadedFile
         );
