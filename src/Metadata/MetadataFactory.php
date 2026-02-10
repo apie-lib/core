@@ -153,7 +153,7 @@ final class MetadataFactory
         foreach ($method->getParameters() as $parameter) {
             $fields[$parameter->name] = new ConstructorParameter($parameter);
         }
-        return new CompositeMetadata(new MetadataFieldHashmap($fields));
+        return new CompositeMetadata(new MetadataFieldHashmap($fields), $method->getDeclaringClass());
     }
 
     /**
