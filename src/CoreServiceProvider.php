@@ -16,7 +16,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->app->bind('apie.csrf_token_provider', \Apie\Core\Session\CsrfTokenProvider::class);
         
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\BoundedContext\BoundedContextHashmap::class,
             function ($app) {
                 return $this->app->make('apie.bounded_context.hashmap_factory')->create(
@@ -25,7 +25,7 @@ class CoreServiceProvider extends ServiceProvider
                 
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Translator\ApieTranslatorInterface::class,
             function ($app) {
                 return \Apie\Core\Translator\ApieTranslator::create(
@@ -42,7 +42,7 @@ class CoreServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Core\Translator\ApieTranslatorInterface::class], 'apie.context');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder::class,
             function ($app) {
                 return new \Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder(
@@ -58,7 +58,7 @@ class CoreServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Core\ContextBuilders\CreateEntityReferenceContextBuilder::class], 'apie.core.context_builder');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\ContextBuilders\CreateEntityListContextBuilder::class,
             function ($app) {
                 return new \Apie\Core\ContextBuilders\CreateEntityListContextBuilder(
@@ -74,7 +74,7 @@ class CoreServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Core\ContextBuilders\CreateEntityListContextBuilder::class], 'apie.core.context_builder');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\ContextBuilders\ContextBuilderFactory::class,
             function ($app) {
                 return \Apie\Common\Wrappers\GeneralServiceFactory::createContextBuilderFactory(
@@ -91,7 +91,7 @@ class CoreServiceProvider extends ServiceProvider
         
         $this->app->bind(\Apie\Core\Datalayers\ApieDatalayer::class, \Apie\Core\Datalayers\GroupedDataLayer::class);
         
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Datalayers\GroupedDataLayer::class,
             function ($app) {
                 return new \Apie\Core\Datalayers\GroupedDataLayer(
@@ -110,7 +110,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->tag([\Apie\Core\Datalayers\GroupedDataLayer::class], 'apie.context');
         $this->app->bind('apie.datalayer', \Apie\Core\Datalayers\ApieDatalayer::class);
         
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Indexing\Indexer::class,
             function ($app) {
                 return \Apie\Core\Indexing\Indexer::create(
@@ -119,7 +119,7 @@ class CoreServiceProvider extends ServiceProvider
                 
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Datalayers\Search\LazyLoadedListFilterer::class,
             function ($app) {
                 return new \Apie\Core\Datalayers\Search\LazyLoadedListFilterer(
@@ -127,7 +127,7 @@ class CoreServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Other\FileWriterInterface::class,
             function ($app) {
                 return new \Apie\Core\Other\ActualFileWriter(
@@ -135,7 +135,7 @@ class CoreServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\FileStorage\ChainedFileStorage::class,
             function ($app) {
                 return \Apie\Core\FileStorage\FileStorageFactory::create(
@@ -152,7 +152,7 @@ class CoreServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Core\FileStorage\ChainedFileStorage::class], 'apie.context');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Core\Datalayers\Grouped\DataLayerByBoundedContext::class,
             function ($app) {
                 return \Apie\Common\Wrappers\GeneralServiceFactory::createDataLayerMap(
