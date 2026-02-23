@@ -284,6 +284,7 @@ class StoredFile implements UploadedFileInterface
         }
         throw new \LogicException("I have no idea how to make a stream for this uploaded file");
     }
+
     public function moveTo(string $targetPath): void
     {
         if ($this->movedPath !== null) {

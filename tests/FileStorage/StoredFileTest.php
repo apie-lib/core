@@ -5,7 +5,12 @@ use Apie\Core\Enums\UploadedFileStatus;
 use Apie\Core\FileStorage\FileStorageFactory;
 use Apie\Core\FileStorage\ImageFile;
 use Apie\Core\FileStorage\StoredFile;
+use Apie\Core\ValueObjects\FileUri;
+use Generator;
 use LogicException;
+use Nyholm\Psr7\UploadedFile;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class StoredFileTest extends TestCase
@@ -141,6 +146,72 @@ class StoredFileTest extends TestCase
         );
         $this->assertSame($internal, StoredFile::createFromUploadedFile($internal));
     }
+
+    #[Test]
+    public function it_can_wrap_file_uri_value_object()
+    {
+        $testItem = StoredFile::createFromUploadedFile(
+            FileUri::fromNative('http://example.com')
+        );
+        $this->assertStringContainsString('<html', $testItem->getContent());
+        $this->assertEquals(null, $testItem->getClientFilename());
+        $this->assertEquals('text/html', $testItem->getServerMimeType());
+        $expected = ['this', 'is',  'for', 'use', 'in', 'documentation', 'examples','example', 'domain'];
+        $actual = $testItem->getIndexing();
+        foreach ($expected as $expectedWord) {
+            $this->assertArrayHasKey($expectedWord, $actual, 'Expected word "' . $expectedWord . '" to be in the indexing');
+        }
+    }
+
+    #[Test]
+    #[DataProvider('provideMethodCalls')]
+    public function it_remembers_values_when_wrapping_a_psr7_upload_file(array $methodCalls)
+    {
+        $testItem = StoredFile::createFromUploadedFile(
+            new UploadedFile(__FILE__, filesize(__FILE__), UPLOAD_ERR_OK, 'StoredFileTest.php', 'text/x-php')
+        );
+        $called = ', I already called ';
+        foreach ($methodCalls as $call) {
+            $actual = $testItem->{$call[0]}();
+            $this->assertEquals($call[1], $actual, 'test ' . $call[0] . $called);
+            
+            $actual2 = $testItem->{$call[0]}();
+            $this->assertEquals($actual, $actual2, 'test ' . $call[0] . ' can be called multiple times' . $called);
+            $called .= $call[0] . ', ';
+        }
+    }
+
+    public static function provideMethodCalls(): Generator
+    {
+        $methods = [
+            ['getContent', file_get_contents(__FILE__)],
+            // ['getStream', file_get_contents(__FILE__)],
+            ['getSize', filesize(__FILE__)],
+            ['getClientFilename', 'StoredFileTest.php'],
+            ['getClientMediaType', 'text/x-php'],
+            ['getServerMimeType', 'text/x-php'],
+        ];
+        foreach (self::permutate($methods) as $permutation) {
+            yield [$permutation];
+        }
+    }
+
+    public static function permutate(array $itemsLeft): Generator
+    {
+        if (empty($itemsLeft)) {
+            yield [];
+        } else {
+            foreach ($itemsLeft as $index => $item) {
+                $remaining = $itemsLeft;
+                unset($remaining[$index]);
+                foreach (self::permutate($remaining) as $permutation) {
+                    yield [$item, ...$permutation];
+                }
+            }
+        }
+    }
+
+
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_wrap_other_instances_of_uploaded_files()
