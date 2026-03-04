@@ -33,6 +33,8 @@ class Base64StreamTest extends TestCase
         yield 'space' => ['', ' '];
         yield 'regular base 64' => ['AAaa', 'AAaa'];
         yield 'base 64 with spaces' => ['AAaa', ' A A a a'];
+        $contents = file_get_contents(__DIR__ . '/base64stream');
+        yield 'large file' => [$contents, $contents];
     }
 
     #[\PHPUnit\Framework\Attributes\Test]

@@ -67,8 +67,8 @@ class JsonFileUploadTest extends TestCase
         ];
         yield 'invalid base64 contents' => [
             ValidationException::class,
-            'Validation error:  Value "hello" is not valid for value object of type: Base64Stream',
-            ['base64' => 'hello', 'originalFilename' => 'tmp.txt']
+            'Validation error:  Value "[]hello" is not valid for value object of type: Base64Stream',
+            ['base64' => '[]hello', 'originalFilename' => 'tmp.txt']
         ];
     }
 

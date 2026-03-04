@@ -8,6 +8,7 @@ use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Enums\FileStreamType;
 use Apie\Core\RegexUtils;
+use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Faker\Generator;
 
@@ -21,12 +22,19 @@ final class Base64Stream implements HasRegexValueObjectInterface
 
     public static function getRegularExpression(): string
     {
-        return '#^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$#';
+        $part = '[A-Za-z0-9+\/]';
+        return '/^' . $part . '*={0,3}$/';
     }
 
     protected function convert(string $input): string
     {
-        return preg_replace('/\s/s', '', $input);
+        $input = preg_replace('/\s+/', '', $input);
+        $input = strtr($input, '-_', '+/');
+        $decoded = base64_decode($input, true);
+        if ($decoded === false) {
+            throw new InvalidStringForValueObjectException($input, $this);
+        }
+        return base64_encode($decoded);
     }
 
     public static function createRandom(Generator $generator): self
