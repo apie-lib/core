@@ -23,12 +23,14 @@ use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
+use Apie\Core\Metadata\Strategy\FileUriStrategy;
 use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
 use Apie\Core\Metadata\Strategy\RegularObjectStrategy;
 use Apie\Core\Metadata\Strategy\ValueObjectStrategy;
 use Apie\Core\Permissions\PermissionInterface;
+use Apie\Core\ValueObjects\FileUri;
 use Apie\CountryAndPhoneNumber\DutchPhoneNumber;
 use Apie\Fixtures\Context\IsActivatedUser;
 use Apie\Fixtures\Dto\DefaultExampleDto;
@@ -122,6 +124,11 @@ class MetadataFactoryTest extends TestCase
         yield 'Apie lib alias' => [
             AliasStrategy::class,
             PermissionInterface::class
+        ];
+
+        yield 'FileUri' => [
+            FileUriStrategy::class,
+            FileUri::class,
         ];
     
         yield 'Composite value object' => [

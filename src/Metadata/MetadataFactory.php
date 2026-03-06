@@ -13,6 +13,7 @@ use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Core\Metadata\Strategy\ExceptionStrategy;
+use Apie\Core\Metadata\Strategy\FileUriStrategy;
 use Apie\Core\Metadata\Strategy\ItemHashmapStrategy;
 use Apie\Core\Metadata\Strategy\ItemListObjectStrategy;
 use Apie\Core\Metadata\Strategy\PolymorphicEntityStrategy;
@@ -46,6 +47,9 @@ final class MetadataFactory
         }
         if (BuiltInPhpClassStrategy::supports($class)) {
             return new BuiltInPhpClassStrategy($class);
+        }
+        if (FileUriStrategy::supports($class)) {
+            return new FileUriStrategy($class);
         }
         if (ScalarStrategy::supports($class)) {
             return new ScalarStrategy(ScalarType::STDCLASS);
