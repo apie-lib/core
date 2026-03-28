@@ -20,6 +20,55 @@ final class TypeUtils
     {
     }
 
+    /**
+     * @var array<string, object>
+     */
+    private static array $alreadyChecked = [];
+
+    /**
+     * @template T of object
+     *
+     * @param ReflectionClass<object> $class
+     * @param class-string<T> $attributeClass
+     * @return T[]
+     */
+    public static function findAttributes(ReflectionClass $class, string $attributeClass): array
+    {
+        $key = $class->name . ':' . $attributeClass;
+        if (!isset(self::$alreadyChecked[$key])) {
+            self::$alreadyChecked[$key] = [];
+            foreach ($class->getAttributes($attributeClass) as $input) {
+                self::$alreadyChecked[$key][] = $input->newInstance();
+            }
+            foreach ($class->getInterfaceNames() as $interfaceName) {
+                array_push(
+                    self::$alreadyChecked[$key],
+                    ...self::findAttributes(
+                        new ReflectionClass($interfaceName),
+                        $attributeClass
+                    )
+                );
+            }
+            foreach ($class->getTraitNames() as $traitName) {
+                array_push(
+                    self::$alreadyChecked[$key],
+                    ...self::findAttributes(
+                        new ReflectionClass($traitName),
+                        $attributeClass
+                    )
+                );
+            }
+            $parent = $class->getParentClass();
+            if ($parent) {
+                array_push(
+                    self::$alreadyChecked[$key],
+                    ...self::findAttributes($parent, $attributeClass)
+                );
+            }
+        }
+        return self::$alreadyChecked[$key];
+    }
+
     public static function allowEmptyString(
         ?ReflectionType $type
     ): bool {
