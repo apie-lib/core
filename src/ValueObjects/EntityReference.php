@@ -6,19 +6,29 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\IdentifierUtils;
 
 class EntityReference extends SnowflakeIdentifier
 {
-    public function __construct(
-        private BoundedContextId $boundedContextId,
-        private NonEmptyString $entityClass,
-        private NonEmptyString $id
+    final public function __construct(
+        protected BoundedContextId $boundedContextId,
+        protected NonEmptyString $entityClass,
+        protected NonEmptyString $id
     ) {
     }
 
-    public static function createFromContext(ApieContext $context): ?self
+    public static function createFromContext(ApieContext $context): ?static
     {
+        // in POST request this is the case if you make a new entity
+        $createdResource = $context->getContext(ContextConstants::RESOURCE, false);
+        if (!$context->hasContext(ContextConstants::RESOURCE_ID) && $createdResource instanceof EntityInterface) {
+            $context = $context->withContext(
+                ContextConstants::RESOURCE_ID,
+                $createdResource->getId()->toNative()
+            );
+        }
+
         if (!$context->hasContext(ContextConstants::BOUNDED_CONTEXT_ID)
             || !$context->hasContext(ContextConstants::RESOURCE_NAME)
             || !$context->hasContext(ContextConstants::RESOURCE_ID)
@@ -35,13 +45,14 @@ class EntityReference extends SnowflakeIdentifier
                 $id = IdentifierUtils::entityClassToIdentifier($resource)
                     ->getMethod('fromNative')
                     ->invoke(null, $context->getContext(ContextConstants::RESOURCE_ID));
-                return new self(
+                return new static(
                     $boundedContextId,
                     NonEmptyString::fromNative($resource->getShortName()),
                     NonEmptyString::fromNative($id->toNative())
                 );
             }
         }
+
         return null;
     }
 
