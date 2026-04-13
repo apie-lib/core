@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core\Indexing;
 
+use Apie\Core\Attributes\SearchFilterOption;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Dto\DtoInterface;
 use Apie\Core\Entities\EntityInterface;
@@ -28,6 +29,12 @@ class FromGetters implements IndexingStrategyInterface
         foreach ($metadata->getHashmap() as $propertyName => $fieldMetadata) {
             if (!$fieldMetadata->isField() || !$fieldMetadata instanceof GetterInterface) {
                 continue;
+            }
+            assert($fieldMetadata instanceof FieldInterface);
+            foreach ($fieldMetadata->getAttributes(SearchFilterOption::class) as $searchFilterOption) {
+                if (!$searchFilterOption->enabled) {
+                    continue 2;
+                }
             }
             /** @var GetterInterface&FieldInterface $fieldMetadata */
             $typehint = $fieldMetadata->getTypehint();

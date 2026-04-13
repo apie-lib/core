@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Core;
 
+use Apie\Common\Other\Audit\AuditEvent;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\Permissions\SerializedPermission;
@@ -21,6 +22,7 @@ final class ApieLib
      */
     private static $aliases = [
         PermissionInterface::class => SerializedPermission::class,
+        AuditEvent::class => 'Apie\Common\Other\Audit\AuditCreate|Apie\Common\Other\Audit\AuditModified|Apie\Common\Other\Audit\AuditRemoved|Apie\Common\Other\Audit\AuditRead|Apie\Common\Other\Audit\AuditMethodCalled'
     ];
 
     public static function resetAliases(): void

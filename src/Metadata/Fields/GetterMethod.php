@@ -7,6 +7,7 @@ use Apie\Core\Metadata\Concerns\UseContextKey;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Utils\ConverterUtils;
 use Apie\TypeConverter\Exceptions\CanNotConvertObjectException;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionType;
 
@@ -60,7 +61,19 @@ final class GetterMethod implements FieldInterface, GetterInterface
         foreach ($this->method->getParameters() as $parameter) {
             $contextKey = $this->getContextKey($apieContext, $parameter);
             if ($contextKey === null || !$apieContext->hasContext($contextKey)) {
-                $arguments[] = $parameter->getDefaultValue();
+                try {
+                    $arguments[] = $parameter->getDefaultValue();
+                } catch (ReflectionException $previous) {
+                    throw new \LogicException(
+                        sprintf(
+                            'Trouble with "%s" for parameter "%s" in method "%s"',
+                            $contextKey,
+                            $parameter->getName(),
+                            $this->method->getName()
+                        ),
+                        previous: $previous
+                    );
+                }
             } else {
                 $arguments[] = $apieContext->getContext($contextKey);
             }

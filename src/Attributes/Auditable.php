@@ -10,7 +10,9 @@ use Attribute;
 final class Auditable
 {
     public function __construct(
-        public RuntimeCheck $permission = new RuntimeCheck()
+        public RuntimeCheck $permission = new RuntimeCheck(),
+        public bool $readEvents = false,
+        public bool $readAllEvents = false,
     ) {
     }
 }
