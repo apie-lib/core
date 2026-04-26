@@ -13,6 +13,28 @@ class SnakeCaseSlugTest extends TestCase
     use TestWithFaker;
     use TestWithOpenapiSchema;
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('fromTextProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fromText_converts_human_text_to_snake_case(string $expected, string $input)
+    {
+        $testItem = SnakeCaseSlug::fromText($input);
+        $this->assertEquals($expected, $testItem->toNative());
+    }
+
+    public static function fromTextProvider(): Generator
+    {
+        yield ['hello_world', 'Hello world'];
+        yield ['snake_case_slug', 'SnakeCaseSlug'];
+        yield ['multiple_words_together', 'Multiple   words   together'];
+        yield ['already_snake_case', 'already_snake_case'];
+        yield ['trailing_and_leading', '  Trailing and leading  '];
+        yield ['numbers_123', 'Numbers 123'];
+        yield ['special_chars', 'Special!@#Chars'];
+        yield ['no_double_underscore', 'No__Double___Underscore'];
+        yield ['mixed_case_and_numbers_42', 'MixedCase and Numbers 42'];
+        yield ['a_b_c', 'A---B---C'];
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('inputProvider')]
     #[\PHPUnit\Framework\Attributes\Test]
     public function fromNative_allows_many_names(string $expected, string $input)

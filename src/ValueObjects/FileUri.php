@@ -2,6 +2,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\Description;
+use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\FileStorage\StoredFile;
@@ -17,6 +18,7 @@ use ReflectionProperty;
 #[Description('URL to download file')]
 #[FakeMethod('createRandom')]
 #[SchemaMethod('createSchema')]
+#[ExampleValue('https://example.com/file.pdf', 'A URL pointing to a file')]
 class FileUri extends Uri implements UploadedFileInterface
 {
     private StoredFile $loadedFile;
@@ -26,7 +28,7 @@ class FileUri extends Uri implements UploadedFileInterface
         if (!isset($this->loadedFile)) {
             $contentType = null;
             if (class_exists('GuzzleHttp\Client')) {
-                $client = new \GuzzleHttp\Client();
+                $client = new \GuzzleHttp\Client(['connect_timeout' => 10, 'timeout' => 10]);
                 try {
                     $response = $client->request('HEAD', $this->toNative());
                     $contentType = $response->getHeaderLine('Content-Type');
@@ -35,7 +37,10 @@ class FileUri extends Uri implements UploadedFileInterface
                     // Fallback to existing logic
                 }
             }
-            $stream = fopen($this->toNative(), 'rb');
+            $context = stream_context_create([
+                'http' => ['timeout' => 10],
+            ]);
+            $stream = fopen($this->toNative(), 'rb', false, $context);
             $this->loadedFile = StoredFile::createFromResource($stream, clientMimeType: $contentType);
         }
         

@@ -69,6 +69,7 @@ class UriTest extends TestCase
                 'type' => 'string',
                 'format' => 'uri',
                 'description' => true,
+                'example' => 'https://apie-lib.blogspot.com/'
             ]
         );
     }

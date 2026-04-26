@@ -2,12 +2,15 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\Description;
+use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Faker\Generator;
 
 #[FakeMethod('createRandom')]
 #[Description('Strict mime type without wildcards, for example "application/json"')]
+#[ExampleValue('application/json', 'JSON data')]
+#[ExampleValue('text/html', 'HTML document')]
 final class StrictMimeType implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;

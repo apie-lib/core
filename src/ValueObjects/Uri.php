@@ -2,6 +2,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\Description;
+use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\StringValueObjectInterface;
@@ -9,6 +10,7 @@ use Faker\Generator;
 
 #[Description('URI in RFC 3986 format.')]
 #[FakeMethod('createRandom')]
+#[ExampleValue('https://apie-lib.blogspot.com/')]
 class Uri implements StringValueObjectInterface
 {
     use IsStringValueObject;

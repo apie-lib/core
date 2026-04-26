@@ -1,12 +1,14 @@
 <?php
 namespace Apie\Core\Datalayers\InMemory;
 
+use Apie\Core\Attributes\ClassStoreOptions;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Datalayers\Lists\InMemoryEntityList;
 use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Enums\SortingOrder;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\Exceptions\UnknownExistingEntityError;
@@ -80,14 +82,27 @@ class InMemoryDatalayer implements ApieDatalayer
             $reflProperty = new ReflectionProperty($entity, 'id');
             $reflProperty->setValue($entity, $id);
         }
-        $className = $id::getReferenceFor()->name;
+        $refl = $id::getReferenceFor();
+        $className = $refl->name;
         $id = $entity->getId()->toNative();
-        foreach ($this->stored[$className] ?? [] as $entityInList) {
+        $this->stored[$className] ??= [];
+        foreach ($this->stored[$className] as $entityInList) {
             if ($entityInList->getId()->toNative() === $id) {
                 throw new EntityAlreadyPersisted($entity);
             }
         }
-        $this->stored[$className][] = $entity;
+        $sortOrder = SortingOrder::Descending;
+        foreach ($refl->getAttributes(ClassStoreOptions::class) as $classStoreOptionsAttribute) {
+            $classStoreOptions = $classStoreOptionsAttribute->newInstance();
+            if ($classStoreOptions->defaultSortingOrder === SortingOrder::Ascending) {
+                $sortOrder = SortingOrder::Ascending;
+            }
+        }
+        if ($sortOrder === SortingOrder::Descending) {
+            $this->stored[$className][] = $entity;
+        } else {
+            array_unshift($this->stored[$className], $entity);
+        }
         return $entity;
     }
 

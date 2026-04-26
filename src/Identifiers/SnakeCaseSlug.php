@@ -38,6 +38,21 @@ class SnakeCaseSlug implements HasRegexValueObjectInterface
         return static::fromNative(strtolower($short));
     }
 
+    public static function fromText(string $text): self
+    {
+        // Replace camelCase with snake_case
+        $text = preg_replace('/([a-z])([A-Z])/', '$1_$2', $text);
+        // Replace any non-alphanumeric character with underscore
+        $text = preg_replace('/[^a-zA-Z0-9]+/', '_', $text);
+        // Convert to lowercase
+        $text = strtolower($text);
+        // Remove leading/trailing underscores
+        $text = trim($text, '_');
+        // Collapse multiple underscores into one
+        $text = preg_replace('/_+/', '_', $text);
+        return static::fromNative($text);
+    }
+
     public function humanize(): string
     {
         return str_replace('_', ' ', $this->internal);
