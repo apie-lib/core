@@ -30,7 +30,9 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
             foreach ($refl->getConstructor()->getParameters() as $parameter) {
                 $propertyName = $parameter->getName();
                 $propertyValue = $refl->getProperty($propertyName)->getValue($this);
-                $stringPropertyValue = Utils::toString($propertyValue);
+                $stringPropertyValue = get_debug_type($propertyValue) === 'float'
+                    ? number_format($propertyValue, 6, '.', '')
+                    : Utils::toString($propertyValue);
                 if (strpos($stringPropertyValue, $separator) !== false) {
                     throw new InvalidStringForValueObjectException($stringPropertyValue, $propertyValue);
                 }

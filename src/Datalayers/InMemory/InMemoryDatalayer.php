@@ -98,7 +98,7 @@ class InMemoryDatalayer implements ApieDatalayer
                 $sortOrder = SortingOrder::Ascending;
             }
         }
-        if ($sortOrder === SortingOrder::Descending) {
+        if ($sortOrder === SortingOrder::Ascending) {
             $this->stored[$className][] = $entity;
         } else {
             array_unshift($this->stored[$className], $entity);

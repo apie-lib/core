@@ -447,7 +447,7 @@ class MetadataFactoryTest extends TestCase
         ];
         yield 'Retrieve of entity with context' => [
             ['id', 'owned', 'createdBy'],
-            ['id', 'owned', 'createdBy'],
+            ['id', 'owned'],
             'getResultMetadata',
             CollectionItemOwned::class,
             $context

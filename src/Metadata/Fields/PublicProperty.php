@@ -3,6 +3,7 @@ namespace Apie\Core\Metadata\Fields;
 
 use Apie\Core\Attributes\ColumnPriority;
 use Apie\Core\Attributes\Optional;
+use Apie\Core\Attributes\RuntimeCheck;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\DoNotChangeUploadedFile;
 use Apie\Core\Metadata\GetterInterface;
@@ -43,6 +44,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
 
         $this->required = !$optional
             && empty($property->getAttributes(Optional::class))
+            && empty($property->getAttributes(RuntimeCheck::class))
             && !$hasDefaultValue
             && $this->field;
     }
