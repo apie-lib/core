@@ -91,6 +91,7 @@ class ItemHashmap implements HashmapInterface
 
     public function offsetGet(mixed $offset): mixed
     {
+        $offset = Utils::toString($offset);
         if (!array_key_exists($offset, $this->internalArray)) {
             throw new IndexNotFoundException($offset);
         }
