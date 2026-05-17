@@ -19,7 +19,7 @@ abstract class Decimal implements ValueObjectInterface, HasRegexValueObjectInter
         return $this->integerPart . '.' . $this->decimalPart;
     }
 
-    abstract public static function getNumberOfDecimals(): int;
+    abstract static public function getNumberOfDecimals(): int;
 
     final public static function getRegularExpression(): string
     {
@@ -44,7 +44,7 @@ abstract class Decimal implements ValueObjectInterface, HasRegexValueObjectInter
             return new static((int)$matches['int'], str_pad($matches['part'] ?? '', $decimals, '0', STR_PAD_RIGHT));
         }
 
-        throw new InvalidStringForValueObjectException($input, new \ReflectionClass(static::class));
+        throw new InvalidStringForValueObjectException($string, new \ReflectionClass(static::class));
     }
 
     final public function toNative(): string
