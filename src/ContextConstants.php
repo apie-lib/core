@@ -111,6 +111,12 @@ final class ContextConstants
      */
     public const CMS='cms';
 
+    /***
+     * User when building the main menu for apie/cms. The value's type is not relevant for now and could change
+     * in the near future.
+     */
+    public const MAIN_MENU_BUILDER = 'main-menu-builder';
+
     /**
      * Added if serializing the profile fields in apie/cms
      */

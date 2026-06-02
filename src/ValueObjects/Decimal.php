@@ -19,7 +19,7 @@ abstract class Decimal implements ValueObjectInterface, HasRegexValueObjectInter
         return $this->integerPart . '.' . $this->decimalPart;
     }
 
-    abstract static public function getNumberOfDecimals(): int;
+    abstract public static function getNumberOfDecimals(): int;
 
     final public static function getRegularExpression(): string
     {

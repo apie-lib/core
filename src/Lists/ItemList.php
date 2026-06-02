@@ -58,6 +58,17 @@ class ItemList implements ItemListInterface
     }
 
     /**
+     * @return T
+     */
+    public function last(): mixed
+    {
+        if (empty($this->internal)) {
+            throw ObjectIsEmpty::createForList();
+        }
+        return end($this->internal);
+    }
+
+    /**
      * @return array<int, T>
      */
     public function toArray(): array

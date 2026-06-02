@@ -2,6 +2,7 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\Description;
+use Apie\Core\Lists\StringList;
 use Apie\Core\ValueObjects\Interfaces\StringValueObjectInterface;
 
 #[Description('Represents a url route definition with placeholders, for example "/test/{id}"')]
@@ -31,5 +32,23 @@ class UrlRouteDefinition implements StringValueObjectInterface
             return $matches['placeholder'];
         }
         return [];
+    }
+
+    /**
+     * @param array<string, string> $values
+     * @return self
+     */
+    public function withFilledInPlaceholders(array $values): self
+    {
+        $result = $this->internal;
+        foreach ($values as $key => $value) {
+            $result = preg_replace('/\{\s*' . preg_quote($key, '/') . '\s*\}/', $value, $result);
+        }
+        return new self($result);
+    }
+
+    public function toStringList(): StringList
+    {
+        return new StringList(explode('/', substr($this->internal, 1)));
     }
 }
