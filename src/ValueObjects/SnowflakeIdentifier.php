@@ -17,7 +17,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
 
     abstract protected static function getSeparator(): string;
 
-    final static protected function getMinimumNumberOfSegments(): int
+    final protected static function getMinimumNumberOfSegments(): int
     {
         $refl = new ReflectionClass(static::class);
         $parameters = $refl->getConstructor()->getParameters();
