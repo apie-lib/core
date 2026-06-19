@@ -160,6 +160,12 @@ final class ContextConstants
 
     public const LOCALE = 'locale';
 
+    public const ACCEPTED_LOCALES = 'accepted_locales';
+
+    public const ACCEPT_LOCALE = 'accept_locale';
+
+    public const DATA_LOCALE = 'data_locale';
+
     /**
      * Used for workarounds with frameworks using middleware or events for authentication and redoing the controller
      * again.

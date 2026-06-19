@@ -17,6 +17,22 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
 
     abstract protected static function getSeparator(): string;
 
+    final static protected function getMinimumNumberOfSegments(): int
+    {
+        $refl = new ReflectionClass(static::class);
+        $parameters = $refl->getConstructor()->getParameters();
+        $parameters = array_reverse($parameters);
+        $count = count($parameters) - 1;
+        foreach ($parameters as $parameter) {
+            if (!$parameter->isOptional() || !$parameter->getType()?->allowsNull()) {
+                return $count;
+            }
+            $count--;
+        }
+
+        return 0;
+    }
+
     final public function toNative(): string
     {
         if (!isset($this->calculated)) {
@@ -27,6 +43,8 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
             $refl = new ReflectionClass($this);
             $separator = static::getSeparator();
             $result = [];
+            $minCount = static::getMinimumNumberOfSegments();
+            $count = 0;
             foreach ($refl->getConstructor()->getParameters() as $parameter) {
                 $propertyName = $parameter->getName();
                 $propertyValue = $refl->getProperty($propertyName)->getValue($this);
@@ -36,7 +54,10 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
                 if (strpos($stringPropertyValue, $separator) !== false) {
                     throw new InvalidStringForValueObjectException($stringPropertyValue, $propertyValue);
                 }
-                $result[] = $stringPropertyValue;
+                if ($propertyValue !== null || $count < $minCount) {
+                    $result[] = $stringPropertyValue;
+                }
+                $count++;
             }
 
             $this->calculated = $prefix . implode($separator, $result);
@@ -70,19 +91,23 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         $parameters = $refl->getConstructor()->getParameters();
         $separator = static::getSeparator();
         $split = explode($separator, $input, count($parameters));
-        if (count($split) !== count($parameters)) {
+        $minCount = static::getMinimumNumberOfSegments();
+        $maxCount = count($parameters);
+        if (count($split) < $minCount || count($split) > $maxCount) {
             throw new InvalidStringForValueObjectException($input, new ReflectionClass(static::class));
         }
         $constructorArguments = [];
+    
         foreach ($parameters as $key => $parameter) {
             $parameterType = $parameter->getType();
             if (!($parameterType instanceof ReflectionNamedType)) {
                 throw new InvalidTypeException($parameterType, 'ReflectionNamedType');
             }
-            if ($parameterType->allowsNull() && $split[$key] === '') {
+            $splitValue = $split[$key] ?? null;
+            if ($parameterType->allowsNull() && ($splitValue === '' || $splitValue === null)) {
                 $constructorArguments[] = null;
             } else {
-                $constructorArguments[] = Utils::toTypehint($parameterType, $split[$key]);
+                $constructorArguments[] = Utils::toTypehint($parameterType, $splitValue ?? '');
             }
         }
         return $refl->newInstanceArgs($constructorArguments);
