@@ -38,7 +38,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         if (!isset($this->calculated)) {
             $prefix = '';
             if (is_callable([static::class, 'getPrefix'])) {
-                $prefix = static::getPrefix() . '-';
+                $prefix = static::getPrefix() . static::getSeparator();
             }
             $refl = new ReflectionClass($this);
             $separator = static::getSeparator();
@@ -80,7 +80,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         $input = Utils::toString($input);
         $prefix = '';
         if (is_callable([static::class, 'getPrefix'])) {
-            $prefix = static::getPrefix() . '-';
+            $prefix = static::getPrefix() . static::getSeparator();
         }
         if (strpos($input, $prefix) === 0) {
             $input = substr($input, strlen($prefix));
@@ -122,7 +122,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         $expressions = [];
         $prefix = '';
         if (is_callable([static::class, 'getPrefix'])) {
-            $prefix = static::getPrefix() . '-';
+            $prefix = static::getPrefix() . static::getSeparator();
         }
         if ($prefix !== '') {
             $expressions[] = preg_quote($prefix, static::getSeparator());
