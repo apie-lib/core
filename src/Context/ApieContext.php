@@ -240,8 +240,6 @@ final class ApieContext
             if (!$this->isAuthorized(runtimeChecks: true, throwError: true)) {
                 throw new ActionNotAllowedException();
             }
-        } catch (ActionNotAllowedException) {
-            throw new ActionNotAllowedException();
         } catch (Throwable $error) {
             throw new ActionNotAllowedException($error);
         }

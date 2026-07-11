@@ -7,7 +7,14 @@ final class ActionNotAllowedException extends ApieException implements HttpStatu
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct($previous ? ('Action not allowed. Reason: ' . $previous->getMessage()) : "Action not allowed!", 0, $previous);
+        $message = "Action not allowed!";
+        if ($previous instanceof ActionNotAllowedException) {
+            $message = $previous->getMessage();
+        } elseif ($previous) {
+            $message = 'Action not allowed. Reason: ' . $previous->getMessage();
+        }
+    
+        parent::__construct($message, 0, $previous);
     }
 
     public function getStatusCode(): int

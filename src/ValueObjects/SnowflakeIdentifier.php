@@ -120,6 +120,7 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         $separator = preg_quote(static::getSeparator());
 
         $expressions = [];
+        $optionalExpressions = [];
         $prefix = '';
         if (is_callable([static::class, 'getPrefix'])) {
             $prefix = static::getPrefix() . static::getSeparator();
@@ -127,10 +128,16 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         if ($prefix !== '') {
             $expressions[] = preg_quote($prefix, static::getSeparator());
         }
+        $addedOptionalMarker = false;
+        $addedSeparator = false;
+        $addedOptionalSeparator = false;
         foreach ($parameters as $parameter) {
             $parameterType = $parameter->getType();
             if (!($parameterType instanceof ReflectionNamedType)) {
                 throw new InvalidTypeException($parameterType, 'ReflectionNamedType');
+            }
+            if ($parameter->isOptional()) {
+                $addedOptionalMarker = true;
             }
             $regex = '[^' . $separator . ']+';
             $class = ConverterUtils::toReflectionClass($parameterType);
@@ -149,11 +156,51 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
                         break;
                 }
             }
-            $expressions[] = $regex;
-            $expressions[] = $separator;
+            if ($addedOptionalMarker) {
+                $optionalExpressions[] = $regex;
+                $optionalExpressions[] = $separator;
+                $addedOptionalSeparator = true;
+            } else {
+                $expressions[] = $regex;
+                $expressions[] = $separator;
+                $addedSeparator = true;
+            }
         }
-        array_pop($expressions);
+        if ($addedSeparator) {
+            $last = array_pop($expressions);
+            if (!empty($optionalExpressions)) {
+                array_unshift($optionalExpressions, $last);
+            }
+        }
+        if ($addedOptionalSeparator) {
+            array_pop($optionalExpressions);
+        }
 
+        $requiredExpression = self::createRegex($expressions);
+        $optionalExpression = self::createRegex($optionalExpressions);
+        if ($optionalExpressions) {
+            $optionalExpression = '(' . $optionalExpression . ')?';
+        }
+
+        $tmp = CompiledRegularExpression::createFromRegexWithoutDelimiters('');
+        $expressions = array_map(
+            function (string $expression) {
+                return CompiledRegularExpression::createFromRegexWithoutDelimiters($expression)
+                            ->removeStartAndEndMarkers();
+            },
+            [$requiredExpression, $optionalExpression]
+        );
+        array_unshift($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('^'));
+        array_push($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('$'));
+
+        return $tmp->merge(...$expressions)->__toString();
+    }
+
+    /**
+     * @param array<int, string> $expressions
+     */
+    private static function createRegex(array $expressions): string
+    {
         $expressions = array_map(
             function (string $expression) {
                 return CompiledRegularExpression::createFromRegexWithoutDelimiters($expression)
@@ -164,8 +211,6 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
         array_unshift($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('^'));
         array_push($expressions, CompiledRegularExpression::createFromRegexWithoutDelimiters('$'));
 
-        $tmp = CompiledRegularExpression::createFromRegexWithoutDelimiters('');
-
-        return $tmp->merge(...$expressions)->__toString();
+        return implode('', $expressions);
     }
 }

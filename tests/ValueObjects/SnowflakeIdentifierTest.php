@@ -85,15 +85,21 @@ class SnowflakeIdentifierTest extends TestCase
 
     #[Test]
     #[DataProvider('regularExpressionProvider')]
-    public function it_provides_regular_expression_for_specific_typehints(string $expected, string $separator, array $typehints)
-    {
-        $className = 'A' . md5(json_encode($typehints) . $separator);
+    public function it_provides_regular_expression_for_specific_typehints(
+        string $expected,
+        string $separator,
+        array $typehints,
+        array $defaultValues = [],
+    ) {
+        $className = 'A' . md5(json_encode($typehints) . json_encode($defaultValues) . $separator);
         if (class_exists($className)) {
             $this->markTestSkipped($className . ' already exists, that should not be possible');
         }
         $arguments = [];
         foreach ($typehints as $name => $type) {
-            $arguments[] = 'private ' . $type . ' $' . $name;
+            $defaultValue = array_key_exists($name, $defaultValues) ? ' =  ' . var_export($defaultValues[$name], true) : '';
+            
+            $arguments[] = 'private ' . $type . ' $' . $name . $defaultValue;
         }
 
         $code = "class " . $className . ' extends \\' . SnowflakeIdentifier::class . "
@@ -118,7 +124,14 @@ class SnowflakeIdentifierTest extends TestCase
         yield 'no arguments' => ['^$', '|', []];
         yield 'string' => ['^[^\|]+$', '|', ['name' => 'string']];
         yield 'nullable string' => ['^[^\|]+$', '|', ['name' => '?string']];
+        yield 'string with default' => [
+            '^[^\-]+(\-[^\-]+)?$',
+            '-',
+            ['name' => 'string', 'value' => '?string'],
+            ['value' => null],
+        ];
         yield 'integer' => ['^-?(0|[1-9]\d*)$', ',', ['name' => 'int']];
         yield 'nullable integer' => ['^-?(0|[1-9]\d*)$', ',', ['name' => '?int']];
+        
     }
 }
