@@ -17,7 +17,7 @@ class Uri implements StringValueObjectInterface
 
     public static function createRandom(Generator $faker): Uri
     {
-        return new self($faker->url);
+        return new self($faker->url());
     }
 
     public static function validate(string $input): void
