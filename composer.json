@@ -45,11 +45,16 @@
   },
   "extra": {
     "apie-objects": [
+    "Apie\\Core\\Translator\\Lists\\TranslationStringSuffixSet",
+    "Apie\\Core\\Translator\\Lists\\TranslationStringPrefixSet",
     "Apie\\Core\\Translator\\Lists\\TranslationStringSet",
     "Apie\\Core\\Translator\\Enums\\FromFileLanguage",
     "Apie\\Core\\Translator\\Enums\\TranslationStringOperationType",
     "Apie\\Core\\Translator\\Enums\\Pluralization",
     "Apie\\Core\\Translator\\Enums\\TranslationStringType",
+    "Apie\\Core\\Translator\\ValueObjects\\ResourceAddResourceButtonLabel",
+    "Apie\\Core\\Translator\\ValueObjects\\ResourceOverviewHeader",
+    "Apie\\Core\\Translator\\ValueObjects\\ResourceAddResourceHeader",
     "Apie\\Core\\Translator\\ValueObjects\\TranslationStringSuffix",
     "Apie\\Core\\Translator\\ValueObjects\\MenuHeader",
     "Apie\\Core\\Translator\\ValueObjects\\TranslationStringPrefix",

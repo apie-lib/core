@@ -23,6 +23,14 @@ final class TranslationString implements HasRegexValueObjectInterface
         return rtrim($rootPath, '/') . '/' . str_replace('.', '/', $this->internal);
     }
 
+    /**
+     * @internal
+     */
+    public function getSpecifity(): int
+    {
+        return 0;
+    }
+
     public function toUnbounded(): self
     {
         if (str_starts_with('apie.bounded.', $this->internal)) {

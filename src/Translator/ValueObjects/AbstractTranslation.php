@@ -5,7 +5,10 @@ use Apie\Core\ApieLib;
 use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
+use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\RegexUtils;
+use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
@@ -88,4 +91,74 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         $regex = RegexUtils::removeDelimiters($regularExpressionWithDelimiter);
         return static::fromNative(RegRev::generate($regex));
     }
+
+    public function withoutBoundedContextId(): static
+    {
+        return new static(
+            $this->prefix->withoutBoundedContextId(),
+            $this->middleSection,
+            $this->suffix
+        );
+    }
+
+    public function withBoundedContextId(BoundedContextId $boundedContextId): static
+    {
+        return new static(
+            $this->prefix->withBoundedContextId($boundedContextId),
+            $this->middleSection,
+            $this->suffix
+        );
+    }
+
+    public function withoutResourceIdentifier(): static
+    {
+        return new static(
+            $this->prefix->withoutResourceIdentifier(),
+            $this->middleSection,
+            $this->suffix
+        );
+    }
+
+    public function withResourceIdentifier(SnakeCaseSlug $resourceIdentifier): static
+    {
+        return new static(
+            $this->prefix->withResourceIdentifier($resourceIdentifier),
+            $this->middleSection,
+            $this->suffix
+        );
+    }
+
+    final public function getSpecifity(): int
+    {
+        return $this->prefix->getSpecifity() + $this->suffix->getSpecifity();
+    }
+
+    final public function getSimplifications(): TranslationStringSet
+    {
+        $list = [];
+        foreach ($this->prefix->getSimplifications() as $prefixSimplification) {
+            $list[] = new static(
+                $prefixSimplification,
+                $this->middleSection,
+                $this->suffix,
+            );
+            foreach ($this->suffix->getSimplifications() as $suffixSimplification) {
+                $list[] = new static(
+                    $prefixSimplification,
+                    $this->middleSection,
+                    $suffixSimplification
+                );
+            }
+        }
+        foreach ($this->suffix->getSimplifications() as $suffixSimplification) {
+            $list[] = new static(
+                $this->prefix,
+                $this->middleSection,
+                $suffixSimplification
+            );
+        }
+        return new TranslationStringSet($list);
+    }
+
+    abstract public function getFallbackText(): string;
 }

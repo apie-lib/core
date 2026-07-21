@@ -5,6 +5,7 @@ use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Identifiers\SnakeCaseSlug;
+use Apie\Core\Translator\Lists\TranslationStringPrefixSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
@@ -22,6 +23,72 @@ final class TranslationStringPrefix implements HasRegexValueObjectInterface
         private ?SnakeCaseSlug $resourceIdentifier = null,
     ) {
     }
+
+    public function getBoundedContextId(): ?BoundedContextId
+    {
+        return $this->boundedContextId;
+    }
+
+    public function getResourceIdentifier(): ?SnakeCaseSlug
+    {
+        return $this->resourceIdentifier;
+    }
+
+    public function getSimplifications(): TranslationStringPrefixSet
+    {
+        $list = [];
+        if ($this->boundedContextId !== null) {
+            $list[] = new static(null, $this->resourceIdentifier);
+            if ($this->resourceIdentifier !== null) {
+                $list[] = new static($this->boundedContextId, null);
+            }
+        } elseif ($this->resourceIdentifier !== null) {
+            $list[] = new static();
+        }
+        return new TranslationStringPrefixSet($list);
+    }
+
+    final public function getSpecifity(): int
+    {
+        return ($this->boundedContextId ? 2 : 0) + ($this->resourceIdentifier ? 4 : 0);
+    }
+
+    public function withoutBoundedContextId(): static
+    {
+        if ($this->boundedContextId === null) {
+            return $this;
+        }
+
+        return new TranslationStringPrefix(null, $this->resourceIdentifier);
+    }
+
+    public function withBoundedContextId(BoundedContextId $boundedContextId): static
+    {
+        if ($this->boundedContextId?->toNative() === $boundedContextId->toNative()) {
+            return $this;
+        }
+
+        return new TranslationStringPrefix($boundedContextId, $this->resourceIdentifier);
+    }
+
+    public function withoutResourceIdentifier(): static
+    {
+        if ($this->resourceIdentifier === null) {
+            return $this;
+        }
+
+        return new TranslationStringPrefix($this->boundedContextId, null);
+    }
+
+    public function withResourceIdentifier(SnakeCaseSlug $resourceIdentifier): static
+    {
+        if ($this->resourceIdentifier?->toNative() === $resourceIdentifier->toNative()) {
+            return $this;
+        }
+
+        return new TranslationStringPrefix($this->boundedContextId, $resourceIdentifier);
+    }
+
 
     public function __toString(): string
     {

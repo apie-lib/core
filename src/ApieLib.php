@@ -7,6 +7,9 @@ use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\Permissions\SerializedPermission;
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
 use Apie\Core\Translator\ValueObjects\MenuHeader;
+use Apie\Core\Translator\ValueObjects\ResourceAddResourceButtonLabel;
+use Apie\Core\Translator\ValueObjects\ResourceAddResourceHeader;
+use Apie\Core\Translator\ValueObjects\ResourceOverviewHeader;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\SchemaGenerator\Other\JsonSchemaFormatValidator;
@@ -23,7 +26,7 @@ final class ApieLib
      * @var array<class-string<object>, string|class-string<object>> $aliases
      */
     private static $aliases = [
-        AbstractTranslation::class => MenuHeader::class,
+        AbstractTranslation::class => MenuHeader::class . '|' . ResourceOverviewHeader::class . '|' . ResourceAddResourceButtonLabel::class . '|' . ResourceAddResourceHeader::class,
         PermissionInterface::class => SerializedPermission::class,
         AuditEvent::class => 'Apie\Common\Other\Audit\AuditCreate|Apie\Common\Other\Audit\AuditModified|Apie\Common\Other\Audit\AuditRemoved|Apie\Common\Other\Audit\AuditRead|Apie\Common\Other\Audit\AuditMethodCalled'
     ];

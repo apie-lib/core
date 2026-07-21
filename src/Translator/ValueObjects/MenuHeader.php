@@ -9,4 +9,12 @@ use Apie\Core\Attributes\ExampleValue;
 class MenuHeader extends AbstractTranslation
 {
     protected const MIDDLE_REGEX = '(menu.header|(menu(\.[^.]+(\.[^.]+)*))*\.header)';
+
+    public function getFallbackText(): string
+    {
+        if (preg_match('/\.[^.]+$/', $this->middleSection, $matches)) {
+            return $matches[0] ?: 'Home';
+        }
+        return $this->middleSection ?: 'Home';
+    }
 }

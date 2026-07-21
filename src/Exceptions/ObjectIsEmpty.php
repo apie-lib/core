@@ -13,6 +13,11 @@ final class ObjectIsEmpty extends ApieException
         return new self('ItemList');
     }
 
+    public static function createForSet(): self
+    {
+        return new self('ItemSet');
+    }
+
     public static function createForHashmap(): self
     {
         return new self('ItemHashmap');

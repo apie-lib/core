@@ -17,6 +17,7 @@ class TranslationStringPrefixTest extends TestCase
     {
         $testItem = TranslationStringPrefix::fromNative($input);
         $this->assertEquals($input, $testItem->toNative());
+        $this->assertEquals($input, $testItem->jsonSerialize());
     }
 
     #[Test]
@@ -42,6 +43,28 @@ class TranslationStringPrefixTest extends TestCase
             yield $description . ', single word' => [$prefix[0], $prefix[0] . 'word'];
             yield $description . ', single word, full suffix' => [$prefix[0], $prefix[0] . 'word.singular.authenticated'];
         }
+    }
+
+    #[Test]
+    #[DataProvider('simplificationsProvider')]
+    public function it_can_provide_translation_simplifications(array $expected, string $input)
+    {
+        $testItem = TranslationStringPrefix::fromNative($input);
+        $this->assertEquals(
+            $expected,
+            json_decode(json_encode($testItem->getSimplifications()), true)
+        );
+    }
+
+    public static function simplificationsProvider(): \Generator
+    {
+        yield 'none' => [[], 'apie.'];
+        yield 'bounded context only' => [['apie.'], 'apie.bounded.test.'];
+        yield 'bounded context and resource' => [
+            ['apie.resource.example.', 'apie.bounded.test.'],
+            'apie.bounded.test.resource.example.'
+        ];
+        yield 'resource only' => [['apie.'], 'apie.resource.example.'];
     }
 
     #[Test]

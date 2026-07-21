@@ -4,6 +4,7 @@ namespace Apie\Core\Translator\ValueObjects;
 use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Translator\Enums\Pluralization;
+use Apie\Core\Translator\Lists\TranslationStringSuffixSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
@@ -24,6 +25,25 @@ final class TranslationStringSuffix implements HasRegexValueObjectInterface
         private ?Pluralization $pluralization = null,
         private ?bool $authenticated = null,
     ) {
+    }
+
+    public function getSimplifications(): TranslationStringSuffixSet
+    {
+        $list = [];
+        if ($this->pluralization !== null) {
+            $list[] = new static(null, $this->authenticated);
+            if ($this->authenticated !== null) {
+                $list[] = new static($this->pluralization, null);
+            }
+        } elseif ($this->authenticated !== null) {
+            $list[] = new static();
+        }
+        return new TranslationStringSuffixSet($list);
+    }
+
+    final public function getSpecifity(): int
+    {
+        return ($this->pluralization ? 5 : 0) + ($this->authenticated ? 3 : 0);
     }
 
     public function __toString(): string
