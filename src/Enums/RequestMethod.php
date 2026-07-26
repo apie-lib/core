@@ -32,6 +32,19 @@ enum RequestMethod: string
         return $this->value;
     }
 
+    public function hasOptionalOrNoContentBody(): bool
+    {
+        return match ($this) {
+            self::GET,
+            self::HEAD,
+            self::DELETE,
+            self::OPTIONS,
+            self::TRACE,
+            self::ANY => true,
+            default => false,
+        };
+    }
+
     /**
      * @return array<RequestMethod>
      */

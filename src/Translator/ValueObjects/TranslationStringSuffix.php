@@ -27,6 +27,16 @@ final class TranslationStringSuffix implements HasRegexValueObjectInterface
     ) {
     }
 
+    public function getPluralization(): ?Pluralization
+    {
+        return $this->pluralization;
+    }
+
+    public function getAuthenticated(): ?bool
+    {
+        return $this->authenticated;
+    }
+
     public function getSimplifications(): TranslationStringSuffixSet
     {
         $list = [];

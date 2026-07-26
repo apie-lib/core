@@ -118,6 +118,23 @@ class ItemHashmapTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
+    public function it_does_not_confuse_numeric_and_non_numeric_keys()
+    {
+        $list = [
+            1 => 'Hello',
+            'key' => 'Hello',
+        ];
+        $testItem = new ItemHashmap($list);
+        $this->assertEquals('{"1":"Hello","key":"Hello"}', json_encode($testItem));
+        $this->assertEquals($list, $testItem->toArray());
+
+        $testItem2 = $testItem->toImmutable();
+        $testItem['2'] = 'Hello';
+        $this->assertEquals('{"1":"Hello","key":"Hello"}', json_encode($testItem2));
+        $this->assertEquals($list, $testItem2->toArray());
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
     public function an_immutable_hashmap_can_not_unset_values()
     {
         $testItem = new ImmutableStringOrIntHashmap([1, 2, 3]);

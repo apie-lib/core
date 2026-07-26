@@ -12,9 +12,9 @@ class MenuHeader extends AbstractTranslation
 
     public function getFallbackText(): string
     {
-        if (preg_match('/\.[^.]+$/', $this->middleSection, $matches)) {
-            return $matches[0] ?: 'Home';
+        if (preg_match('/\.([^.]+)\.header$/', $this->middleSection, $matches)) {
+            return $matches[1] ? ucfirst($matches[1]) : 'Home';
         }
-        return $this->middleSection ?: 'Home';
+        return 'Home';
     }
 }

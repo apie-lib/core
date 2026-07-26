@@ -1,31 +1,33 @@
 <?php
 namespace Apie\Tests\Core\Translator\ValueObjects;
 
-use Apie\Core\Translator\ValueObjects\MenuHeader;
+use Apie\Core\Translator\ValueObjects\ResourceModifyResourceButtonLabel;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-class MenuHeaderTest extends TestCase
+class ResourceModifyResourceButtonLabelTest extends TestCase
 {
     use TestWithFaker;
 
     #[Test]
     #[DataProvider('validInputProvider')]
-    public function it_can_create_object_from_fromNative(string $expectedFallback, string $input)
-    {
-        $testItem = MenuHeader::fromNative($input);
+    public function it_can_create_object_from_fromNative(
+        array $expectedPlaceholders,
+        string $expectedFallback,
+        string $input
+    ) {
+        $testItem = ResourceModifyResourceButtonLabel::fromNative($input);
         $this->assertEquals($input, $testItem->toNative());
         $this->assertEquals($expectedFallback, $testItem->getFallbackText());
+        $this->assertEquals($expectedPlaceholders, $testItem->getPlaceholders()->toArray());
     }
 
     public static function validInputProvider(): \Generator
     {
-        yield 'menu header root' => ['Home', 'apie.menu.header'];
-        yield 'submenu item' => ['Sub2', 'apie.menu.sub.sub2.header'];
-        yield 'all options' => ['Sub2', 'apie.bounded.test.resource.test.menu.sub.sub2.header.singular.authenticated'];
+        yield 'simple label' => [['id' => '12345678'], 'Edit', 'apie.action.edit.12345678.label'];
     }
 
     #[Test]
@@ -33,7 +35,7 @@ class MenuHeaderTest extends TestCase
     public function fromNative_throws_error_on_invalid_input(string $input)
     {
         $this->expectException(InvalidStringForValueObjectException::class);
-        MenuHeader::fromNative($input);
+        ResourceModifyResourceButtonLabel::fromNative($input);
     }
 
     public static function invalidInputProvider(): \Generator
@@ -47,6 +49,6 @@ class MenuHeaderTest extends TestCase
     #[Test]
     public function it_works_with_apie_faker()
     {
-        $this->runFakerTest(MenuHeader::class);
+        $this->runFakerTest(ResourceModifyResourceButtonLabel::class);
     }
 }

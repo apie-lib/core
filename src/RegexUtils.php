@@ -54,4 +54,20 @@ final class RegexUtils
 
         return self::$alreadyCalculated[$regularExpression];
     }
+
+    public static function fromPlaceholderToRegularExpression(
+        string $translationString,
+        bool $includeStartAndEndRegex = true,
+        bool $includeAsCaptureGroup = true
+    ): string {
+        $regex = preg_replace(
+            '/:([a-zA-Z_][a-zA-Z0-9_]*)/',
+            $includeAsCaptureGroup ? '(?<$1>[^.]+)' : '[^.]+',
+            $translationString
+        );
+        if ($includeStartAndEndRegex) {
+            return '/^' . $regex . '$/';
+        }
+        return $regex;
+    }
 }

@@ -9,6 +9,7 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
 
@@ -41,7 +42,11 @@ class FromGetters implements IndexingStrategyInterface
             if (!$typehint instanceof ReflectionNamedType) {
                 continue;
             }
-            $value = $fieldMetadata->getValue($object, $context);
+            try {
+                $value = $fieldMetadata->getValue($object, $context);
+            } catch (LogicException) { // see GetterMethod::getValue
+                $value = null;
+            }
             if (is_object($value)) {
                 $embeddedObjectResult = $indexer->getIndexesForObject($value, $context);
                 $result = Indexer::merge($result, $embeddedObjectResult);

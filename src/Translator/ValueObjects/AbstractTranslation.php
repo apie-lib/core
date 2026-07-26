@@ -7,6 +7,7 @@ use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Identifiers\SnakeCaseSlug;
+use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\RegexUtils;
 use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
@@ -32,9 +33,11 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
     final protected function __construct(
         protected TranslationStringPrefix $prefix,
         protected string $middleSection,
-        protected TranslationStringSuffix $suffix
+        protected TranslationStringSuffix $suffix,
+        protected ItemHashmap $placeholderValue
     ) {
-        if (!preg_match('/^' . static::MIDDLE_REGEX . '$/', $middleSection)) {
+        $regex = RegexUtils::fromPlaceholderToRegularExpression(static::MIDDLE_REGEX, includeAsCaptureGroup: false);
+        if (!preg_match($regex, $middleSection)) {
             throw new InvalidStringForValueObjectException(
                 $prefix . $middleSection . $suffix,
                 new ReflectionClass(static::class)
@@ -42,9 +45,20 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         }
     }
 
+    public function getPlaceholders(): ItemHashmap
+    {
+        return $this->placeholderValue;
+    }
+
     public static function getRegularExpression(): string
     {
-        return '/^' . self::PREFIX_REGEX . static::MIDDLE_REGEX . self::SUFFIX_REGEX . '$/';
+        $regex = RegexUtils::fromPlaceholderToRegularExpression(static::MIDDLE_REGEX, false, false);
+        // the str_replace is a temporary fix because RegRev seems to read [^.] incorrectly.
+        return str_replace(
+            '[^.]+',
+            '[a-zA-Z0-9]+',
+            '/^' . self::PREFIX_REGEX . $regex . self::SUFFIX_REGEX . '$/'
+        );
     }
 
     final public function toNative(): string
@@ -71,10 +85,15 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
     
         $middleSection = substr($inputSection, 0, strlen($inputSection) - strlen($suffix->toNative()));
 
+        $regex = RegexUtils::fromPlaceholderToRegularExpression(static::MIDDLE_REGEX);
+        preg_match($regex, $middleSection, $placeholders);
+        // @phpstan-ignore-next-line nullCoalesce.variable
+        $placeholders = array_filter($placeholders ?? [], fn ($k) => !is_numeric($k), ARRAY_FILTER_USE_KEY);
         return new static(
             $prefix,
             $middleSection,
-            $suffix
+            $suffix,
+            (new ItemHashmap($placeholders))
         );
     }
 
@@ -97,7 +116,8 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         return new static(
             $this->prefix->withoutBoundedContextId(),
             $this->middleSection,
-            $this->suffix
+            $this->suffix,
+            $this->placeholderValue
         );
     }
 
@@ -106,7 +126,8 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         return new static(
             $this->prefix->withBoundedContextId($boundedContextId),
             $this->middleSection,
-            $this->suffix
+            $this->suffix,
+            $this->placeholderValue
         );
     }
 
@@ -115,7 +136,8 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         return new static(
             $this->prefix->withoutResourceIdentifier(),
             $this->middleSection,
-            $this->suffix
+            $this->suffix,
+            $this->placeholderValue
         );
     }
 
@@ -124,7 +146,8 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         return new static(
             $this->prefix->withResourceIdentifier($resourceIdentifier),
             $this->middleSection,
-            $this->suffix
+            $this->suffix,
+            $this->placeholderValue
         );
     }
 
@@ -141,12 +164,14 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
                 $prefixSimplification,
                 $this->middleSection,
                 $this->suffix,
+                $this->placeholderValue
             );
             foreach ($this->suffix->getSimplifications() as $suffixSimplification) {
                 $list[] = new static(
                     $prefixSimplification,
                     $this->middleSection,
-                    $suffixSimplification
+                    $suffixSimplification,
+                    $this->placeholderValue
                 );
             }
         }
@@ -154,7 +179,8 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
             $list[] = new static(
                 $this->prefix,
                 $this->middleSection,
-                $suffixSimplification
+                $suffixSimplification,
+                $this->placeholderValue
             );
         }
         return new TranslationStringSet($list);

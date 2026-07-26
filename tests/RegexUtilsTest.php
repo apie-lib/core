@@ -38,4 +38,62 @@ class RegexUtilsTest extends TestCase
         yield 'different delimiter' => ['aaa', 'baaab'];
         yield 'case insensitive' => ['(a|A)(a|A)(a|A)', '/aaa/i'];
     }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('translationStringProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_replace_translation_strings_to_regex(
+        string $expected,
+        string $input,
+        bool $includeStartAndEndRegex,
+        bool $includeAsCaptureGroup
+    ) {
+        $this->assertEquals(
+            $expected,
+            RegexUtils::fromPlaceholderToRegularExpression(
+                $input,
+                $includeStartAndEndRegex,
+                $includeAsCaptureGroup
+            )
+        );
+    }
+
+    public static function translationStringProvider(): \Generator
+    {
+        yield 'no translation strings' => [
+            'apie.menu.header.authenticated',
+            'apie.menu.header.authenticated',
+            false,
+            false
+        ];
+        yield 'no translation strings, add start and end regex' => [
+            '/^apie.menu.header.authenticated$/',
+            'apie.menu.header.authenticated',
+            true,
+            false
+        ];
+        yield 'simple placeholder' => [
+            'apie.resource.edit.[^.]+.label',
+            'apie.resource.edit.:id.label',
+            false,
+            false
+        ];
+        yield 'simple placeholder, add start and end regex' => [
+            '/^apie.resource.edit.[^.]+.label$/',
+            'apie.resource.edit.:id.label',
+            true,
+            false
+        ];
+        yield 'simple placeholder, add start and end regex and capture group' => [
+            '/^apie.resource.edit.(?<id>[^.]+).label$/',
+            'apie.resource.edit.:id.label',
+            true,
+            true
+        ];
+        yield 'simple placeholder, add capture group' => [
+            'apie.resource.edit.(?<id>[^.]+).label',
+            'apie.resource.edit.:id.label',
+            false,
+            true
+        ];
+    }
 }
