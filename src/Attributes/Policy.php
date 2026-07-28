@@ -13,7 +13,7 @@ final class Policy implements ApieContextAttribute
     public function __construct(
         public string $rule,
         public ?string $globalRule = null,
-        public ?bool $enabledOnMissingRule = null,
+        public bool|null|ApieContextAttribute $enabledOnMissingRule = null,
         public array $additionalContext = []
     ) {
     }
@@ -34,15 +34,20 @@ final class Policy implements ApieContextAttribute
                 ->registerInstance($resource)
                 ->withContext(get_debug_type($resource), $resource);
         }
+        $enabledOnMissingRule = match(get_debug_type($this->enabledOnMissingRule)) {
+            'null' => null,
+            'bool' => $this->enabledOnMissingRule,
+            default => $this->enabledOnMissingRule->applies($context)
+        };
         
         if ($policyManager instanceof PolicyManager) {
             return $policyManager->allowed(
                 $context,
                 $rule,
-                $this->enabledOnMissingRule
+                $enabledOnMissingRule
             );
         }
 
-        return $this->enabledOnMissingRule ?? false;
+        return $enabledOnMissingRule ?? false;
     }
 }

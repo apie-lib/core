@@ -4,6 +4,7 @@ namespace Apie\Core\Translator\ValueObjects;
 use Apie\Core\Attributes\Description;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Identifiers\SnakeCaseSlug;
+use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\IsStringWithRegexValueObject;
 use ReflectionClass;
@@ -51,6 +52,16 @@ final class TranslationString implements HasRegexValueObjectInterface
             return $fn($this->internal);
         }
         return $fn(substr(strrchr($this->internal, '.'), 1));
+    }
+
+    public function getFallbackText(): string
+    {
+        return $this->getLastTranslationSegment();
+    }
+
+    public function getSimplifications(): TranslationStringSet
+    {
+        return new TranslationStringSet();
     }
 
     /**

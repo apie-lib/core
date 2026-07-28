@@ -9,4 +9,9 @@ class StringList extends ItemList
     {
         return parent::offsetGet($offset);
     }
+
+    public function join(string $separator = ','): string
+    {
+        return implode($separator, $this->internal);
+    }
 }

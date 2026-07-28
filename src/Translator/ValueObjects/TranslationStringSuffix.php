@@ -3,6 +3,8 @@ namespace Apie\Core\Translator\ValueObjects;
 
 use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
+use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Translator\Enums\Pluralization;
 use Apie\Core\Translator\Lists\TranslationStringSuffixSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
@@ -37,6 +39,20 @@ final class TranslationStringSuffix implements HasRegexValueObjectInterface
         return $this->authenticated;
     }
 
+    public function withoutAuthenticated(): static
+    {
+        return new static($this->pluralization, null);
+    }
+
+    public function withAuthenticated(bool $authenticated): static
+    {
+        return new static($this->pluralization, $authenticated);
+    }
+    
+    public static function fromApieContext(ApieContext $context, ?Pluralization $pluralization = null): static
+    {
+        return new static($pluralization, $context->hasContext(ContextConstants::AUTHENTICATED_USER));
+    }
     public function getSimplifications(): TranslationStringSuffixSet
     {
         $list = [];

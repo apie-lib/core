@@ -151,12 +151,32 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         );
     }
 
+    public function withoutAuthenticated(): static
+    {
+        return new static(
+            $this->prefix,
+            $this->middleSection,
+            $this->suffix->withoutAuthenticated(),
+            $this->placeholderValue
+        );
+    }
+
+    public function withAuthenticated(bool $authenticated): static
+    {
+        return new static(
+            $this->prefix,
+            $this->middleSection,
+            $this->suffix->withAuthenticated($authenticated),
+            $this->placeholderValue
+        );
+    }
+
     final public function getSpecifity(): int
     {
         return $this->prefix->getSpecifity() + $this->suffix->getSpecifity();
     }
 
-    final public function getSimplifications(): TranslationStringSet
+    public function getSimplifications(): TranslationStringSet
     {
         $list = [];
         foreach ($this->prefix->getSimplifications() as $prefixSimplification) {

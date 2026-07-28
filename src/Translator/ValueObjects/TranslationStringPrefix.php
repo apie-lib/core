@@ -4,6 +4,8 @@ namespace Apie\Core\Translator\ValueObjects;
 use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Translator\Lists\TranslationStringPrefixSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
@@ -23,7 +25,20 @@ final class TranslationStringPrefix implements HasRegexValueObjectInterface
         private ?SnakeCaseSlug $resourceIdentifier = null,
     ) {
     }
-
+    public static function fromApieContext(ApieContext $context): static
+    {
+        $resourceIdentifier = $context->getContext(ContextConstants::RESOURCE_NAME, false);
+        if (!$resourceIdentifier && $context->hasContext(ContextConstants::SERVICE_CLASS)) {
+            $resourceIdentifier = $context->getContext(ContextConstants::SERVICE_CLASS, false);
+        }
+        if ($resourceIdentifier) {
+            $resourceIdentifier = SnakeCaseSlug::fromClass(new \ReflectionClass($resourceIdentifier));
+        }
+        return new static(
+            $context->getContext(BoundedContextId::class, false),
+            $resourceIdentifier
+        );
+    }
     public function getBoundedContextId(): ?BoundedContextId
     {
         return $this->boundedContextId;

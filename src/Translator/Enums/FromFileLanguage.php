@@ -2,6 +2,7 @@
 namespace Apie\Core\Translator\Enums;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 
 enum FromFileLanguage: string
 {
@@ -10,7 +11,7 @@ enum FromFileLanguage: string
 
     public static function fromContext(ApieContext $apieContext): self
     {
-        $locale = $apieContext->getContext('locale', false) ?? 'en';
+        $locale = $apieContext->getContext(ContextConstants::ACCEPT_LOCALE, false) ?? 'en';
         if (strpos($locale, '_')) {
             $locale = substr($locale, strpos($locale, '_'));
         }

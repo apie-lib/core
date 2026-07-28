@@ -18,7 +18,6 @@ class BoundedContextPolicyProvider implements PolicyProviderInterface
         if ($boundedContext === null) {
             return $this->fallbackPolicy;
         }
-
         // @phpstan-ignore nullCoalesce.expr
         return $this->policiesByBoundedContext[$boundedContext]->getPolicyFor($apieContext, $action) ?? $this->fallbackPolicy;
     }

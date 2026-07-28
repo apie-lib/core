@@ -7,6 +7,7 @@ use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Translator\Enums\Pluralization;
+use Apie\Core\Translator\Lists\TranslationStringSet;
 use ICanBoogie\Inflector;
 
 #[Description('Name of resource')]
@@ -41,5 +42,20 @@ class ResourceName extends AbstractTranslation
             $suffix,
             new ItemHashmap()
         );
+    }
+
+    public function getSimplifications(): TranslationStringSet
+    {
+        $list = [];
+        $prefixSimplification = $this->prefix->withoutBoundedContextId();
+        foreach ($this->suffix->getSimplifications() as $suffixSimplification) {
+            $list[] = new static(
+                $prefixSimplification,
+                $this->middleSection,
+                $suffixSimplification,
+                $this->placeholderValue
+            );
+        }
+        return new TranslationStringSet($list);
     }
 }
