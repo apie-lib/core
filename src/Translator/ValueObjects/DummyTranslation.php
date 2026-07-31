@@ -1,5 +1,5 @@
 <?php
-namespace Apie\Tests\Core\Translator\ValueObjects;
+namespace Apie\Core\Translator\ValueObjects;
 
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
 

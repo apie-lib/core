@@ -16,18 +16,31 @@ final class MenuHeader extends AbstractTranslation
     public function getFallbackText(): string
     {
         if (preg_match('/\.([^.]+)\.header$/', $this->middleSection, $matches)) {
-            return $matches[1] ? ucfirst(SnakeCaseSlug::fromNative($matches[1])->humanize()) : 'Home';
+            return $matches[1] ? ucfirst(SnakeCaseSlug::fromText($matches[1])->humanize()) : 'Home';
         }
         return 'Home';
     }
 
-    public static function createRoot(ApieContext $context, string $path = ''): MenuHeader
+    public function createChildNode(string $part): MenuHeader
+    {
+        if ($part) {
+            $middle = preg_replace('/\.header$/', '.' . $part . '.header', $this->middleSection);
+            return new static($this->prefix, $middle, $this->suffix, $this->placeholderValue);
+        }
+
+        return $this;
+    }
+
+    public static function createRoot(ApieContext $context = new ApieContext(), string $path = ''): MenuHeader
     {
         $prefix = TranslationStringPrefix::fromApieContext($context);
         $suffix = TranslationStringSuffix::fromApieContext($context);
         $pathList = array_filter(
             array_map(
                 function (string $pathItem) {
+                    if ($pathItem === 'header') {
+                        return 'header2';
+                    }
                     return $pathItem ? SnakeCaseSlug::fromText($pathItem)->toNative() : '';
                 },
                 explode('.', $path)

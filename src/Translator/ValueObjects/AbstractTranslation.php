@@ -78,6 +78,16 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
 
     final public static function fromNative(mixed $input): static
     {
+        if (static::class === AbstractTranslation::class) {
+            $alias = explode('|', ApieLib::getAlias(static::class));
+            foreach ($alias as $class) {
+                try {
+                    return $class::fromNative($input);
+                } catch (InvalidStringForValueObjectException) {
+                }
+            }
+            throw new InvalidStringForValueObjectException($input, new ReflectionClass(static::class));
+        }
         $input = Utils::toString($input);
         $prefix = TranslationStringPrefix::createFromTranslation($input);
         $inputSection = substr($input, strlen($prefix->toNative()));
@@ -89,6 +99,7 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         preg_match($regex, $middleSection, $placeholders);
         // @phpstan-ignore-next-line nullCoalesce.variable
         $placeholders = array_filter($placeholders ?? [], fn ($k) => !is_numeric($k), ARRAY_FILTER_USE_KEY);
+        
         return new static(
             $prefix,
             $middleSection,
@@ -204,6 +215,11 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
             );
         }
         return new TranslationStringSet($list);
+    }
+
+    final public function toPath(string $rootPath): string
+    {
+        return rtrim($rootPath, '/') . '/' . str_replace('.', '/', $this->toNative());
     }
 
     abstract public function getFallbackText(): string;

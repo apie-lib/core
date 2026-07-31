@@ -3,16 +3,15 @@ namespace Apie\Core\Translator\Lists;
 
 use Apie\Core\Lists\ItemSet;
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
-use Apie\Core\Translator\ValueObjects\TranslationString;
 
 /**
- * @extends ItemSet<TranslationString|AbstractTranslation>
+ * @extends ItemSet<AbstractTranslation>
  */
 final class TranslationStringSet extends ItemSet
 {
     protected bool $mutable = false;
 
-    public function offsetGet(mixed $offset): TranslationString|AbstractTranslation
+    public function offsetGet(mixed $offset): AbstractTranslation
     {
         return parent::offsetGet($offset);
     }
@@ -23,7 +22,7 @@ final class TranslationStringSet extends ItemSet
 
         usort(
             $list,
-            function (TranslationString|AbstractTranslation $a, TranslationString|AbstractTranslation $b) {
+            function (AbstractTranslation $a, AbstractTranslation $b) {
                 return $a->getSpecifity() <=> $b->getSpecifity();
             }
         );
@@ -32,7 +31,7 @@ final class TranslationStringSet extends ItemSet
     }
 
     /**
-     * @return array<int, TranslationString|AbstractTranslation>
+     * @return array<int, AbstractTranslation>
      */
     public function toArrayWithSimplifications(): array
     {
@@ -63,7 +62,7 @@ final class TranslationStringSet extends ItemSet
         $result = [];
 
         foreach ($this->toArrayWithSimplifications() as $translationString) {
-            /** @var TranslationString|AbstractTranslation $translationString */
+            /** @var AbstractTranslation $translationString */
             $key = $translationString->toNative();
             $value = $translationString->getFallbackText();
             $parts = explode('.', $key);

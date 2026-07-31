@@ -3,20 +3,21 @@ namespace Apie\Tests\Core\Translator;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Translator\ApieTranslator;
-use Apie\Core\Translator\ValueObjects\TranslationString;
+use Apie\Core\Translator\ValueObjects\AuditLogEventMessage;
+use Apie\Core\Translator\ValueObjects\DummyTranslation;
 use PHPUnit\Framework\TestCase;
 
 class ApieTranslatorTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_returns_translation_string_if_not_found()
+    public function it_returns_fallback_text_if_not_found()
     {
         $testItem = ApieTranslator::create();
         $actual = $testItem->getGeneralTranslation(
             new ApieContext(),
-            new TranslationString('does_not_exist')
+            DummyTranslation::fromNative('apie.mid-section.parent')
         );
-        $this->assertEquals('does_not_exist', $actual);
+        $this->assertEquals('Dummy', $actual);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -25,8 +26,8 @@ class ApieTranslatorTest extends TestCase
         $testItem = ApieTranslator::create();
         $actual = $testItem->getGeneralTranslation(
             new ApieContext(),
-            new TranslationString('apie.cms.bounded_context')
+            AuditLogEventMessage::createResourceCreatedEvent(new ApieContext())
         );
-        $this->assertEquals('Bounded context', $actual);
+        $this->assertEquals('Added resource', $actual);
     }
 }

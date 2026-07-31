@@ -6,7 +6,7 @@ use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Translator\Enums\TranslationStringOperationType;
 use Apie\Core\Translator\Enums\TranslationStringType;
 use Apie\Core\Translator\Lists\TranslationStringSet;
-use Apie\Core\Translator\ValueObjects\TranslationString;
+use Apie\Core\Translator\ValueObjects\AbstractTranslation;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -75,7 +75,7 @@ final class TranslationStringSetBuilder
         return new TranslationStringSet(
             array_map(
                 function (string $value) {
-                    return TranslationString::fromNative($value);
+                    return AbstractTranslation::fromNative($value);
                 },
                 array_merge(
                     ...array_map(

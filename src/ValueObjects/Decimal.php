@@ -9,8 +9,8 @@ use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 abstract class Decimal implements ValueObjectInterface, HasRegexValueObjectInterface
 {
     final protected function __construct(
-        private int $integerPart,
-        private string $decimalPart,
+        protected readonly int $integerPart,
+        protected readonly string $decimalPart,
     ) {
     }
 

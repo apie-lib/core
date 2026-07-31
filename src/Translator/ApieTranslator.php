@@ -4,7 +4,6 @@ namespace Apie\Core\Translator;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
-use Apie\Core\Translator\ValueObjects\TranslationString;
 
 class ApieTranslator implements ApieTranslatorInterface
 {
@@ -22,12 +21,12 @@ class ApieTranslator implements ApieTranslatorInterface
     public static function create(): self
     {
         return new self(
+            FromFileTranslator::createFallback(),
             new DefaultLabelPropertyTranslator(),
-            FromFileTranslator::createFallback()
         );
     }
 
-    public function getGeneralTranslation(ApieContext $context, AbstractTranslation|TranslationString|TranslationStringSet $translation): string
+    public function getGeneralTranslation(ApieContext $context, AbstractTranslation|TranslationStringSet $translation): string
     {
         foreach ($this->translators as $translator) {
             $res = $translator->getGeneralTranslation($context, $translation);

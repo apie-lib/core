@@ -5,7 +5,6 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Translator\Enums\FromFileLanguage;
 use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
-use Apie\Core\Translator\ValueObjects\TranslationString;
 
 class FromFileTranslator implements ApieTranslatorInterface
 {
@@ -18,11 +17,8 @@ class FromFileTranslator implements ApieTranslatorInterface
         return new self(__DIR__ . '/../../lang/');
     }
 
-    public function getGeneralTranslation(ApieContext $context, AbstractTranslation|TranslationString|TranslationStringSet $translations): ?string
+    public function getGeneralTranslation(ApieContext $context, AbstractTranslation|TranslationStringSet $translations): ?string
     {
-        if ($translations instanceof TranslationString) {
-            $translations = new TranslationStringSet([$translations]);
-        }
         if ($translations instanceof AbstractTranslation) {
             $translations = [$translations, ...$translations->getSimplifications()];
         }

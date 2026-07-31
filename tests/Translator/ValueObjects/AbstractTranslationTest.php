@@ -2,6 +2,7 @@
 namespace Apie\Tests\Core\Translator\ValueObjects;
 
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
+use Apie\Core\Translator\ValueObjects\DummyTranslation;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
