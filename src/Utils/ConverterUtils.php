@@ -48,17 +48,56 @@ final class ConverterUtils
     }
 
     /**
+     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod|null $input
+     */
+    public static function isStaticOrSelf(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod|null $input): bool
+    {
+        if (is_string($input)) {
+            return $input === 'self' || $input === 'static';
+        }
+        if ($input instanceof ReflectionProperty) {
+            return self::isStaticOrSelf($input->getType());
+        }
+        if ($input instanceof ReflectionNamedType) {
+            return self::isStaticOrSelf($input->getName());
+        }
+        if ($input instanceof \ReflectionIntersectionType || $input instanceof \ReflectionUnionType) {
+            return false;
+        }
+        if ($input instanceof ReflectionType) {
+            return self::isStaticOrSelf((string) $input);
+        }
+        return false;
+    }
+
+    /**
      * @template T of object
      * @param string|ReflectionClass<T>|ReflectionProperty|ReflectionType|ReflectionMethod|null $input
+     * @param ReflectionMethod|ReflectionClass<T>|null $context
      * @return ReflectionClass<T>|null
      */
-    public static function toReflectionClass(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod|null $input, bool $strict = false): ?ReflectionClass
-    {
+    public static function toReflectionClass(
+        string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod|null $input,
+        bool $strict = false,
+        ReflectionMethod|ReflectionClass|null $context = null
+    ): ?ReflectionClass {
         if ($input === null) {
             return null;
         }
         if ($input instanceof ReflectionClass) {
             return $input;
+        }
+        if (self::isStaticOrSelf($input)) {
+            if ($context instanceof ReflectionMethod) {
+                return $context->getDeclaringClass();
+            }
+            if ($context instanceof ReflectionClass) {
+                return $context;
+            }
+            if ($input instanceof ReflectionMethod) {
+                return $input->getDeclaringClass();
+            }
+            throw new \LogicException('I can not handle static without a proper context of usage');
         }
         if (is_string($input) && !class_exists($input)) {
             return null;

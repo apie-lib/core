@@ -3,6 +3,7 @@ namespace Apie\Core\BackgroundProcess;
 
 use Apie\Core\ApieLib;
 use Apie\Core\Attributes\AlwaysDisabled;
+use Apie\Core\Attributes\CmsIcon;
 use Apie\Core\Attributes\Context;
 use Apie\Core\Attributes\FakeCount;
 use Apie\Core\Attributes\Internal;
@@ -27,6 +28,7 @@ use ReflectionClass;
 use Throwable;
 
 #[FakeCount(0)]
+#[CmsIcon('tabler:stack-2')]
 #[StaticCheck(new Policy('staticCanViewAny', enabledOnMissingRule: true))]
 #[RuntimeCheck(
     new Policy('canView', 'canViewAny')

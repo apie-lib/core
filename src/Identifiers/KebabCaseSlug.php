@@ -34,6 +34,21 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
         return static::fromNative(strtolower($short));
     }
 
+    public static function fromText(string $text): self
+    {
+        // Replace camelCase with kebab-case
+        $text = preg_replace('/([a-z])([A-Z])/', '$1-$2', $text);
+        // Replace any non-alphanumeric character with dash
+        $text = preg_replace('/[^a-zA-Z0-9]+/', '-', $text);
+        // Convert to lowercase
+        $text = strtolower($text);
+        // Remove leading/trailing dashes
+        $text = trim($text, '-');
+        // Collapse multiple dashes into one
+        $text = preg_replace('/-+/', '-', $text);
+        return static::fromNative($text);
+    }
+
     public function humanize(): string
     {
         return str_replace('-', ' ', $this->internal);

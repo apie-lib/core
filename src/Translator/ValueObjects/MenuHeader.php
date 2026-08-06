@@ -18,12 +18,19 @@ final class MenuHeader extends AbstractTranslation
         if (preg_match('/\.([^.]+)\.header$/', $this->middleSection, $matches)) {
             return $matches[1] ? ucfirst(SnakeCaseSlug::fromText($matches[1])->humanize()) : 'Home';
         }
+
         return 'Home';
+    }
+
+    public function asId(): string
+    {
+        return str_replace('.', '_', $this->middleSection);
     }
 
     public function createChildNode(string $part): MenuHeader
     {
         if ($part) {
+            $part = SnakeCaseSlug::fromText($part)->toNative();
             $middle = preg_replace('/\.header$/', '.' . $part . '.header', $this->middleSection);
             return new static($this->prefix, $middle, $this->suffix, $this->placeholderValue);
         }
