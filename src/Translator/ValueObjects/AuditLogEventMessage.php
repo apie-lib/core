@@ -3,6 +3,7 @@ namespace Apie\Core\Translator\ValueObjects;
 
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
+use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Lists\ItemHashmap;
 
@@ -65,7 +66,7 @@ final class AuditLogEventMessage extends AbstractTranslation
     {
         $methodName ??= '(unknown)';
         if ($context->hasContext(ContextConstants::METHOD_NAME)) {
-            $methodName = $context->getContext(ContextConstants::METHOD_NAME);
+            $methodName = KebabCaseSlug::fromText($context->getContext(ContextConstants::METHOD_NAME))->toNative();
         }
         return new AuditLogEventMessage(
             TranslationStringPrefix::fromApieContext($context),

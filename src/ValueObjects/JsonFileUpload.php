@@ -2,13 +2,16 @@
 namespace Apie\Core\ValueObjects;
 
 use Apie\Core\Attributes\Description;
+use Apie\Core\Attributes\FakeMethod;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\FileStorage\StoredFile;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\Enums\SchemaUsages;
+use Faker\Generator;
 
 #[SchemaMethod('createSchema')]
+#[FakeMethod('createRandom')]
 #[Description('Uploads a file with JSON.')]
 final class JsonFileUpload implements CompositeWithOwnValidation
 {
@@ -23,6 +26,28 @@ final class JsonFileUpload implements CompositeWithOwnValidation
         #[Optional]
         private ?StrictMimeType $mime = null
     ) {
+    }
+
+    public static function createRandom(Generator $generator): JsonFileUpload
+    {
+        $file = Filename::createRandom($generator)->toNative();
+        $contents = null;
+        $base64 = null;
+        $mime = null;
+        if ($generator->boolean()) {
+            $contents = $generator->text();
+        } else {
+            $base64 = Base64Stream::createRandom($generator)->toNative();
+        }
+        if ($generator->boolean()) {
+            $mime = StrictMimeType::createRandom($generator)->toNative();
+        }
+        return JsonFileUpload::fromNative(array_filter([
+            'originalFilename' => $file,
+            'contents' => $contents,
+            'base64' => $base64,
+            'mime' => $mime,
+        ]));
     }
 
     protected function validateState(): void
