@@ -17,7 +17,7 @@ interface MetadataInterface
     public function getArrayItemType(): ?MetadataInterface;
     public function getValueOptions(ApieContext $context, bool $runtimeFilter = false): ?ValueOptionList;
     /**
-     * @return ReflectionClass<object>|null
+     * @return ReflectionClass<covariant object>|null
      */
     public function toClass(): ?ReflectionClass;
 }

@@ -21,7 +21,7 @@ class DiscriminatorColumn implements FieldInterface, GetterInterface
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     * @param ReflectionClass<covariant PolymorphicEntityInterface> $class
      */
     public function getValueForClass(ReflectionClass $class): string
     {

@@ -19,7 +19,7 @@ final class TranslationStringSetBuilder
     private ?TranslationStringOperationType $operationType = null;
 
     /**
-     * @param ReflectionClass<object> $resourceName
+     * @param ReflectionClass<covariant object> $resourceName
      */
     private function __construct(
         private ReflectionClass $resourceName,
@@ -28,7 +28,7 @@ final class TranslationStringSetBuilder
     }
 
     /**
-     * @param ReflectionClass<object> $resourceName
+     * @param ReflectionClass<covariant object> $resourceName
      */
     public static function create(ReflectionClass $resourceName, ?BoundedContextId $boundedContextId = null): self
     {

@@ -46,8 +46,8 @@ final class IdentifierUtils
 
     /**
      * @template T of EntityInterface
-     * @param ReflectionClass<T>|T $identifier
-     * @return ReflectionClass<IdentifierInterface<T>>
+     * @param ReflectionClass<covariant T>|T $identifier
+     * @return ReflectionClass<covariant IdentifierInterface<T>>
      */
     public static function entityClassToIdentifier(ReflectionClass|EntityInterface $identifier): ReflectionClass
     {
@@ -62,7 +62,7 @@ final class IdentifierUtils
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public static function classNameToUnderscore(ReflectionClass $class): string
     {

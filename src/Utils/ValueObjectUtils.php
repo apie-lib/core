@@ -27,7 +27,7 @@ final class ValueObjectUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -39,7 +39,7 @@ final class ValueObjectUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isNonCompositeValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -57,7 +57,7 @@ final class ValueObjectUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isCompositeValueObject(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {

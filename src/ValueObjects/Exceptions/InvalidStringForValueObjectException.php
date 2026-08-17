@@ -14,7 +14,7 @@ use Throwable;
 class InvalidStringForValueObjectException extends ApieException
 {
     /**
-     * @param ValueObjectInterface|ReflectionClass<object> $valueObject
+     * @param ValueObjectInterface|ReflectionClass<covariant object> $valueObject
      */
     public function __construct(string $input, ValueObjectInterface|ReflectionClass $valueObject, ?Throwable $previous = null)
     {

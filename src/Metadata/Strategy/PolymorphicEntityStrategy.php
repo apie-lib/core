@@ -23,7 +23,7 @@ final class PolymorphicEntityStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     * @param ReflectionClass<covariant PolymorphicEntityInterface> $class
      */
     public function __construct(private ReflectionClass $class)
     {

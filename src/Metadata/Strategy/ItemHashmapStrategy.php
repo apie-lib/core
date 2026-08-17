@@ -16,7 +16,7 @@ final class ItemHashmapStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<ItemHashmap> $class
+     * @param ReflectionClass<covariant ItemHashmap> $class
      */
     public function __construct(private readonly ReflectionClass $class)
     {

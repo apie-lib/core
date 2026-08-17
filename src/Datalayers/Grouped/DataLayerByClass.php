@@ -27,7 +27,7 @@ final class DataLayerByClass extends ItemHashmap
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function pickDataLayerFor(ReflectionClass $class): ApieDatalayer
     {

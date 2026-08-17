@@ -306,7 +306,7 @@ final class Utils
     }
 
     /**
-     * @param ValueObjectInterface|ReflectionClass<object> $class
+     * @param ValueObjectInterface|ReflectionClass<covariant object> $class
      */
     public static function getDisplayNameForValueObject(ValueObjectInterface|ReflectionClass $class): string
     {

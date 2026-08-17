@@ -18,7 +18,7 @@ final class CompositeValueObjectStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<ValueObjectInterface> $class
+     * @param ReflectionClass<covariant ValueObjectInterface> $class
      */
     public function __construct(private ReflectionClass $class)
     {

@@ -17,7 +17,7 @@ final class ItemListObjectStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<ItemList|ItemSet> $class
+     * @param ReflectionClass<covariant ItemList>|ReflectionClass<covariant ItemSet> $class
      */
     public function __construct(private readonly ReflectionClass $class)
     {

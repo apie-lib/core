@@ -20,7 +20,7 @@ final class HashmapUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isHashmap(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -29,7 +29,7 @@ final class HashmapUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function getArrayType(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): ReflectionType
     {
@@ -41,7 +41,7 @@ final class HashmapUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isList(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -50,7 +50,7 @@ final class HashmapUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isSet(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {

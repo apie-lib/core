@@ -12,7 +12,7 @@ use ReflectionType;
 class ReflectionClassToReflectionTypeConverter implements ConverterInterface
 {
     /**
-     * @param ReflectionClass<object> $input
+     * @param ReflectionClass<covariant object> $input
      */
     public function convert(ReflectionClass $input): ReflectionType
     {

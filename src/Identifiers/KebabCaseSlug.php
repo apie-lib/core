@@ -20,7 +20,7 @@ class KebabCaseSlug implements HasRegexValueObjectInterface
     use IsStringWithRegexValueObject;
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|string $class
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionProperty|string $class
      */
     public static function fromClass(ReflectionClass|ReflectionMethod|ReflectionProperty|string $class): self
     {

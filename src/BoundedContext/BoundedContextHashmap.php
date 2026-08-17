@@ -25,11 +25,11 @@ final class BoundedContextHashmap extends ItemHashmap
     }
 
     /**
-     * @param ReflectionClass<EntityInterface|IdentifierInterface<EntityInterface>> $class
+     * @param ReflectionClass<EntityInterface>|ReflectionClass<IdentifierInterface<EntityInterface>> $class
      */
     public function getBoundedContextFromClassName(ReflectionClass $class, ?BoundedContextId $prio = null): ?BoundedContext
     {
-        if ($class->implementsInterface(IdentifierInterface::class)) {
+        if (in_array(IdentifierInterface::class, $class->getInterfaceNames())) {
             $class = $class->getMethod('getReferenceFor')->invoke(null);
         }
         if ($prio && isset($this[$prio->toNative()])) {

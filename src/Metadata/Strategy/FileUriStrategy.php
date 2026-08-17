@@ -19,7 +19,7 @@ class FileUriStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<StoredFile> $class
+     * @param ReflectionClass<covariant StoredFile> $class
      */
     public function __construct(private readonly ReflectionClass $class)
     {

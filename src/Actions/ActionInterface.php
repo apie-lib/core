@@ -30,8 +30,8 @@ interface ActionInterface
      * Gets input type of action, for example it should create the object on POST or do a method call.
      *
      * @template T of EntityInterface
-     * @param ReflectionClass<T> $class
-     * @return ReflectionClass<T>|ReflectionMethod|ReflectionType
+     * @param ReflectionClass<covariant T> $class
+     * @return ReflectionClass<covariant T>|ReflectionMethod|ReflectionType
      */
     public static function getInputType(ReflectionClass $class): ReflectionClass|ReflectionMethod|ReflectionType;
 
@@ -39,8 +39,8 @@ interface ActionInterface
      * Returns output type of response, for example the resource being updated or the result of the method call.
      *
      * @template T of EntityInterface
-     * @param ReflectionClass<T> $class
-     * @return ReflectionClass<T>|ReflectionMethod|ReflectionType|ListOf
+     * @param ReflectionClass<covariant T> $class
+     * @return ReflectionClass<covariant T>|ReflectionMethod|ReflectionType|ListOf
      */
     public static function getOutputType(ReflectionClass $class): ReflectionClass|ReflectionMethod|ReflectionType|ListOf;
 
@@ -52,19 +52,19 @@ interface ActionInterface
     /**
      * Returns description of action.
      *
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public static function getDescription(ReflectionClass $class): string;
 
     /**
      * Returns tags of an action so a tool can combine these.
      *
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public static function getTags(ReflectionClass $class): StringList;
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      * @return array<string, mixed>
      */
     public static function getRouteAttributes(ReflectionClass $class): array;

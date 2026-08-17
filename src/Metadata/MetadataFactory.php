@@ -33,12 +33,15 @@ use ReflectionUnionType;
 
 final class MetadataFactory
 {
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public static function getMetadataStrategy(ReflectionClass $class): StrategyInterface
     {
@@ -161,7 +164,7 @@ final class MetadataFactory
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionType $typehint
+     * @param ReflectionClass<covariant object>|ReflectionType $typehint
      */
     public static function getCreationMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): MetadataInterface
     {
@@ -172,7 +175,7 @@ final class MetadataFactory
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionType $typehint
+     * @param ReflectionClass<covariant object>|ReflectionType $typehint
      */
     public static function getModificationMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): MetadataInterface
     {
@@ -183,7 +186,7 @@ final class MetadataFactory
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionType $typehint
+     * @param ReflectionClass<covariant object>|ReflectionType $typehint
      */
     public static function getResultMetadata(ReflectionClass|ReflectionType $typehint, ApieContext $context): MetadataInterface
     {

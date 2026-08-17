@@ -117,7 +117,7 @@ final class ApieContext
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function getApplicableGetters(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
@@ -140,7 +140,7 @@ final class ApieContext
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function getApplicableSetters(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
@@ -162,7 +162,7 @@ final class ApieContext
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function getApplicableMethods(ReflectionClass $class, bool $runtimeChecks = true): ReflectionHashmap
     {
@@ -189,7 +189,7 @@ final class ApieContext
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method
      */
     public function appliesToContext(ReflectionClass|ReflectionMethod|ReflectionProperty|ReflectionType|ReflectionEnumUnitCase $method, bool $runtimeChecks = true, ?Throwable $errorToThrow = null): bool
     {

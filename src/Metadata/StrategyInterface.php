@@ -7,7 +7,7 @@ use ReflectionClass;
 interface StrategyInterface
 {
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public static function supports(ReflectionClass $class): bool;
     public function getCreationMetadata(ApieContext $context): MetadataInterface;

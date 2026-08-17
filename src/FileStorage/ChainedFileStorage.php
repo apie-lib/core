@@ -20,8 +20,8 @@ final class ChainedFileStorage implements PsrAwareStorageInterface, ResourceAwar
     private array $resourceAwareStorages;
 
     /**
-     * @param array<int, PsrAwareStorageInterface> $psrAwareStorages
-     * @param array<int, ResourceAwareStorageInterface> $resourceAwareStorages
+     * @param iterable<int, PsrAwareStorageInterface> $psrAwareStorages
+     * @param iterable<int, ResourceAwareStorageInterface> $resourceAwareStorages
      */
     public function __construct(
         iterable $psrAwareStorages,

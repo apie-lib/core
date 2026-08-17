@@ -6,12 +6,12 @@ use Apie\Core\ContextConstants;
 use ReflectionClass;
 
 /**
- * @extends ItemList<ReflectionClass<object>>
+ * @extends ItemList<ReflectionClass<covariant object>>
  */
 final class ReflectionClassList extends ItemList
 {
     /**
-     * @return ReflectionClass<object>
+     * @return ReflectionClass<covariant object>
      */
     public function offsetGet(mixed $offset): ReflectionClass
     {

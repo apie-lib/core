@@ -19,7 +19,7 @@ final class DtoStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<DtoInterface> $class
+     * @param ReflectionClass<covariant DtoInterface> $class
      */
     public function __construct(private ReflectionClass $class)
     {

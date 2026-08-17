@@ -24,7 +24,7 @@ final class EntityUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -39,7 +39,7 @@ final class EntityUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isNonPolymorphicEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -55,7 +55,7 @@ final class EntityUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isPolymorphicEntity(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -70,8 +70,8 @@ final class EntityUtils
     }
 
     /**
-     * @param PolymorphicEntityInterface|ReflectionClass<PolymorphicEntityInterface> $entity
-     * @param ReflectionClass<PolymorphicEntityInterface>|null $base
+     * @param PolymorphicEntityInterface|ReflectionClass<covariant PolymorphicEntityInterface> $entity
+     * @param ReflectionClass<covariant PolymorphicEntityInterface>|null $base
      * @return array<string, string>
      */
     public static function getDiscriminatorValues(PolymorphicEntityInterface|ReflectionClass $entity, ?ReflectionClass $base = null): array
@@ -103,7 +103,7 @@ final class EntityUtils
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface> $base
+     * @param ReflectionClass<covariant PolymorphicEntityInterface> $base
      */
     public static function getDiscriminatorClasses(ReflectionClass $base): ReflectionClassList
     {
@@ -156,8 +156,8 @@ final class EntityUtils
      *
      * @template T of PolymorphicEntityInterface
      * @param array<string, string> $discriminators
-     * @param ReflectionClass<T> $base
-     * @return ReflectionClass<T>
+     * @param ReflectionClass<covariant T> $base
+     * @return ReflectionClass<covariant T>
      */
     public static function findClass(array $discriminators, ReflectionClass $base): ReflectionClass
     {

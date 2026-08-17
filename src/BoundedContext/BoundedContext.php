@@ -3,6 +3,7 @@ namespace Apie\Core\BoundedContext;
 
 use Apie\Core\ApieLib;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Identifiers\IdentifierInterface;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Core\Utils\ConverterUtils;
@@ -22,7 +23,7 @@ final class BoundedContext implements EntityInterface
     }
 
     /**
-     * @param ReflectionClass<object> $resourceClass
+     * @param ReflectionClass<EntityInterface>|ReflectionClass<IdentifierInterface<EntityInterface>> $resourceClass
      */
     public function contains(ReflectionClass $resourceClass): bool
     {

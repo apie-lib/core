@@ -5,7 +5,7 @@ use Apie\TypeConverter\ConverterInterface;
 use ReflectionClass;
 
 /**
- * @implements ConverterInterface<class-string<object>, ReflectionClass<object>>
+ * @implements ConverterInterface<class-string<object>, ReflectionClass<covariant object>>
  */
 final class StringToReflectionClassConverter implements ConverterInterface
 {

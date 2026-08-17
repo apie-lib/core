@@ -48,7 +48,7 @@ final class ConverterUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod|null $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod|null $input
      */
     public static function isStaticOrSelf(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod|null $input): bool
     {
@@ -106,7 +106,7 @@ final class ConverterUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function toReflectionType(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input, bool $strict = false): ?ReflectionType
     {

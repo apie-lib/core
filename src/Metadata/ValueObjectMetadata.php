@@ -28,7 +28,7 @@ class ValueObjectMetadata implements NullableMetadataInterface
         return null;
     }
     /**
-     * @param ReflectionClass<ValueObjectInterface> $class
+     * @param ReflectionClass<covariant ValueObjectInterface> $class
      */
     public function __construct(private ReflectionClass $class)
     {
@@ -40,7 +40,7 @@ class ValueObjectMetadata implements NullableMetadataInterface
     }
 
     /**
-     * @return ReflectionClass<ValueObjectInterface>
+     * @return ReflectionClass<covariant ValueObjectInterface>
      */
     public function toClass(): ReflectionClass
     {

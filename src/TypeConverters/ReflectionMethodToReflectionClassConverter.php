@@ -15,7 +15,7 @@ use ReflectionType;
 class ReflectionMethodToReflectionClassConverter implements ConverterInterface
 {
     /**
-     * @return ReflectionClass<object>|null
+     * @return ReflectionClass<covariant object>|null
      */
     public function convert(ReflectionMethod $input, ?ReflectionType $wantedType = null, ?TypeConverter $converter = null): ?ReflectionClass
     {

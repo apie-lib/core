@@ -13,7 +13,7 @@ use ReflectionUnionType;
 class ReflectionUnionTypeToReflectionClassConverter implements ConverterInterface
 {
     /**
-     * @return ReflectionClass<object>|null
+     * @return ReflectionClass<covariant object>|null
      */
     public function convert(ReflectionUnionType $input, ?ReflectionType $wantedType = null, ?TypeConverter $typeConverter = null): ?ReflectionClass
     {

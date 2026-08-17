@@ -14,7 +14,7 @@ use UnitEnum;
 class EnumMetadata implements MetadataInterface
 {
     /**
-     * @param ReflectionEnum<UnitEnum> $enum
+     * @param ReflectionEnum<covariant UnitEnum> $enum
      */
     public function __construct(private ReflectionEnum $enum)
     {
@@ -26,7 +26,7 @@ class EnumMetadata implements MetadataInterface
     }
 
     /**
-     * @return ReflectionEnum<UnitEnum>
+     * @return ReflectionEnum<covariant UnitEnum>
      */
     public function toClass(): ReflectionEnum
     {

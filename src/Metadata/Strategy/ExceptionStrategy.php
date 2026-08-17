@@ -20,7 +20,7 @@ final class ExceptionStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<Throwable> $class
+     * @param ReflectionClass<covariant Throwable> $class
      */
     public function __construct(private ReflectionClass $class)
     {

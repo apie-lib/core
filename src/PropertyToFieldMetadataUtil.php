@@ -20,7 +20,7 @@ final class PropertyToFieldMetadataUtil
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public static function fromPropertyStringToFieldMetadata(
         ReflectionClass $class,
@@ -31,7 +31,7 @@ final class PropertyToFieldMetadataUtil
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param array<int, string> $property
      */
     public static function fromPropertyArrayToFieldMetadata(

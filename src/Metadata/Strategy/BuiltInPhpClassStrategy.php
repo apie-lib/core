@@ -50,7 +50,7 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     }
 
     /**
-     * @return ReflectionClass<object>
+     * @return ReflectionClass<covariant object>
      */
     public function getClass(): ReflectionClass
     {
@@ -58,7 +58,7 @@ class BuiltInPhpClassStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function __construct(private ReflectionClass $class)
     {

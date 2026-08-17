@@ -32,7 +32,7 @@ final class DiscriminatorMapping
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface>|PolymorphicEntityInterface $class
+     * @param ReflectionClass<covariant PolymorphicEntityInterface>|PolymorphicEntityInterface $class
      */
     public function getConfigForClass(ReflectionClass|PolymorphicEntityInterface $class): DiscriminatorConfig
     {
@@ -54,7 +54,7 @@ final class DiscriminatorMapping
     }
 
     /**
-     * @param ReflectionClass<PolymorphicEntityInterface> $class
+     * @param ReflectionClass<covariant PolymorphicEntityInterface> $class
      */
     public function getDiscriminatorForClass(ReflectionClass $class): string
     {

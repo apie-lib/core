@@ -19,7 +19,7 @@ enum TranslationStringType: string
     }
 
     /**
-     * @param ReflectionClass<object> $className
+     * @param ReflectionClass<covariant object> $className
      * @return array<int, string>
      */
     public static function stringCasesFor(

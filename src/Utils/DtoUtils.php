@@ -17,7 +17,7 @@ final class DtoUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isDto(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {

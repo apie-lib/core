@@ -28,7 +28,7 @@ final class TypeUtils
     /**
      * @template T of object
      *
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param class-string<T> $attributeClass
      * @return T[]
      */

@@ -31,7 +31,7 @@ final class EnumUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -40,7 +40,7 @@ final class EnumUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isStringEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
@@ -53,7 +53,7 @@ final class EnumUtils
     }
 
     /**
-     * @param string|ReflectionClass<object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
+     * @param string|ReflectionClass<covariant object>|ReflectionProperty|ReflectionType|ReflectionMethod $input
      */
     public static function isIntEnum(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {

@@ -14,7 +14,7 @@ use ReflectionType;
 class ReflectionPropertyToReflectionClassConverter implements ConverterInterface
 {
     /**
-     * @return ReflectionClass<object>|null
+     * @return ReflectionClass<covariant object>|null
      */
     public function convert(ReflectionProperty $input, ?ReflectionType $wantedType = null, ?TypeConverter $converter = null): ?ReflectionClass
     {

@@ -16,7 +16,7 @@ final class FormFieldProperty extends AbstractTranslation
     }
 
     /**
-     * @param \ReflectionClass<object> $class
+     * @param \ReflectionClass<covariant object> $class
      */
     public static function createForProperty(
         StringList $list,

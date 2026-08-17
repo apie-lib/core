@@ -15,7 +15,7 @@ use ReflectionType;
 final class ListOf
 {
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $type
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionType $type
      */
     public function __construct(
         public readonly ReflectionClass|ReflectionMethod|ReflectionType $type

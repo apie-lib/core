@@ -2,6 +2,7 @@
 namespace Apie\Core\Datalayers;
 
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Lists\StringSet;
 use ReflectionClass;
 
@@ -11,12 +12,12 @@ use ReflectionClass;
 interface ApieDatalayerWithFilters extends ApieDatalayer
 {
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function getFilterColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringSet;
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function getOrderByColumns(ReflectionClass $class, BoundedContextId $boundedContextId): ?StringSet;
 }

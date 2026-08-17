@@ -52,7 +52,7 @@ final class PublicProperty implements FieldWithPossibleDefaultValue, GetterInter
     /**
      * ReflectionProperty::hasDefaultValue() returns false for promoted public properties,
      * so we look up the constructors to find ReflectionParameter and return this.
-     * @param \ReflectionClass<object> $class
+     * @param \ReflectionClass<covariant object> $class
      */
     private function findPromotedProperty(\ReflectionClass $class): ?\ReflectionParameter
     {

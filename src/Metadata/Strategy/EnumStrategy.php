@@ -19,7 +19,7 @@ final class EnumStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<UnitEnum> $class
+     * @param ReflectionClass<covariant UnitEnum> $class
      */
     public function __construct(ReflectionClass $class)
     {

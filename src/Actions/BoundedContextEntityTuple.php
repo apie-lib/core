@@ -8,7 +8,7 @@ use ReflectionClass;
 final class BoundedContextEntityTuple
 {
     /**
-     * @param ReflectionClass<EntityInterface> $resourceClass
+     * @param ReflectionClass<covariant EntityInterface> $resourceClass
      */
     public function __construct(
         public readonly BoundedContext $boundedContext,

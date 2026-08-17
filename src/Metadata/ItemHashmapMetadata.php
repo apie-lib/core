@@ -14,7 +14,7 @@ final class ItemHashmapMetadata implements MetadataInterface
     use NoValueOptions;
 
     /**
-     * @param ReflectionClass<ItemHashmap> $class
+     * @param ReflectionClass<covariant ItemHashmap> $class
      */
     public function __construct(private readonly ReflectionClass $class, private readonly bool $creation = true)
     {
@@ -26,7 +26,7 @@ final class ItemHashmapMetadata implements MetadataInterface
     }
 
     /**
-     * @return ReflectionClass<ItemHashmap>
+     * @return ReflectionClass<covariant ItemHashmap>
      */
     public function toClass(): ReflectionClass
     {

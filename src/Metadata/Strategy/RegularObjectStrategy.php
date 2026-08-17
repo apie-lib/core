@@ -18,7 +18,7 @@ use ReflectionProperty;
 final class RegularObjectStrategy implements StrategyInterface
 {
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public static function supports(ReflectionClass $class): bool
     {
@@ -26,7 +26,7 @@ final class RegularObjectStrategy implements StrategyInterface
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function __construct(private ReflectionClass $class)
     {

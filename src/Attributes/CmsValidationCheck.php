@@ -30,7 +30,7 @@ final class CmsValidationCheck
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @return array<string, mixed>
      */
     public function toArray(ReflectionClass $class): array

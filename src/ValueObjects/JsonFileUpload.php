@@ -52,10 +52,12 @@ final class JsonFileUpload implements CompositeWithOwnValidation
 
     protected function validateState(): void
     {
+        // @phpstan-ignore-next-line isset.initializedProperty
         if (isset($this->contents) xor isset($this->base64)) {
             return;
         }
         throw new \LogicException(
+            // @phpstan-ignore-next-line isset.initializedProperty
             isset($this->contents)
             ? 'You should only provide contents or base64'
             : 'I need either a "contents" or a "base64" property'
@@ -69,6 +71,7 @@ final class JsonFileUpload implements CompositeWithOwnValidation
      */
     public function toUploadedFile(string $className = StoredFile::class): StoredFile
     {
+        // @phpstan-ignore-next-line isset.initializedProperty
         $contents = isset($this->contents) ? $this->contents->toNative() : $this->base64->decode()->toNative();
         return $className::createFromString(
             $contents,
