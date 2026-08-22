@@ -20,17 +20,17 @@
     }
   },
   "require": {
-    "php": ">=8.3",
+    "php": ">=8.4",
     "apie/count-words": "self.version",
     "apie/regex-tools": "self.version",
     "apie/type-converter": "^1.6.2",
     "beste/clock": "^3.0",
-    "composer/semver": "^3.4",
-    "fakerphp/faker": "^1.23.1",
+    "composer/semver": "^3.4.4",
+    "fakerphp/faker": "^1.24.1",
     "icanboogie/inflector": "^4.0",
     "nyholm/psr7": "^1.8.2",
-    "psr/http-message": "^1.1|^2.0",
-    "ramsey/uuid": "^4.7.6",
+    "psr/http-message": "^2.0",
+    "ramsey/uuid": "^4.9.3",
     "symfony/http-foundation": "^7.2",
     "symfony/mime": "^7.2",
     "symfony/uid": "^7.2"
@@ -38,10 +38,10 @@
   "require-dev": {
     "apie/fixtures": "self.version",
     "apie/service-provider-generator": "0.14.0",
-    "devizzent/cebe-php-openapi": "^1.1.2",
-    "guzzlehttp/psr7": "^2.4",
+    "devizzent/cebe-php-openapi": "^1.1.5",
+    "guzzlehttp/psr7": "^2.13",
     "illuminate/support": "*",
-    "phpspec/prophecy-phpunit": "^2.2",
+    "phpspec/prophecy-phpunit": "^2.5",
     "phpunit/phpunit": "^11.5.2"
   },
   "extra": {

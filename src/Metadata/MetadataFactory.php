@@ -10,6 +10,7 @@ use Apie\Core\Metadata\Fields\ConstructorParameter;
 use Apie\Core\Metadata\Strategy\AliasStrategy;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
+use Apie\Core\Metadata\Strategy\CustomObjectStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Core\Metadata\Strategy\ExceptionStrategy;
@@ -77,6 +78,9 @@ final class MetadataFactory
         }
         if (ValueObjectStrategy::supports($class)) {
             return new ValueObjectStrategy($class);
+        }
+        if (CustomObjectStrategy::supports($class)) {
+            return new CustomObjectStrategy($class);
         }
         if (ExceptionStrategy::supports($class)) {
             return new ExceptionStrategy($class);
