@@ -6,9 +6,12 @@ use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Lists\StringList;
 
-final class FormFieldProperty extends AbstractTranslation
+/**
+ * Translation for a form field on the create resource form.
+ */
+final class CreateFormFieldProperty extends AbstractTranslation
 {
-    protected const MIDDLE_REGEX = 'properties\.[^.]+(\.[^.]+)*';
+    protected const MIDDLE_REGEX = 'create\.[^.]+(\.[^.]+)*';
 
     public function getFallbackText(): string
     {
@@ -23,9 +26,9 @@ final class FormFieldProperty extends AbstractTranslation
         \ReflectionClass $class,
         ?BoundedContextId $boundedContextId = null
     ): static {
-        return new FormFieldProperty(
+        return new CreateFormFieldProperty(
             new TranslationStringPrefix($boundedContextId, SnakeCaseSlug::fromClass($class)),
-            'properties.' . $list->join('.'),
+            'create.' . $list->join('.'),
             new TranslationStringSuffix(),
             new ItemHashmap()
         );

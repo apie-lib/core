@@ -7,6 +7,7 @@ use Apie\Core\Permissions\PermissionInterface;
 use Apie\Core\Permissions\SerializedPermission;
 use Apie\Core\Translator\ValueObjects\AbstractTranslation;
 use Apie\Core\Translator\ValueObjects\AuditLogEventMessage;
+use Apie\Core\Translator\ValueObjects\CreateFormFieldProperty;
 use Apie\Core\Translator\ValueObjects\FormFieldProperty;
 use Apie\Core\Translator\ValueObjects\MenuHeader;
 use Apie\Core\Translator\ValueObjects\ResourceAddResourceButtonLabel;
@@ -37,6 +38,7 @@ final class ApieLib
     private static $aliases = [
         AbstractTranslation::class => MenuHeader::class
             . '|' . AuditLogEventMessage::class
+            . '|' . CreateFormFieldProperty::class
             . '|' . FormFieldProperty::class
             . '|' . ResourceOverviewHeader::class
             . '|' . ResourceAddResourceButtonLabel::class

@@ -5,6 +5,7 @@ use Apie\Core\ApieLib;
 use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\ExampleValue;
 use Apie\Core\Attributes\FakeMethod;
+use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Lists\ItemHashmap;
@@ -13,6 +14,10 @@ use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 use Apie\Core\ValueObjects\Utils;
+use Apie\SchemaGenerator\Builders\ComponentsBuilder;
+use Apie\SchemaGenerator\Enums\SchemaUsages;
+use Apie\TypeConverter\ReflectionTypeFactory;
+use cebe\openapi\spec\Schema;
 use Faker\Generator as FakerGenerator;
 use ReflectionClass;
 use RegRev\RegRev;
@@ -20,6 +25,7 @@ use RegRev\RegRev;
 #[Description('A translation string for an Apie translation following a rigid, predictable structure.')]
 #[ExampleValue('apie.bounded.example.resource.user.example.test.singular.authenticated')]
 #[FakeMethod('createRandom')]
+#[SchemaMethod('createSchema')]
 abstract class AbstractTranslation implements HasRegexValueObjectInterface
 {
     protected const PREFIX_REGEX = 'apie\.(bounded\.([a-z][a-z0-9]*)\.)?(resource\.([a-z0-9]+(_[a-z0-9]+)*)\.)?';
@@ -120,6 +126,20 @@ abstract class AbstractTranslation implements HasRegexValueObjectInterface
         $regularExpressionWithDelimiter = static::getRegularExpression();
         $regex = RegexUtils::removeDelimiters($regularExpressionWithDelimiter);
         return static::fromNative(RegRev::generate($regex));
+    }
+
+    /**
+     * @return Schema|array<array-key, mixed>
+     */
+    public static function createSchema(SchemaUsages $usage, ComponentsBuilder $componentsBuilder): Schema|array
+    {
+        if ($usage === SchemaUsages::GET) {
+            return ['type' => 'string', 'example' => 'This is a translation'];
+        }
+
+        return $componentsBuilder->getSchemaForType(
+            ReflectionTypeFactory::createReflectionType(ApieLib::getAlias(AbstractTranslation::class))
+        );
     }
 
     public function withoutBoundedContextId(): static

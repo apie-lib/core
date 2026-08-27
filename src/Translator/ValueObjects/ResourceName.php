@@ -8,7 +8,7 @@ use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Lists\ItemHashmap;
 use Apie\Core\Translator\Enums\Pluralization;
 use Apie\Core\Translator\Lists\TranslationStringSet;
-use ICanBoogie\Inflector;
+use Apie\Core\Utils\Inflector;
 
 #[Description('Name of resource')]
 #[ExampleValue('apie.bounded.test.resource.user.name.singular')]
