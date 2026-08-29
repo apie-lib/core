@@ -33,7 +33,7 @@ final class DtoStrategy implements StrategyInterface
                 return true;
             }
         }
-        return $property->isReadOnly();
+        return $property->isReadOnly() && $setterHooks;
     }
     private function getDtoMetadata(ApieContext $context, bool $optional, bool $setterHooks, bool $allowPromoted): CompositeMetadata
     {

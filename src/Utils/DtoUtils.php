@@ -22,6 +22,6 @@ final class DtoUtils
     public static function isDto(string|ReflectionClass|ReflectionProperty|ReflectionType|ReflectionMethod $input): bool
     {
         $class = ConverterUtils::toReflectionClass($input);
-        return $class->isInstantiable() && $class->implementsInterface(DtoInterface::class);
+        return $class->isInstantiable() && in_array(DtoInterface::class, $class->getInterfaceNames());
     }
 }
