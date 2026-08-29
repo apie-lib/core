@@ -12,6 +12,9 @@ final class FormFieldProperty extends AbstractTranslation
 
     public function getFallbackText(): string
     {
+        if (!str_contains($this->middleSection, '.')) {
+            return $this->middleSection;
+        }
         return strstr($this->middleSection, '.');
     }
 

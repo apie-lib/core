@@ -23,7 +23,7 @@
     "php": ">=8.4",
     "apie/count-words": "self.version",
     "apie/regex-tools": "self.version",
-    "apie/type-converter": "^1.6.2",
+    "apie/type-converter": "^1.6.3",
     "beste/clock": "^3.0",
     "composer/semver": "^3.4.4",
     "fakerphp/faker": "^1.24.1",
