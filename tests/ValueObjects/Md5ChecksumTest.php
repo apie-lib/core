@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Tests\Core\ValueObjects;
 
+use Apie\Core\ValueObjects\Md5Checksum;
 use Apie\Fixtures\TestHelpers\TestsValueObjectConstructor;
 use Apie\Fixtures\TestHelpers\ValueObjectTestCase;
 
@@ -11,6 +12,12 @@ class Md5ChecksumTest extends ValueObjectTestCase
     public static function className(): string
     {
         return \Apie\Core\ValueObjects\Md5Checksum::class;
+    }
+
+    
+    public static function createExampleObject(): object
+    {
+        return Md5Checksum::fromNative(md5('test'));
     }
 
     public static function provideFromNative(): array

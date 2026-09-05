@@ -102,6 +102,7 @@ class ItemHashmap implements HashmapInterface
 
     public function offsetExists(mixed $offset): bool
     {
+        $offset = Utils::toString($offset);
         return array_key_exists($offset, $this->internalArray);
     }
 
