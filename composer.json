@@ -102,6 +102,7 @@
     "Apie\\Core\\ValueObjects\\Base64Stream",
     "Apie\\Core\\ValueObjects\\StrictMimeType",
     "Apie\\Core\\ValueObjects\\JsonFileUpload",
+    "Apie\\Core\\ValueObjects\\PhpDateIntervalString",
     "Apie\\Core\\Actions\\ActionResponseStatusList",
     "Apie\\Core\\Actions\\ActionResponseStatus",
     "Apie\\Core\\Identifiers\\Identifier",

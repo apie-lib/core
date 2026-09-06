@@ -7,8 +7,10 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\StringList;
 use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Other\StreamBucketObject;
+use Apie\Core\ValueObjects\PhpDateIntervalString;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use BcMath\Number;
+use DateInterval;
 use DOMAttr;
 use DOMElement;
 use FFI\CType;
@@ -32,6 +34,7 @@ class CustomObjectsMetadata implements MetadataInterface
         SimpleXMLElement::class => 'string',
         DOMAttr::class => 'string',
         DOMElement::class => 'string',
+        DateInterval::class => PhpDateIntervalString::class,
     ];
 
     private MetadataInterface $internal;

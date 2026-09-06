@@ -11,6 +11,7 @@ use Apie\Core\Metadata\Strategy\AliasStrategy;
 use Apie\Core\Metadata\Strategy\BuiltInPhpClassStrategy;
 use Apie\Core\Metadata\Strategy\CompositeValueObjectStrategy;
 use Apie\Core\Metadata\Strategy\CustomObjectStrategy;
+use Apie\Core\Metadata\Strategy\DatePeriodStrategy;
 use Apie\Core\Metadata\Strategy\DtoStrategy;
 use Apie\Core\Metadata\Strategy\EnumStrategy;
 use Apie\Core\Metadata\Strategy\ExceptionStrategy;
@@ -87,6 +88,9 @@ final class MetadataFactory
         }
         if (UploadedFileStrategy::supports($class)) {
             return new UploadedFileStrategy($class);
+        }
+        if (DatePeriodStrategy::supports($class)) {
+            return new DatePeriodStrategy($class);
         }
         if (RegularObjectStrategy::supports($class)) {
             return new RegularObjectStrategy($class);
