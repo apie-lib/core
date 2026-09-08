@@ -59,6 +59,9 @@ enum ScalarType: string
         if ($this === self::INTEGER) {
             return 'integer';
         }
+        if ($this === self::STDCLASS) {
+            return 'json';
+        }
         return $this->value;
     }
 
