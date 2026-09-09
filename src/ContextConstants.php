@@ -177,4 +177,10 @@ final class ContextConstants
     public const BACKGROUND_PROCESS = 'background_process';
 
     public const WEBDAV = 'webdav';
+
+    /**
+     * Configured log out url. It depends on the framework how this is setup. For example Symfony has a logout
+     * url generator, but for Laravel the only way to do this is adding a config to the apie library.
+     */
+    public const LOGOUT_URL = 'logout_url';
 }

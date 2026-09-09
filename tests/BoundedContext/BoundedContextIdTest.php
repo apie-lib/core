@@ -20,12 +20,6 @@ class BoundedContextIdTest extends ValueObjectTestCase
         ];
     }
 
-    
-    public static function createExampleObject(): object
-    {
-        return new BoundedContextId('test');
-    }
-
     public static function getOpenApiSchemaForCreation(): array
     {
         return [
