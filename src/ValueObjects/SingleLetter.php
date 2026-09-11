@@ -1,9 +1,9 @@
 <?php
 namespace Apie\Core\ValueObjects;
 
-use Apie\Core\ValueObjects\Interfaces\StringValueObjectInterface;
+use Apie\Core\ValueObjects\Interfaces\HasRegexValueObjectInterface;
 
-class SingleLetter implements StringValueObjectInterface
+class SingleLetter implements HasRegexValueObjectInterface
 {
     use IsStringWithRegexValueObject;
 
