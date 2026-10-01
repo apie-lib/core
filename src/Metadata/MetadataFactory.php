@@ -65,6 +65,9 @@ final class MetadataFactory
         if (PolymorphicEntityStrategy::supports($class)) {
             return new PolymorphicEntityStrategy($class);
         }
+        if (CustomObjectStrategy::supports($class)) {
+            return new CustomObjectStrategy($class);
+        }
         if (CompositeValueObjectStrategy::supports($class)) {
             return new CompositeValueObjectStrategy($class);
         }
@@ -79,9 +82,6 @@ final class MetadataFactory
         }
         if (ValueObjectStrategy::supports($class)) {
             return new ValueObjectStrategy($class);
-        }
-        if (CustomObjectStrategy::supports($class)) {
-            return new CustomObjectStrategy($class);
         }
         if (ExceptionStrategy::supports($class)) {
             return new ExceptionStrategy($class);

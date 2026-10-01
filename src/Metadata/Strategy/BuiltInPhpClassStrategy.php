@@ -29,8 +29,6 @@ class BuiltInPhpClassStrategy implements StrategyInterface
         ReflectionNamedType::class,
         ReflectionUnionType::class,
         ReflectionIntersectionType::class,
-        ReflectionClass::class,
-        ReflectionMethod::class,
         ReflectionProperty::class,
         ReflectionParameter::class,
         ReflectionEnum::class,
@@ -42,6 +40,8 @@ class BuiltInPhpClassStrategy implements StrategyInterface
         DateTimeInterface::class,
         DateTime::class,
         DateTimeImmutable::class,
+        ReflectionClass::class,
+        ReflectionMethod::class,
     ];
 
     public static function supports(ReflectionClass $class): bool

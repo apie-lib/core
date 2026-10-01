@@ -38,6 +38,14 @@ class StoredFile implements UploadedFileInterface
         $this->validateState();
     }
 
+    public function __clone(): void
+    {
+        if ($this->resource) {
+            $this->resource = $this->getStream()->detach();
+        }
+        $this->removeOnDestruct = false;
+    }
+
     protected function validateState(): void
     {
     }

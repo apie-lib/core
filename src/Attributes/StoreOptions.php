@@ -9,6 +9,7 @@ use Attribute;
  *
  * - mutableListField: stores/restores mutability state of a list.
  * - alwaysMixedData: if true, the data is always stored in the special mixed data table.
+ * - noStorage: ignore property
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class StoreOptions
@@ -16,6 +17,7 @@ class StoreOptions
     public function __construct(
         public readonly bool $mutableListField = false,
         public readonly bool $alwaysMixedData = false,
+        public readonly bool $noStorage = false,
     ) {
     }
 }

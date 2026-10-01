@@ -14,4 +14,29 @@ This package is part of the [Apie](https://github.com/apie-lib) library.
 The code is maintained in a monorepo, so PR's need to be sent to the [monorepo](https://github.com/apie-lib/apie-lib-monorepo/pulls)
 
 ## Documentation
-The core contains the core functionality used in the entire Apie library. This includes all Attributes and all common interfaces.
+The core contains the attributes, value-object traits, interfaces, contexts, and
+reflection helpers shared by the Apie packages.
+
+### Standalone usage
+Install it with:
+```bash
+composer require apie/core
+```
+
+Use the interfaces and attributes when defining your own domain objects. For example,
+an identifier can implement `Apie\Core\ValueObjects\Interfaces\IdentifierInterface`
+and a constrained string can use one of the `Apie\Core\ValueObjects` traits. The core
+is framework-free and is normally installed indirectly by higher-level packages.
+
+### Symfony integration
+Via `apie/apie-bundle`, `core.yaml` is loaded automatically and registers the
+`Apie\Core\BoundedContext\BoundedContextHashmap`, the datalayer chain (`apie.datalayer`),
+`Apie\Core\Translator\ApieTranslator`, `Apie\Core\FileStorage\ChainedFileStorage` and the
+`Apie\Core\Indexing\Indexer`. Bounded contexts and file storage locations are configured
+through the `apie.bounded_contexts`, `apie.scan_bounded_contexts`, `apie.datalayers` and
+`apie.storage` keys in `config/packages/apie.yaml`.
+
+### Laravel integration
+Via `apie/laravel-apie`, the generated `Apie\Core\CoreServiceProvider` registers the same
+bounded context, datalayer, translator, file storage and indexer services in the Laravel
+container, using the equivalent Apie configuration.

@@ -152,6 +152,24 @@ class StoredFileTest extends TestCase
     }
 
     #[Test]
+    public function it_does_not_copy_server_path_when_cloned()
+    {
+        $testItem = StoredFile::createFromLocalFile(__FILE__, 'text/x-php');
+
+        $cloned = clone $testItem;
+
+        $this->assertSame(__FILE__, $testItem->getServerPath());
+        $serverPath = $cloned->getServerPath();
+        $this->assertFileExists($serverPath);
+        $this->assertSame(__FILE__, $serverPath);
+        $this->assertSame(file_get_contents(__FILE__), $cloned->getContent());
+        $this->assertSame($testItem->getClientMediaType(), $cloned->getClientMediaType());
+        $this->assertSame($testItem->getClientFilename(), $cloned->getClientFilename());
+        unset($cloned);
+        $this->assertFileExists($serverPath);
+    }
+
+    #[Test]
     public function it_can_wrap_file_uri_value_object()
     {
         $this->markTestIncomplete('Needs a mock of the file storage to work');
