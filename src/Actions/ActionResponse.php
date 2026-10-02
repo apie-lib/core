@@ -66,7 +66,7 @@ final class ActionResponse
     public function getStatusCode(): int
     {
         return match ($this->status) {
-            ActionResponseStatus::CLIENT_ERROR => $this->error->getStatusCode(),
+            ActionResponseStatus::CLIENT_ERROR, ActionResponseStatus::AUTHORIZATION_ERROR => $this->error->getStatusCode(),
             ActionResponseStatus::CREATED => 201,
             ActionResponseStatus::SUCCESS => 200,
             ActionResponseStatus::DELETED => 204,
