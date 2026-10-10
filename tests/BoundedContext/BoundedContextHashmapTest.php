@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\Core\BoundedContext;
 
-use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Fixtures\TestHelpers\ObjectTestCase;
 
