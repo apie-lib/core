@@ -4,7 +4,8 @@ namespace Apie\Core;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Exceptions\IndexNotFoundException;
 use Apie\Core\Lists\ItemHashmap;
-use Apie\Core\Lists\ItemList;
+use Apie\Core\Lists\ItemListInterface;
+use Apie\Core\Lists\ItemSet;
 use Apie\Core\Metadata\GetterInterface;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
@@ -63,7 +64,10 @@ final class PropertyAccess
         if (null === $arrayItemType) {
             return self::throwErrorOnMissingValue($key, $throwErrorOnMissing);
         }
-        if (is_array($object) || $object instanceof ItemList || $object instanceof ItemHashmap) {
+        if (is_array($object) || $object instanceof ItemListInterface || $object instanceof ItemHashmap) {
+            if ($object instanceof ItemSet) {
+                $object = $object->toArray();
+            }
             if (!isset($object[$key])) {
                 return self::throwErrorOnMissingValue($key, $throwErrorOnMissing);
             }
@@ -73,6 +77,7 @@ final class PropertyAccess
             }
             return self::visit($value, $arrayItemType, $apieContext, $property, $throwErrorOnMissing);
         }
+
         return self::throwErrorOnMissingValue($key, $throwErrorOnMissing);
     }
 
