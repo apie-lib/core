@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Tests\Core\Datalayers\Repositories;
 
+use Apie\Core\ApieLib;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\EntityAlreadyPersisted;
 use Apie\Core\Exceptions\EntityNotFoundException;
@@ -33,6 +34,10 @@ class InMemoryDatalayerTest extends TestCase
             )
         );
         $testItem->persistNew($user);
+        $metadata = $testItem->getMetadata($user->getId());
+        $this->assertSame(ApieLib::VERSION, $metadata->createdInApieVersion);
+        $this->assertSame(ApieLib::VERSION, $metadata->updatedInApieVersion);
+        $this->assertEquals($metadata->createdAt, $metadata->updatedAt);
         $this->assertEquals(
             [$user],
             iterator_to_array($testItem->all(new ReflectionClass(UserWithAutoincrementKey::class)))

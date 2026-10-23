@@ -6,6 +6,7 @@ use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Identifiers\IdentifierInterface;
 use Apie\Serializer\Serializer;
+use Exception;
 use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -31,17 +32,32 @@ final class IdentifierUtils
     }
 
     /**
-     * @return IdentifierInterface<EntityInterface>
+     * @param bool $throwError
+     * @phpstan-return ($throwError is true ? IdentifierInterface<EntityInterface> : IdentifierInterface<EntityInterface>|null)
      */
-    public static function idStringToIdentifier(string $id, ApieContext $context): IdentifierInterface
-    {
-        $resourceClass = new ReflectionClass($context->getContext(ContextConstants::RESOURCE_NAME));
-        $idClass = self::entityClassToIdentifier($resourceClass);
-        /** @var IdentifierInterface<EntityInterface> $idObject */
-        $idObject = $context->hasContext(Serializer::class)
-            ? $context->getContext(Serializer::class)->denormalizeNewObject($id, $idClass->name, $context)
-            : $idClass->newInstance($id);
-        return $idObject;
+    public static function idStringToIdentifier(
+        string $id,
+        ApieContext $context,
+        bool $throwError = true
+    ): ?IdentifierInterface {
+        $resourceName = $context->getContext(ContextConstants::RESOURCE_NAME, $throwError);
+        if (empty($resourceName) && !$throwError) {
+            return null;
+        }
+        try {
+            $resourceClass = new ReflectionClass($resourceName ?? '');
+            $idClass = self::entityClassToIdentifier($resourceClass);
+            /** @var IdentifierInterface<EntityInterface> $idObject */
+            $idObject = $context->hasContext(Serializer::class)
+                ? $context->getContext(Serializer::class)->denormalizeNewObject($id, $idClass->name, $context)
+                : $idClass->newInstance($id);
+            return $idObject;
+        } catch (Exception $exception) {
+            if ($throwError) {
+                throw $exception;
+            }
+            return null;
+        }
     }
 
     /**

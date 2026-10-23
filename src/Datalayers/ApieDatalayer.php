@@ -25,6 +25,15 @@ interface ApieDatalayer
 
     /**
      * @template T of EntityInterface
+     * @param IdentifierInterface<T> $identifier
+     */
+    public function getMetadata(
+        IdentifierInterface $identifier,
+        ?BoundedContextId $boundedContextId = null
+    ): DataLayerMetadata;
+
+    /**
+     * @template T of EntityInterface
      * @param T $entity
      * @return T
      */

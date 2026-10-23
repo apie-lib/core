@@ -63,6 +63,18 @@ final class GroupedDataLayer implements ApieDatalayerWithFilters, ApieDatalayer,
             ->find($identifier, $boundedContextId);
     }
 
+    /**
+     * @template T of EntityInterface
+     * @param IdentifierInterface<T> $identifier
+     */
+    public function getMetadata(
+        IdentifierInterface $identifier,
+        ?BoundedContextId $boundedContextId = null
+    ): DataLayerMetadata {
+        return $this->hashmap->pickDataLayerFor($identifier::getReferenceFor(), $boundedContextId)
+            ->getMetadata($identifier, $boundedContextId);
+    }
+
     private function dispatch(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): EntityInterface
     {
         $this->dispatcher->dispatch(

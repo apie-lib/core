@@ -1,8 +1,10 @@
 <?php
 namespace Apie\Core\Datalayers\InMemory;
 
+use Apie\Core\ApieLib;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Datalayers\DataLayerMetadata;
 use Apie\Core\Datalayers\Lists\EntityListInterface;
 use Apie\Core\Datalayers\Lists\InMemoryEntityList;
 use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
@@ -32,6 +34,9 @@ class SessionDatalayer implements ApieDatalayer
 
     private Generator $generator;
 
+    /** @var array<string, array<class-string<EntityInterface>, array<string, DataLayerMetadata>>> */
+    private array $metadata = [];
+
     public function __construct(
         private readonly SessionInterface $session,
         private readonly LazyLoadedListFilterer $filterer,
@@ -39,6 +44,7 @@ class SessionDatalayer implements ApieDatalayer
     ) {
         $this->generator = Factory::create();
         $this->stored = $this->restore();
+        $this->metadata = $this->session->get($this->sessionKey . '_metadata', []);
     }
 
     /**
@@ -98,6 +104,14 @@ class SessionDatalayer implements ApieDatalayer
         }
         $this->stored[$boundedContextIdString][$className][] = $entity;
         $this->store($this->stored);
+        $now = ApieLib::getPsrClock()->now();
+        $this->metadata[$boundedContextIdString][$className][(string) $id] = new DataLayerMetadata(
+            $now,
+            $now,
+            ApieLib::VERSION,
+            ApieLib::VERSION
+        );
+        $this->storeMetadata();
         return $entity;
     }
 
@@ -114,8 +128,19 @@ class SessionDatalayer implements ApieDatalayer
         $className = $entity->getId()::getReferenceFor()->name;
         foreach ($this->stored[$boundedContextIdString][$className] ?? [] as $key => $entityInList) {
             if ($entityInList->getId()->toNative() === $id) {
-                $this->stored[$className][$key] = $entity;
+                $this->stored[$boundedContextIdString][$className][$key] = $entity;
                 $this->store($this->stored);
+                $metadata = $this->metadata[$boundedContextIdString][$className][(string) $id] ?? new DataLayerMetadata(
+                    ApieLib::getPsrClock()->now(),
+                    ApieLib::getPsrClock()->now(),
+                    ApieLib::VERSION,
+                    ApieLib::VERSION
+                );
+                $this->metadata[$boundedContextIdString][$className][(string) $id] = $metadata->withUpdatedMetadata(
+                    ApieLib::getPsrClock()->now(),
+                    ApieLib::VERSION
+                );
+                $this->storeMetadata();
                 return $entity;
             }
         }
@@ -136,6 +161,33 @@ class SessionDatalayer implements ApieDatalayer
         throw new EntityNotFoundException($identifier);
     }
 
+    /**
+     * @template T of EntityInterface
+     * @param IdentifierInterface<T> $identifier
+     */
+    public function getMetadata(
+        IdentifierInterface $identifier,
+        ?BoundedContextId $boundedContextId = null
+    ): DataLayerMetadata {
+        $boundedContextId ??= new BoundedContextId('unknown');
+        $this->find($identifier, $boundedContextId);
+        $contextId = $boundedContextId->toNative();
+        $className = $identifier::getReferenceFor()->name;
+        $id = (string) $identifier->toNative();
+        if (!isset($this->metadata[$contextId][$className][$id])) {
+            $now = ApieLib::getPsrClock()->now();
+            $this->metadata[$contextId][$className][$id] = new DataLayerMetadata(
+                $now,
+                $now,
+                ApieLib::VERSION,
+                ApieLib::VERSION
+            );
+            $this->storeMetadata();
+        }
+
+        return $this->metadata[$contextId][$className][$id];
+    }
+
     public function removeExisting(EntityInterface $entity, ?BoundedContextId $boundedContextId = null): void
     {
         $boundedContextId ??= new BoundedContextId('unknown');
@@ -150,7 +202,9 @@ class SessionDatalayer implements ApieDatalayer
             }
         }
         $this->stored[$boundedContextIdString][$className] = $newList;
+        unset($this->metadata[$boundedContextIdString][$className][(string) $id]);
         $this->store($this->stored);
+        $this->storeMetadata();
     }
 
     public function upsert(EntityInterface $entity, ?BoundedContextId $boundedContextId): EntityInterface
@@ -160,5 +214,10 @@ class SessionDatalayer implements ApieDatalayer
         } catch (UnknownExistingEntityError) {
             return $this->persistNew($entity, $boundedContextId);
         }
+    }
+
+    private function storeMetadata(): void
+    {
+        $this->session->set($this->sessionKey . '_metadata', $this->metadata);
     }
 }
