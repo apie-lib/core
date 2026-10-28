@@ -148,4 +148,9 @@ class UtilsTest extends TestCase
         $result = Utils::toTypehint($typehint, $iterable);
         $this->assertSame(['x' => 1], $result);
     }
+
+    public function test_toString_with_reflection_gives_name()
+    {
+        $this->assertEquals(__CLASS__, Utils::toString(new ReflectionClass(__CLASS__)));
+    }
 }

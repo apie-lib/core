@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use ReflectionClass;
 use ReflectionNamedType;
+use ReflectionType;
 use ReflectionUnionType;
 use stdClass;
 use Stringable;
@@ -51,6 +52,9 @@ final class Utils
     {
         if ($input instanceof ValueObjectInterface) {
             $input = $input instanceof Stringable ? $input->__toString() : $input->toNative();
+        }
+        if ($input instanceof ReflectionClass) {
+            return $input->name;
         }
         if (is_array($input)) {
             throw new InvalidTypeException($input, 'string');
