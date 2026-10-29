@@ -17,6 +17,15 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
 
     abstract protected static function getSeparator(): string;
 
+    /**
+     * Lets the last segment contain the separator. fromNative() already
+     * splits with a limit, so such values can be parsed back.
+     */
+    protected static function allowsSeparatorInLastSegment(): bool
+    {
+        return false;
+    }
+
     final protected static function getMinimumNumberOfSegments(): int
     {
         $refl = new ReflectionClass(static::class);
@@ -45,13 +54,16 @@ abstract class SnowflakeIdentifier implements ValueObjectInterface, HasRegexValu
             $result = [];
             $minCount = static::getMinimumNumberOfSegments();
             $count = 0;
-            foreach ($refl->getConstructor()->getParameters() as $parameter) {
+            $parameters = $refl->getConstructor()->getParameters();
+            $lastIndex = count($parameters) - 1;
+            foreach ($parameters as $index => $parameter) {
                 $propertyName = $parameter->getName();
                 $propertyValue = $refl->getProperty($propertyName)->getValue($this);
                 $stringPropertyValue = get_debug_type($propertyValue) === 'float'
                     ? number_format($propertyValue, 6, '.', '')
                     : Utils::toString($propertyValue);
-                if (strpos($stringPropertyValue, $separator) !== false) {
+                $isFreeSegment = $index === $lastIndex && static::allowsSeparatorInLastSegment();
+                if (!$isFreeSegment && strpos($stringPropertyValue, $separator) !== false) {
                     throw new InvalidStringForValueObjectException($stringPropertyValue, $propertyValue);
                 }
                 if ($propertyValue !== null || $count < $minCount) {

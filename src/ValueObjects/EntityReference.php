@@ -91,4 +91,9 @@ class EntityReference extends SnowflakeIdentifier
         }
         return null;
     }
+
+    protected static function allowsSeparatorInLastSegment(): bool
+    {
+        return true;
+    }
 }
