@@ -272,7 +272,7 @@ class StoredFile implements UploadedFileInterface
         if ($this->content !== null) {
             return Stream::create($this->content);
         }
-        if ($this->serverPath) {
+        if ($this->serverPath && file_exists($this->serverPath)) {
             return new Stream(fopen($this->serverPath, 'r'));
         }
         if (is_resource($this->resource)) {
