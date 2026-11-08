@@ -13,7 +13,6 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use ReflectionClass;
 use ReflectionNamedType;
-use ReflectionType;
 use ReflectionUnionType;
 use stdClass;
 use Stringable;

@@ -8,6 +8,7 @@ enum RequestMethod: string
     case DELETE = 'DELETE';
     case PATCH = 'PATCH';
     case GET = 'GET';
+    case QUERY = 'QUERY';
     case HEAD = 'HEAD';
     case CONNECT = 'CONNECT';
     case OPTIONS = 'OPTIONS';
