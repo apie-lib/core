@@ -25,7 +25,7 @@ class FromAttribute implements IndexingStrategyInterface
         foreach ($attributes as $attribute) {
             /** @var ReflectionAttribute<ProvideIndex> $attribute */
             $method = $refl->getMethod($attribute->newInstance()->methodName);
-            $result += $method->invoke($object);
+            $result += $method->invoke($method->isStatic() ? null : $object);
         }
         return $result;
     }

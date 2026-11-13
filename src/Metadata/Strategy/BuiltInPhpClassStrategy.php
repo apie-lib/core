@@ -21,10 +21,12 @@ use ReflectionProperty;
 use ReflectionType;
 use ReflectionUnionType;
 use Stringable;
+use Time\Duration;
 
 class BuiltInPhpClassStrategy implements StrategyInterface
 {
     private const COMPOSITE_NAME_CLASSES = [
+        Duration::class,
         ReflectionType::class,
         ReflectionNamedType::class,
         ReflectionUnionType::class,

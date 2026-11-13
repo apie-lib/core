@@ -68,7 +68,7 @@ final class FromProperty implements FieldInterface
         if (!empty($this->property->getAttributes(Optional::class))) {
             return;
         }
-        $this->property->setValue($instance, $this->property->getDefaultValue());
+        $this->property->setValue($instance, $this->property->hasDefaultValue() ? $this->property->getDefaultValue() : null);
     }
 
     public function isInitialized(ValueObjectInterface $instance): bool
