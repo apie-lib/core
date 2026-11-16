@@ -111,6 +111,23 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind('apie.datalayer', \Apie\Core\Datalayers\ApieDatalayer::class);
         
         $this->registerSingleton(
+            \Apie\Core\Datalayers\InMemory\SessionDatalayer::class,
+            function ($app) {
+                return new \Apie\Core\Datalayers\InMemory\SessionDatalayer(
+                    $app->make(\Apie\Core\Session\SessionFactoryInterface::class),
+                    $app->make(\Apie\Core\Datalayers\Search\LazyLoadedListFilterer::class)
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Core\Datalayers\InMemory\SessionDatalayer::class,
+            array(
+              0 => 'apie.datalayer',
+            )
+        );
+        $this->app->tag([\Apie\Core\Datalayers\InMemory\SessionDatalayer::class], 'apie.datalayer');
+        $this->registerSingleton(
             \Apie\Core\Indexing\Indexer::class,
             function ($app) {
                 return \Apie\Core\Indexing\Indexer::create(

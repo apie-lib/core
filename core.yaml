@@ -47,6 +47,13 @@ services:
   apie.datalayer:
     alias: Apie\Core\Datalayers\ApieDatalayer
 
+  Apie\Core\Datalayers\InMemory\SessionDatalayer:
+    arguments:
+      - '@Apie\Core\Session\SessionFactoryInterface'
+      - '@Apie\Core\Datalayers\Search\LazyLoadedListFilterer'
+    tags:
+      - apie.datalayer
+
   Apie\Core\Indexing\Indexer:
     factory: ['Apie\Core\Indexing\Indexer', 'create']
 
