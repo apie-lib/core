@@ -3,6 +3,8 @@ namespace Apie\Tests\Core\Identifiers;
 
 use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
+use Apie\Fixtures\Actions\InvokableActionExample;
+use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\TestHelpers\TestWithFaker;
 use Apie\Fixtures\TestHelpers\TestWithOpenapiSchema;
 use Generator;
@@ -12,6 +14,20 @@ class SnakeCaseSlugTest extends TestCase
 {
     use TestWithFaker;
     use TestWithOpenapiSchema;
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fromClass_uses_declaring_class_for_invoke_method()
+    {
+        $invoke = new \ReflectionMethod(InvokableActionExample::class, '__invoke');
+        $this->assertEquals('invokable_action_example', SnakeCaseSlug::fromClass($invoke)->toNative());
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function fromClass_prefixes_magic_methods()
+    {
+        $construct = new \ReflectionMethod(StaticActionExample::class, '__construct');
+        $this->assertEquals('magic_method_construct', SnakeCaseSlug::fromClass($construct)->toNative());
+    }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('fromTextProvider')]
     #[\PHPUnit\Framework\Attributes\Test]

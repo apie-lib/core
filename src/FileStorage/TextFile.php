@@ -3,9 +3,9 @@ namespace Apie\Core\FileStorage;
 
 use Apie\Core\Attributes\FakeFile;
 use Apie\Core\Exceptions\InvalidTypeException;
-use Apie\Faker\Interfaces\ApieImageFileFaker;
+use Apie\Faker\FileFakers\TextFileFaker;
 
-#[FakeFile(ApieImageFileFaker::class)]
+#[FakeFile(TextFileFaker::class)]
 final class TextFile extends StoredFile
 {
     protected function validateState(): void

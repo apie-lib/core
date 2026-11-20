@@ -122,7 +122,7 @@ class ItemSet implements ItemListInterface
             if ($value instanceof EntityInterface) {
                 return get_debug_type($value) . ',' . $value->getId()->toNative();
             }
-            return get_debug_type($value) . ',' . spl_object_hash($value);
+            return get_debug_type($value) . ',' . spl_object_id($value);
         }
     }
 

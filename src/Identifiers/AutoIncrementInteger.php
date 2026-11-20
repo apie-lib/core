@@ -23,7 +23,7 @@ class AutoIncrementInteger implements ValueObjectInterface, Stringable
     private static array $fakeCounter = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, int>
      */
     private static array $hash = [];
 
@@ -56,8 +56,8 @@ class AutoIncrementInteger implements ValueObjectInterface, Stringable
 
     final public static function createRandom(Generator $generator): static
     {
-        $hash = spl_object_hash($generator);
-        if ((self::$hash[static::class] ?? '') !== $hash) {
+        $hash = spl_object_id($generator);
+        if ((self::$hash[static::class] ?? null) !== $hash) {
             self::$fakeCounter[static::class] = 1;
             self::$hash[static::class] = $hash;
         }

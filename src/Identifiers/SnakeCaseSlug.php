@@ -30,7 +30,11 @@ class SnakeCaseSlug implements HasRegexValueObjectInterface
     public static function fromClass(ReflectionClass|ReflectionMethod|ReflectionProperty|string $class): self
     {
         if (is_object($class)) {
+            if ($class instanceof ReflectionMethod && $class->name === '__invoke') {
+                $class = $class->getDeclaringClass();
+            }
             $shortName = $class instanceof ReflectionClass ? $class->getShortName() : $class->name;
+            $shortName = preg_replace_callback('/^__(.)/', fn (array $m) => 'magicMethod' . strtoupper($m[1]), $shortName);
             $short = preg_replace('/([a-z])([A-Z])/', '$1_$2', $shortName);
         } else {
             $short = $class;
